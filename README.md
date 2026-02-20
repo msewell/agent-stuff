@@ -2,6 +2,14 @@
 
 A collection of reusable agent artifacts — skills, prompts, and more.
 
+## Installation
+
+If you use [Vercel's npx skills](https://github.com/vercel-labs/skills), you can install individual skills like this:
+
+```bash
+npx skills add mls/agent-stuff/skills/<skill-name>
+```
+
 ## Index
 
 <!-- INDEX:START -->
