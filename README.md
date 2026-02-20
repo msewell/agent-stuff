@@ -19,4 +19,4 @@ npx skills add mls/agent-stuff/skills/<skill-name>
 | [tweet-review](skills/tweet-review) | Reviews draft tweets and provides engagement optimization recommendations with improved alternatives. Use when the user has a draft tweet or thread and wants feedback on how to maximize reach, replies, and engagement on Twitter/X. Primarily niche-agnostic with additional guidance for tech Twitter. |
 <!-- INDEX:END -->
 
-Run `scripts/gen-index.sh` to regenerate the index.
+<!-- Run `scripts/gen-index.sh` to regenerate the index. -->
