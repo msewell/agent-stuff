@@ -56,9 +56,7 @@ description: Creates, reviews, and iterates on Agent Skills (the open, cross-pla
 ````markdown
 ---
 name: my-skill-name
-description: >-
-  [What it does]. [What it produces or transforms].
-  Use when [specific triggers and contexts].
+description: "[What it does]. [What it produces or transforms]. Use when [specific triggers and contexts]."
 ---
 
 # [Skill Name]

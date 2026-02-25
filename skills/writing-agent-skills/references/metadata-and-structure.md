@@ -60,24 +60,15 @@ skill.
 **Good descriptions:**
 
 ```yaml
-description: >-
-  Extract text and tables from PDF files, fill forms, merge documents.
-  Use when working with PDF files or when the user mentions PDFs, forms,
-  or document extraction.
+description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ```
 
 ```yaml
-description: >-
-  Analyze Excel spreadsheets, create pivot tables, generate charts.
-  Use when analyzing Excel files, spreadsheets, tabular data,
-  or .xlsx files.
+description: Analyze Excel spreadsheets, create pivot tables, generate charts. Use when analyzing Excel files, spreadsheets, tabular data, or .xlsx files.
 ```
 
 ```yaml
-description: >-
-  Generate descriptive commit messages by analyzing git diffs.
-  Use when the user asks for help writing commit messages or
-  reviewing staged changes.
+description: Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.
 ```
 
 **Bad descriptions:**

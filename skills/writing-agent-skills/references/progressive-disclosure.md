@@ -27,10 +27,7 @@ the script's output consumes tokens.
 ````markdown
 ---
 name: pdf-processing
-description: >-
-  Extracts text and tables from PDF files, fills forms, and merges documents.
-  Use when working with PDF files or when the user mentions PDFs, forms,
-  or document extraction.
+description: Extracts text and tables from PDF files, fills forms, and merges documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ---
 
 # PDF Processing
