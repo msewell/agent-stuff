@@ -10,9 +10,9 @@ If you use [Vercel's npx skills](https://github.com/vercel-labs/skills), you can
 npx skills add msewell/agent-stuff/skills/<skill-name>
 ```
 
-## Index
+## Skills
 
-<!-- INDEX:START -->
+<!-- SKILLS:START -->
 | Artifact | Description |
 |----------|-------------|
 | [api-first-best-practices](skills/api-first-best-practices) | Provides instructive best practices for API-first development — designing API contracts collaboratively with consumers before writing implementation code, enforcing contracts in CI/CD, and scaling adoption across teams. Use when advising on API design process, contract testing, mock-driven parallel development, API governance, OpenAPI specs, consumer-driven feedback, or designing APIs for AI-agent consumers. |
@@ -24,6 +24,14 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [toon-format](skills/toon-format) | Instructs an LLM agent when and how to use TOON (Token-Oriented Object Notation) for encoding and generating structured data. Use when injecting structured data into context, encoding tool results, preparing RAG documents, producing structured output, or advising on TOON integration. |
 | [tweet-review](skills/tweet-review) | Reviews draft tweets and provides engagement optimization recommendations with improved alternatives. Use when the user has a draft tweet or thread and wants feedback on how to maximize reach, replies, and engagement on Twitter/X. Primarily niche-agnostic with additional guidance for tech Twitter. |
 | [writing-agent-skills](skills/writing-agent-skills) | Creates, reviews, and iterates on Agent Skills (the open, cross-platform format for extending AI agents). Scaffolds new skill directories, writes SKILL.md files with proper frontmatter and body structure, applies progressive disclosure, reviews existing skills for anti-patterns, and guides testing workflows. Use when the user asks to create a skill, write a SKILL.md, review or improve an existing skill, or structure agent instructions. |
-<!-- INDEX:END -->
+<!-- SKILLS:END -->
+
+## Prompts
+
+<!-- PROMPTS:START -->
+| Name | Description |
+|------|-------------|
+| [review-scope](prompts/review-scope.md) | Review changes within a scope for long-term maintainability |
+<!-- PROMPTS:END -->
 
 <!-- Run `.scripts/gen-index.sh` to regenerate the index. -->
