@@ -1,13 +1,6 @@
 ---
 name: writing-agent-skills
-description: >-
-  Creates, reviews, and iterates on Agent Skills (the open, cross-platform
-  format for extending AI agents). Scaffolds new skill directories, writes
-  SKILL.md files with proper frontmatter and body structure, applies
-  progressive disclosure, reviews existing skills for anti-patterns, and
-  guides testing workflows. Use when the user asks to create a skill, write
-  a SKILL.md, review or improve an existing skill, or structure agent
-  instructions.
+description: Creates, reviews, and iterates on Agent Skills (the open, cross-platform format for extending AI agents). Scaffolds new skill directories, writes SKILL.md files with proper frontmatter and body structure, applies progressive disclosure, reviews existing skills for anti-patterns, and guides testing workflows. Use when the user asks to create a skill, write a SKILL.md, review or improve an existing skill, or structure agent instructions.
 ---
 
 # Writing Agent Skills
