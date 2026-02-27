@@ -42,7 +42,7 @@ while IFS= read -r -d '' file; do
   desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
   rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$(dirname "$file")" "$REPO_ROOT")
   echo "| [$name]($rel_path) | $desc |" >> "$SKILLS_INDEX"
-done < <(find "$REPO_ROOT" -not -path '*/.git/*' -name "SKILL.md" -print0 | sort -z)
+done < <(find "$REPO_ROOT" -not -path '*/.git/*' -not -path '*/.archive/*' -name "SKILL.md" -print0 | sort -z)
 
 replace_section "<!-- SKILLS:START -->" "<!-- SKILLS:END -->" "$SKILLS_INDEX"
 rm "$SKILLS_INDEX"
