@@ -38,8 +38,8 @@ echo "| Artifact | Description |" >> "$SKILLS_INDEX"
 echo "|----------|-------------|" >> "$SKILLS_INDEX"
 
 while IFS= read -r -d '' file; do
-  name=$(awk '/^name:/{gsub(/^name:[[:space:]]*/,""); print; exit}' "$file")
-  desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); print; exit}' "$file")
+  name=$(awk '/^name:/{gsub(/^name:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
+  desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
   rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$(dirname "$file")" "$REPO_ROOT")
   echo "| [$name]($rel_path) | $desc |" >> "$SKILLS_INDEX"
 done < <(find "$REPO_ROOT" -not -path '*/.git/*' -name "SKILL.md" -print0 | sort -z)
@@ -54,7 +54,7 @@ echo "|------|-------------|" >> "$PROMPTS_INDEX"
 
 while IFS= read -r -d '' file; do
   name=$(basename "$file" .md)
-  desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); print; exit}' "$file")
+  desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
   rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$file" "$REPO_ROOT")
   echo "| [$name]($rel_path) | $desc |" >> "$PROMPTS_INDEX"
 done < <(find "$REPO_ROOT/prompts" -not -path '*/.git/*' -name "*.md" -print0 | sort -z)
