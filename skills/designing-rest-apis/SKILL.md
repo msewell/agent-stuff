@@ -1,6 +1,6 @@
 ---
 name: designing-rest-apis
-description: "Guides designing and reviewing RESTful APIs following industry best practices — resource modeling, URL structure, HTTP methods, status codes, error handling (RFC 9457), pagination, versioning, security, authentication, caching, idempotency, bulk operations, async patterns, file uploads, and OpenAPI documentation. Use when designing new REST API endpoints, reviewing existing API designs for issues, choosing between REST patterns (cursor vs offset pagination, PUT vs PATCH, polling vs webhooks), writing OpenAPI specs, or making API evolution and deprecation decisions."
+description: "Guides designing, reviewing, and governing RESTful APIs — resource modeling, URL structure, HTTP methods, status codes, error handling (RFC 9457), pagination, versioning, security, authentication, caching, idempotency, bulk operations, async patterns, file uploads, OpenAPI documentation, API-first process, and AI-agent consumers. Use when designing new REST API endpoints, reviewing existing API designs, adopting API-first development, running API design sessions, enforcing API contracts in CI/CD, governing an API program, choosing between REST patterns (cursor vs offset pagination, PUT vs PATCH, polling vs webhooks), writing OpenAPI specs, designing for AI-agent consumers (MCP), or making API evolution and deprecation decisions."
 ---
 
 # Designing REST APIs
@@ -16,6 +16,18 @@ description: "Guides designing and reviewing RESTful APIs following industry bes
 7. **Plan versioning.** Use URI path versioning (`/v1/`). Only bump for breaking changes. Support at least one prior version with 6–12 month migration window. Signal deprecation via `Deprecation` and `Sunset` headers.
 8. **Address cross-cutting concerns.** Add rate limiting headers on every response. Use `Cache-Control` + ETags. Require idempotency keys for POST endpoints with side effects. Use `Authorization: Bearer` for auth.
 9. **Write the OpenAPI spec first** (design-first, not code-first). Use OpenAPI 3.1. Document every endpoint, every status code, every error type. Lint with Spectral or Redocly CLI.
+
+## Workflow: Adopting API-first process
+
+1. **Identify consumers.** List every team and system that will call the API before designing anything. If consumers aren't in the room, the API will be optimised for the producer.
+2. **Run a design session.** Start from the consumer's workflow, not the data model. Sketch endpoints and payloads informally before writing YAML. Name disagreements immediately — they're cheap to resolve now, expensive later.
+3. **Write the spec first.** Formalize the agreed design as an OpenAPI spec. Review it via PR with automated linting, consumer sign-off, and breaking change detection. Change the spec first, then the implementation — never the reverse.
+4. **Generate mocks immediately.** Unblock consumers with a mock server (Prism, Postman Mock Server) the moment the spec is agreed. Consumers build against the mock while the backend builds against the same spec.
+5. **Enforce the contract in CI/CD.** Lint specs on every PR. Detect breaking changes before merge. Validate implementation responses against the spec. Run consumer contract tests. Automate all of this — process discipline alone erodes under deadline pressure.
+6. **Govern lightly.** Maintain an API catalog tracking each API's lifecycle stage (draft → active → deprecated → retired). Signal deprecation via `Deprecation` and `Sunset` headers with a migration guide and sunset date.
+7. **Design for AI-agent consumers.** Write `description` fields as if explaining to a non-expert. Provide `example` values for every field. Use clear `operationId` values. A complete, well-described OpenAPI spec is nearly MCP-compatible for free.
+
+For detailed guidance: references 09–11.
 
 ## Workflow: Reviewing an existing API
 
@@ -53,7 +65,9 @@ Consult these for detailed guidance, examples, and tradeoff analysis:
 - [06 — File uploads & binary data](references/06-file-uploads-and-binary-data.md)
 - [07 — Security (OWASP Top 10), Authentication & authorization, Rate limiting](references/07-security-auth-and-rate-limiting.md)
 - [08 — Caching (ETags, Cache-Control), Idempotency, Content negotiation](references/08-caching-idempotency-and-content-negotiation.md)
-- [09 — HATEOAS, OpenAPI documentation, Observability, Testing, Evolution & deprecation](references/09-hateoas-openapi-observability-testing-evolution.md)
+- [09 — HATEOAS, OpenAPI documentation, Observability, Testing](references/09-openapi-observability-and-testing.md)
+- [10 — Evolution & deprecation, API-first process, Governance](references/10-evolution-api-first-process-and-governance.md)
+- [11 — AI-agent consumers (MCP), Organizational adoption, Tooling reference](references/11-ai-consumers-adoption-and-tooling.md)
 
 To find guidance on a specific topic, use:
 ```bash

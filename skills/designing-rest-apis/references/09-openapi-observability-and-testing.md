@@ -74,14 +74,44 @@ incompatibilities. It is the current standard.
 
 ### Spec hygiene
 
-1. **Validate and lint your spec** — use tools like Spectral, Redocly CLI, or
-   Vacuum to enforce naming conventions and completeness.
+1. **Validate and lint your spec** — use Spectral, Redocly CLI, or Vacuum to enforce
+   naming conventions and completeness.
 2. **Split large specs** — use `$ref` to break out schemas, paths, and parameters
    into separate files organized by resource.
 3. **Keep examples realistic** — auto-generated placeholder values like `"string"`
    or `0` help no one. Use meaningful example data.
 4. **Version the spec** — store the OpenAPI YAML in source control alongside the
    code. Review spec changes in pull requests.
+
+### Spec review as pull request
+
+The OpenAPI spec is reviewed via pull request, just like code:
+
+- **Automated linting** runs first (Spectral, Redocly CLI). Violations block the PR.
+- **Consumer review** — at least one engineer from each consuming team reviews and
+  explicitly signs off. Silence is not approval.
+- **Security review** — for endpoints handling sensitive data or authentication, a
+  security reviewer checks the spec for common misconfigurations.
+- **Breaking change detection** — if this is a change to an existing API, a diff
+  tool (oasdiff, Optic) checks for backward-incompatible changes. Breaking changes
+  require a version bump and a migration plan.
+
+The rule: **change the spec first, then the implementation** — never the reverse.
+
+### API style guide
+
+Maintain an organizational style guide that codifies conventions and enforce it via
+automated linting, not human memory:
+
+- Naming conventions (plural nouns for collections, consistent casing)
+- Pagination approach (cursor-based vs. offset)
+- Standard query parameter names (`filter`, `sort`, `fields`)
+- Versioning scheme (URL path vs. header)
+- Error response format (RFC 9457, stable `type` URIs)
+- Authentication patterns
+
+A style guide prevents every API built by a different team feeling like a different
+product.
 
 ---
 
@@ -140,6 +170,32 @@ Keep health checks lightweight — they should not trigger expensive database qu
 
 ## 22. Testing Strategies
 
+### CI/CD Enforcement
+
+Automate contract enforcement — process discipline alone is fragile under deadline
+pressure.
+
+**On every PR that touches an API spec:**
+- **Lint the spec.** Fail the build if it violates the style guide (Spectral,
+  Redocly CLI).
+- **Detect breaking changes.** Diff against the current spec (oasdiff, Optic).
+  Breaking changes must require a version bump — never sneak in silently.
+
+**On every PR that touches API implementation code:**
+- **Schema conformance validation.** Run integration tests that validate actual
+  responses against the OpenAPI spec (Schemathesis, Dredd, Specmatic). If the
+  implementation returns a field not in the spec, or omits a required field, the
+  build fails.
+
+**On every PR (spec or implementation):**
+- **Consumer contract tests.** Run consumer contracts against the provider (Pact,
+  Spring Cloud Contract). A change that breaks a consumer's declared contract fails
+  the build.
+
+**The goal:** no PR should be able to merge that introduces a spec violating the
+style guide, makes a breaking change without a version bump, ships an implementation
+that doesn't match the spec, or breaks a consumer's declared contract.
+
 ### Contract testing with Pact
 
 Contract testing verifies that a consumer and provider can communicate correctly by
@@ -155,26 +211,20 @@ brittle end-to-end integration tests.
 3. **Contract broker mediates:** A broker (e.g., PactFlow) stores contracts, manages
    versions, and reports verification results.
 
-```
-# Consumer pact example (conceptual):
-# "When I GET /users/42, I expect a 200 with { id, name, email }"
-
-# Provider verification:
-# Replay GET /users/42 against the real provider → confirm 200 with matching schema
-```
-
-**Why contract testing over integration testing:** Integration tests require all
-services running simultaneously, are slow, flaky, and expensive to maintain. Contract
-tests run in isolation, are fast, and catch the exact class of bugs that matter —
-incompatible interface changes between services.
+**When to use:**
+- **Provider-side spec conformance** (Schemathesis, Dredd) — always. Every API.
+  Non-negotiable baseline. Catches the most common failure: the backend quietly
+  diverging from the spec.
+- **Consumer-driven CDC (Pact)** — when the API has multiple consumers across team
+  boundaries. The overhead of maintaining pacts is worth it when a breaking change
+  would silently break another team's product. CDC flips the power dynamic: consumers
+  explicitly declare their dependencies; the backend must satisfy them.
 
 ### OpenAPI spec conformance
 
 Validate that your running API actually conforms to its published OpenAPI
-specification. Spec drift — where the implementation diverges from the documentation —
-is one of the most common sources of integration bugs.
-
-**Tools and approach:**
+specification. Spec drift — where the implementation diverges from the documentation
+— is one of the most common sources of integration bugs.
 
 | Tool | What it does |
 |------|-------------|
@@ -183,9 +233,8 @@ is one of the most common sources of integration bugs.
 | **Prism** (Stoplight) | Mock server + validation proxy — intercepts live traffic and flags spec violations |
 | **Schemathesis** | Generates test cases from the OpenAPI spec and fires them at the live API, finding crashes and spec violations |
 
-**Integrate into CI:** Run spec linting and conformance checks on every pull request.
-Treat spec violations as build failures — if the spec says a field is required and
-the implementation returns it as optional, that's a bug.
+Integrate into CI: run spec linting and conformance checks on every pull request.
+Treat spec violations as build failures.
 
 ### Backward compatibility testing
 
@@ -205,9 +254,9 @@ Automated checks that prevent new versions from breaking existing consumers.
 
 **How to automate:**
 
-1. **OpenAPI diff tools** — tools like `oasdiff` or `openapi-diff` compare two
-   versions of an OpenAPI spec and report breaking changes. Integrate into CI to
-   block PRs that introduce breaking changes without a version bump.
+1. **OpenAPI diff tools** — `oasdiff` or `openapi-diff` compare two versions of an
+   OpenAPI spec and report breaking changes. Block PRs that introduce breaking
+   changes without a version bump.
 2. **Pact's "can-i-deploy"** — queries the contract broker to determine whether a
    provider version is compatible with all deployed consumer versions. Gate your
    deployment pipeline on this check.
@@ -219,8 +268,8 @@ Automated checks that prevent new versions from breaking existing consumers.
 Combines consumer-driven Pact contracts with provider-side OpenAPI specs. The consumer
 publishes a pact; the provider publishes its OpenAPI spec. A broker (PactFlow)
 cross-references them to verify compatibility *without the provider needing to run
-Pact verification tests*. This is especially useful when the provider team already
-has comprehensive OpenAPI coverage and doesn't want to maintain a separate Pact
+Pact verification tests*. Especially useful when the provider team already has
+comprehensive OpenAPI coverage and doesn't want to maintain a separate Pact
 verification suite.
 
 ### Best practices
@@ -232,45 +281,6 @@ verification suite.
 | Use contract tests for inter-service boundaries | Faster and more reliable than integration tests |
 | Keep a "compatibility test suite" of golden examples | Verifies real payloads from prior versions still work |
 | Gate deployments on contract verification | "Can I deploy?" should be answered by tooling, not hope |
-
----
-
-## 23. Evolution & Deprecation
-
-### Non-breaking changes (safe to make without a new version)
-
-- Adding a new optional field to a response
-- Adding a new endpoint
-- Adding a new optional query parameter
-- Adding a new enum value (if clients handle unknown values gracefully)
-- Relaxing a constraint (e.g., increasing a max length)
-
-### Breaking changes (require a new version)
-
-- Removing or renaming a field
-- Changing a field's type
-- Making a previously optional field required
-- Changing the URL structure of an existing endpoint
-- Altering the semantic behavior of an existing endpoint
-
-### Deprecation lifecycle
-
-1. **Announce** — add `Deprecation` and `Sunset` headers; update documentation and
-   changelogs.
-2. **Monitor** — track usage of deprecated endpoints. Reach out to high-usage
-   consumers directly.
-3. **Provide migration guides** — document exactly what changed and how to update
-   client code.
-4. **Enforce** — after the sunset date, return `410 Gone` with a body pointing to
-   the successor.
-
-### Robustness principle
-
-> *Be conservative in what you send, be liberal in what you accept.* — Postel's Law
-
-Design clients to ignore unknown fields. Design servers to accept optional fields
-being absent. This principle is the single most important factor in making APIs
-evolvable without breakage.
 
 ---
 
