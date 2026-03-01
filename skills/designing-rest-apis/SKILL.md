@@ -19,7 +19,7 @@ description: "Guides designing, reviewing, and governing RESTful APIs — resour
 
 ## Workflow: Adopting API-first process
 
-1. **Identify consumers.** List every team and system that will call the API before designing anything. If consumers aren't in the room, the API will be optimised for the producer.
+1. **Identify consumers.** List every team and system that will call the API before designing anything. If consumers aren't in the room, the API will be optimized for the producer.
 2. **Run a design session.** Start from the consumer's workflow, not the data model. Sketch endpoints and payloads informally before writing YAML. Name disagreements immediately — they're cheap to resolve now, expensive later.
 3. **Write the spec first.** Formalize the agreed design as an OpenAPI spec. Review it via PR with automated linting, consumer sign-off, and breaking change detection. Change the spec first, then the implementation — never the reverse.
 4. **Generate mocks immediately.** Unblock consumers with a mock server (Prism, Postman Mock Server) the moment the spec is agreed. Consumers build against the mock while the backend builds against the same spec.
@@ -69,7 +69,4 @@ Consult these for detailed guidance, examples, and tradeoff analysis:
 - [10 — Evolution & deprecation, API-first process, Governance](references/10-evolution-api-first-process-and-governance.md)
 - [11 — AI-agent consumers (MCP), Organizational adoption, Tooling reference](references/11-ai-consumers-adoption-and-tooling.md)
 
-To find guidance on a specific topic, use:
-```bash
-grep -i "your_topic" references/*.md
-```
+

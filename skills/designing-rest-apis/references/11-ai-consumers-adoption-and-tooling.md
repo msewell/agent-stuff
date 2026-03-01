@@ -59,14 +59,14 @@ Use a whiteboard or shared doc for the design session; the YAML is the formaliza
 afterward.
 
 **"We tried it and nobody followed the process."** Process without enforcement is a
-suggestion. Automate the guardrails (§22 CI/CD Enforcement). If CI doesn't block
+suggestion. Automate the guardrails (CI/CD Enforcement — see `09-openapi-observability-and-testing.md` §22). If CI doesn't block
 non-conforming implementations, the process will erode the first time a deadline is
 tight.
 
 ### Starting Small
 
 1. Pick one **new** API (not a rewrite) as a pilot.
-2. Run the collaboration process (§24) with both producer and consumer teams.
+2. Run the collaboration process (§24 in `10-evolution-api-first-process-and-governance.md`) with both producer and consumer teams.
 3. Set up CI enforcement — linting and schema validation — for that one API.
 4. Run a retrospective. Expand incorporating lessons learned.
 
@@ -79,8 +79,8 @@ development, less rework — so adoption spreads because teams *want* to work th
 
 Tools support the process but don't replace it. Tools already described in earlier
 sections (Spectral, Redocly CLI, oasdiff, Optic, Schemathesis, Dredd, Specmatic,
-Pact, Spring Cloud Contract, Prism — see §§20 and 22) are listed here for
-completeness alongside tools not mentioned elsewhere.
+Pact, Spring Cloud Contract, Prism — see `09-openapi-observability-and-testing.md`
+§§20 and 22) are listed here for completeness alongside tools not mentioned elsewhere.
 
 ### Spec Authoring & Design
 

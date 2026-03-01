@@ -106,8 +106,9 @@ of the other.
 5. Time-box it: 1–2 hours per API surface area. Aim for "good enough to start," not
    "perfect."
 
-The output is a draft OpenAPI spec that goes through the review process (§20) before
-becoming the governing contract.
+The output is a draft OpenAPI spec that goes through the spec-review-as-pull-request
+process (see `09-openapi-observability-and-testing.md` §20) before becoming the
+governing contract.
 
 ### Mock-Driven Parallel Development
 
@@ -139,7 +140,8 @@ tickets, and post-integration retrospectives. Use usage data to drive evolution.
 
 Consumer-driven contract testing (CDC) formalizes this feedback loop: consumers write
 contracts describing their expectations; a provider change that breaks any consumer
-contract fails the build before it ships. See §22 for implementation details.
+contract fails the build before it ships. See `09-openapi-observability-and-testing.md`
+§22 for implementation details.
 
 ---
 
