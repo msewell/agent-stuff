@@ -53,7 +53,7 @@ Use `fold` over `reduce` when an initial value is needed or the result type diff
 Follow §18 (Testing).  
 - Test pure core with direct assertions — no mocks needed.
 - Test sealed branches exhaustively.
-- Use Kotest `forAll` / `Arb` for property-based testing of validators and transformations.
+- Use Kotest `checkAll` with `Arb` for property-based testing of validators and transformations; prefer `checkAll` over `forAll` for matcher-based assertions and clearer failures.
 - Reserve integration tests (MockK, Testcontainers) for the imperative shell.
 
 ## References
