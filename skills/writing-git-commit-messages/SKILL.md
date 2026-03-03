@@ -88,4 +88,4 @@ supported version is now Node 18.
 - **Fundamental rules & message anatomy**: [references/01-rules-and-format.md](references/01-rules-and-format.md)
 - **Conventional Commits spec, types, alternatives & anti-patterns**: [references/02-conventional-commits-and-alternatives.md](references/02-conventional-commits-and-alternatives.md)
 - **Enforcement tooling, AI-assisted messages & templates**: [references/03-tooling-and-automation.md](references/03-tooling-and-automation.md)
-- **Signed commits, DCO & quick reference**: [references/04-signing-and-sources.md](references/04-signing-and-sources.md)
+- **Signed commits, DCO & quick reference**: [references/04-signing-and-dco.md](references/04-signing-and-dco.md)
