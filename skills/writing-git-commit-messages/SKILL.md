@@ -21,7 +21,8 @@ description: "Writes and reviews git commit messages following Conventional Comm
    - Imperative mood ("Add", not "Added")
    - ≤50 characters total
    - No trailing period
-   - Lowercase description after the colon
+   - **Lowercase** description after the colon (Conventional Commits standard);
+     if the project omits a type prefix, capitalize the first word instead
 6. **Write the body** (for non-trivial changes). Explain *what* changed and
    *why* — not *how*. Wrap at 72 characters.
 7. **Add footers** as needed: `Fixes #123`, `BREAKING CHANGE: ...`,
@@ -87,4 +88,4 @@ supported version is now Node 18.
 - **Fundamental rules & message anatomy**: [references/01-rules-and-format.md](references/01-rules-and-format.md)
 - **Conventional Commits spec, types, alternatives & anti-patterns**: [references/02-conventional-commits-and-alternatives.md](references/02-conventional-commits-and-alternatives.md)
 - **Enforcement tooling, AI-assisted messages & templates**: [references/03-tooling-and-automation.md](references/03-tooling-and-automation.md)
-- **Signed commits, DCO, quick reference & sources**: [references/04-signing-and-sources.md](references/04-signing-and-sources.md)
+- **Signed commits, DCO & quick reference**: [references/04-signing-and-sources.md](references/04-signing-and-sources.md)

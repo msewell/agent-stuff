@@ -1,4 +1,4 @@
-# Signed Commits, DCO, and Sources
+# Signed Commits and DCO
 
 ## Table of Contents
 
@@ -6,7 +6,6 @@
 - [Developer Certificate of Origin (DCO)](#developer-certificate-of-origin-dco)
 - [When to Use What](#when-to-use-what)
 - [Quick Reference](#quick-reference)
-- [Sources](#sources)
 
 ---
 
@@ -160,31 +159,4 @@ the commit author.
 - [ ] Commit is atomic — one logical change per commit
 - [ ] No secrets in the message
 
----
 
-## Sources
-
-- [How to Write a Git Commit Message — Chris Beams](https://cbea.ms/git-commit/)
-- [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
-- [Angular Contributing Guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md)
-- [8 Git Commit Message Best Practices for 2025 — PullNotifier](https://blog.pullnotifier.com/blog/8-git-commit-message-best-practices-for-2025)
-- [Git Commit Message Best Practices — Graphite](https://graphite.com/guides/git-commit-message-best-practices)
-- [Git Commit Messages: Best Practices & Guidelines — Initial Commit](https://initialcommit.com/blog/git-commit-messages-best-practices)
-- [The Power of Commit Messages — LeanIX Engineering](https://engineering.leanix.net/blog/essence-of-git-commit-message/)
-- [Git Commit Message Anti-Patterns — AMC](https://amcaplan.ninja/blog/2016/12/26/git-commit-message-anti-patterns/)
-- ["and" as Anti-Pattern in Git Commit Subjects — Kosta Harlan](https://www.kostaharlan.net/posts/and-commit-message-anti-pattern/)
-- [Gitmoji](https://gitmoji.dev)
-- [commitlint](https://github.com/conventional-changelog/commitlint)
-- [Commitizen](https://github.com/commitizen/cz-cli)
-- [Husky](https://github.com/typicode/husky)
-- [semantic-release](https://github.com/semantic-release/semantic-release)
-- [GitHub Copilot Commit Message Generation — GitHub Docs](https://docs.github.com/en/copilot/responsible-use/copilot-commit-message-generation)
-- [Configuring Copilot for Better Commit Messages — Tim Deschryver](https://timdeschryver.dev/blog/gain-control-over-commit-messages-generated-by-github-copilot)
-- [Commit Message Template — Lisa Wolderiksen](https://gist.github.com/lisawolderiksen/a7b99d94c92c6671181611be1641c733)
-- [Conventional Commits Cheatsheet — qoomon](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13)
-- [About Commit Signature Verification — GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
-- [Signing Git Commits with GPG and SSH — Manuel Laggner](https://www.laggner.info/posts/sign-git-commits-with-gpg-ssh/)
-- [Git Commit Signing: Verifying Code Authenticity — Graphite](https://graphite.com/guides/git-commit-signing-code-authenticity)
-- [Developer Certificate of Origin — Linux Foundation](https://wiki.linuxfoundation.org/dco)
-- [DCO GitHub App](https://probot.github.io/apps/dco/)
-- [A Complete Guide to DCO for Open Source Developers — Second State](https://www.secondstate.io/articles/dco/)
