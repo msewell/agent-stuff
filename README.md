@@ -2,6 +2,17 @@
 
 A collection of reusable agent artifacts — skills, prompts, and more.
 
+## Table of Contents
+
+<!-- TOC:START -->
+- [Skills](#skills)
+  - [Installation](#installation)
+  - [Software Engineering](#software-engineering)
+  - [Writing & Communication](#writing--communication)
+  - [Agent Tooling](#agent-tooling)
+- [Prompts](#prompts)
+<!-- TOC:END -->
+
 ## Skills
 
 ### Installation

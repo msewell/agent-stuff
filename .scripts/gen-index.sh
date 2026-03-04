@@ -154,4 +154,67 @@ done < <(find "$REPO_ROOT/prompts" -not -path '*/.git/*' -name "*.md" -print0 | 
 replace_section "<!-- PROMPTS:START -->" "<!-- PROMPTS:END -->" "$PROMPTS_INDEX"
 rm "$PROMPTS_INDEX"
 
+# --- Table of Contents ---
+# Generated last so it reflects the fully-updated README.
+TOC_INDEX="$(mktemp)"
+
+python3 - "$README" "$TOC_INDEX" <<'EOF'
+import sys
+import re
+
+readme_path, output_path = sys.argv[1], sys.argv[2]
+
+with open(readme_path) as f:
+    lines = f.readlines()
+
+def heading_anchor(text):
+    """Convert a heading to a GitHub-style anchor slug.
+
+    GitHub's algorithm:
+      1. Lowercase
+      2. Remove anything that is not a word char, space, or hyphen
+      3. Replace each space with a hyphen (no collapsing — two spaces → --)
+    """
+    text = text.lower()
+    text = re.sub(r'[^\w\s-]', '', text)  # remove punctuation except hyphens
+    text = text.replace(' ', '-')          # each space → hyphen (no collapse)
+    return text
+
+toc_lines = []
+in_toc_block = False
+
+for line in lines:
+    stripped = line.rstrip()
+
+    # Skip everything inside the TOC block itself to avoid self-reference
+    if '<!-- TOC:START -->' in stripped:
+        in_toc_block = True
+        continue
+    if '<!-- TOC:END -->' in stripped:
+        in_toc_block = False
+        continue
+    if in_toc_block:
+        continue
+
+    m = re.match(r'^(#{2,3})\s+(.+)', stripped)
+    if not m:
+        continue
+
+    hashes, title = m.group(1), m.group(2).strip()
+
+    # Skip the TOC heading itself to avoid self-reference
+    if title == 'Table of Contents':
+        continue
+    depth = len(hashes)  # 2 → top-level, 3 → one indent
+    indent = '  ' * (depth - 2)
+    anchor = heading_anchor(title)
+    toc_lines.append(f"{indent}- [{title}](#{anchor})")
+
+with open(output_path, 'w') as f:
+    f.write('\n'.join(toc_lines) + '\n')
+EOF
+
+replace_section "<!-- TOC:START -->" "<!-- TOC:END -->" "$TOC_INDEX"
+rm "$TOC_INDEX"
+
 echo "Index updated in README.md"
