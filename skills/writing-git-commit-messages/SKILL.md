@@ -1,6 +1,7 @@
 ---
 name: writing-git-commit-messages
 description: "Writes and reviews git commit messages following Conventional Commits and the seven fundamental rules. Produces well-formatted, atomic, automation-friendly commit messages. Use when writing a commit message, reviewing commit messages, committing code changes, or when the user mentions git commits, commit messages, or changelogs."
+category: Software Engineering
 ---
 
 # Writing Git Commit Messages

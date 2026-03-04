@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Regenerates the index tables in README.md from artifact frontmatter.
 # Scans for SKILL.md files and prompts/*.md files.
+#
+# Rules enforced for skills:
+#   - Every SKILL.md must have a `category:` field (hard error)
+#   - No category may contain more than 10 skills (hard error)
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -34,15 +38,103 @@ EOF
 
 # --- Skills ---
 SKILLS_INDEX="$(mktemp)"
-echo "| Artifact | Description |" >> "$SKILLS_INDEX"
-echo "|----------|-------------|" >> "$SKILLS_INDEX"
 
-while IFS= read -r -d '' file; do
-  name=$(awk '/^name:/{gsub(/^name:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
-  desc=$(awk '/^description:/{gsub(/^description:[[:space:]]*/,""); gsub(/^"/,""); gsub(/"$/,""); print; exit}' "$file")
-  rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$(dirname "$file")" "$REPO_ROOT")
-  echo "| [$name]($rel_path) | $desc |" >> "$SKILLS_INDEX"
-done < <(find "$REPO_ROOT" -not -path '*/.git/*' -not -path '*/.archive/*' -name "SKILL.md" -print0 | sort -z)
+python3 - "$REPO_ROOT" "$SKILLS_INDEX" <<'EOF'
+import sys
+import os
+import subprocess
+from collections import defaultdict
+
+repo_root, output_path = sys.argv[1], sys.argv[2]
+
+# Collect all SKILL.md files
+skill_files = []
+for dirpath, dirnames, filenames in os.walk(repo_root):
+    # Skip .git and .archive
+    dirnames[:] = [d for d in dirnames if d not in ('.git', '.archive')]
+    if 'SKILL.md' in filenames:
+        skill_files.append(os.path.join(dirpath, 'SKILL.md'))
+skill_files.sort()
+
+errors = []
+categories = defaultdict(list)  # category -> list of (name, rel_path, desc)
+
+for path in skill_files:
+    with open(path) as f:
+        content = f.read()
+
+    # Parse frontmatter (between first two ---)
+    lines = content.split('\n')
+    fm = {}
+    in_fm = False
+    fm_done = False
+    dash_count = 0
+    for line in lines:
+        if line.strip() == '---':
+            dash_count += 1
+            if dash_count == 1:
+                in_fm = True
+            elif dash_count == 2:
+                fm_done = True
+                break
+        elif in_fm:
+            if ':' in line:
+                key, _, val = line.partition(':')
+                fm[key.strip()] = val.strip().strip('"')
+
+    name = fm.get('name', '')
+    desc = fm.get('description', '')
+    category = fm.get('category', '')
+
+    rel_dir = os.path.relpath(os.path.dirname(path), repo_root)
+
+    if not category:
+        errors.append(f"ERROR: missing 'category' field in {path}")
+        continue
+
+    categories[category].append((name, rel_dir, desc))
+
+# Check category size limit
+MAX_PER_CATEGORY = 10
+for cat, skills in categories.items():
+    if len(skills) > MAX_PER_CATEGORY:
+        errors.append(
+            f"ERROR: category '{cat}' has {len(skills)} skills (max {MAX_PER_CATEGORY}): "
+            + ", ".join(s[0] for s in skills)
+        )
+
+if errors:
+    for e in errors:
+        print(e, file=sys.stderr)
+    sys.exit(1)
+
+# Defined display order for categories
+CATEGORY_ORDER = ["Software Engineering", "Writing & Communication", "Agent Tooling"]
+
+ordered = []
+seen = set()
+for cat in CATEGORY_ORDER:
+    if cat in categories:
+        ordered.append(cat)
+        seen.add(cat)
+# Append any unknown categories alphabetically (future-proofing)
+for cat in sorted(categories):
+    if cat not in seen:
+        ordered.append(cat)
+
+lines_out = []
+for cat in ordered:
+    skills = sorted(categories[cat], key=lambda x: x[0])
+    lines_out.append(f"### {cat}\n")
+    lines_out.append("| Artifact | Description |")
+    lines_out.append("|----------|-------------|")
+    for name, rel_path, desc in skills:
+        lines_out.append(f"| [{name}]({rel_path}) | {desc} |")
+    lines_out.append("")  # blank line between sections
+
+with open(output_path, 'w') as f:
+    f.write('\n'.join(lines_out))
+EOF
 
 replace_section "<!-- SKILLS:START -->" "<!-- SKILLS:END -->" "$SKILLS_INDEX"
 rm "$SKILLS_INDEX"

@@ -1,6 +1,7 @@
 ---
 name: reducing-coupling
 description: Analyzes a codebase scope for coupling issues, diagnoses coupling types using the Connascence framework, and proposes a comprehensive refactoring plan with concrete code changes. Use when asked to find coupling, reduce dependencies, decouple modules, or improve modularity in a codebase.
+category: Software Engineering
 ---
 
 # Reducing Coupling

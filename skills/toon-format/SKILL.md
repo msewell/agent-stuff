@@ -1,6 +1,7 @@
 ---
 name: toon-format
 description: Instructs an LLM agent when and how to use TOON (Token-Oriented Object Notation) for encoding and generating structured data. Use when injecting structured data into context, encoding tool results, preparing RAG documents, producing structured output, or advising on TOON integration.
+category: Agent Tooling
 ---
 
 # TOON Format

@@ -1,6 +1,7 @@
 ---
 name: kotlin-functional-programming
 description: Guides writing idiomatic, functional-style Kotlin code using built-in language features. Use when asked to write, review, or refactor Kotlin code for immutability, pure functions, sealed types, error handling, collections, coroutines, or functional architecture patterns.
+category: Software Engineering
 ---
 
 # Kotlin Functional Programming

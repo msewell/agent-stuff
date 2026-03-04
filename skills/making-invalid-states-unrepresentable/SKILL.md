@@ -1,6 +1,7 @@
 ---
 name: making-invalid-states-unrepresentable
 description: Analyzes existing code and guides new type design to make invalid states unrepresentable using type system techniques such as sum types, newtypes, typestate, branded types, and parse-don't-validate. Use when reviewing code for invalid-state bugs, refactoring types to eliminate impossible states, designing domain models, or applying compile-time correctness patterns. Language-agnostic.
+category: Software Engineering
 ---
 
 # Making Invalid States Unrepresentable

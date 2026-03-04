@@ -1,6 +1,7 @@
 ---
 name: property-based-testing-with-kotest
 description: "Writes property-based tests using Kotest's kotest-property module. Identifies testable properties, designs generators, and configures PBT for Kotlin/JVM projects. Use when writing property-based tests, creating custom Arb generators, choosing property patterns (roundtrip, invariant, idempotence, oracle), debugging shrunk counterexamples, or integrating PBT into a Kotlin test suite alongside example-based tests."
+category: Software Engineering
 ---
 
 # Property-Based Testing with Kotest

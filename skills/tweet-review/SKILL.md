@@ -1,6 +1,7 @@
 ---
 name: tweet-review
 description: Reviews draft tweets and provides engagement optimization recommendations with improved alternatives. Use when the user has a draft tweet or thread and wants feedback on how to maximize reach, replies, and engagement on Twitter/X. Primarily niche-agnostic with additional guidance for tech Twitter.
+category: Writing & Communication
 ---
 
 # Tweet Review
