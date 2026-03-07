@@ -28,6 +28,18 @@ category: Software Engineering
    *why* — not *how*. Wrap at 72 characters.
 7. **Add footers** as needed: `Fixes #123`, `BREAKING CHANGE: ...`,
    `Co-authored-by: ...`.
+8. **When executing `git commit` from the shell, use this method only**
+   (to guarantee real newlines and avoid literal `\\n` in history):
+
+   ```bash
+   git commit -F- <<'EOF'
+   <type>(<scope>): <description>
+
+   <body wrapped at 72 chars>
+
+   <optional footer(s)>
+   EOF
+   ```
 
 ## Format
 
