@@ -1,7 +1,7 @@
 ---
 name: tdd-with-llm-agents
 description: "Enforces strict red/green/refactor TDD discipline when writing code. Guides the agent through one-test-at-a-time cycles, prevents test subversion, and ensures minimal implementation. Use when writing code with TDD, doing test-driven development, implementing features test-first, or when the user mentions red/green TDD, failing tests first, or test-driven workflow."
-category: "Agent Tooling"
+category: "Software Engineering"
 ---
 
 # Test-Driven Development with LLM Agents
