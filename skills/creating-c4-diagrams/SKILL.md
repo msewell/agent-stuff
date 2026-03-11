@@ -1,7 +1,7 @@
 ---
 name: creating-c4-diagrams
 description: "Creates, reviews, and interprets C4 software architecture diagrams (System Context, Container, Component, Dynamic, Deployment). Produces Structurizr DSL or Mermaid diagram code following C4 model best practices. Use when creating architecture diagrams for a system, reviewing existing C4 diagrams for correctness and anti-patterns, generating Structurizr DSL workspaces, producing Mermaid C4 diagrams for READMEs, or using C4 diagrams as context for design decisions, code generation, risk analysis, or onboarding."
-category: Software Engineering
+category: System Architecture
 ---
 
 # Creating C4 Diagrams
