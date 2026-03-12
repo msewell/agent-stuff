@@ -4,6 +4,7 @@
 #
 # Rules enforced for skills:
 #   - Every SKILL.md must have a `category:` field (hard error)
+#   - Every category must contain at least 2 skills (hard error)
 #   - No category may contain more than 10 skills (hard error)
 set -euo pipefail
 
@@ -94,9 +95,15 @@ for path in skill_files:
 
     categories[category].append((name, rel_dir, desc))
 
-# Check category size limit
+# Check category size limits
+MIN_PER_CATEGORY = 2
 MAX_PER_CATEGORY = 10
 for cat, skills in categories.items():
+    if len(skills) < MIN_PER_CATEGORY:
+        errors.append(
+            f"ERROR: category '{cat}' has {len(skills)} skill(s) (min {MIN_PER_CATEGORY}): "
+            + ", ".join(s[0] for s in skills)
+        )
     if len(skills) > MAX_PER_CATEGORY:
         errors.append(
             f"ERROR: category '{cat}' has {len(skills)} skills (max {MAX_PER_CATEGORY}): "
