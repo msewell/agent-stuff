@@ -47,7 +47,7 @@ Load additional files based on the architectural context you discover.
 Read the files within the target scope. For each file and across files, look for:
 
 ### Structural Indicators
-- Direct instantiation of concrete dependencies (no DI).
+- Direct instantiation of volatile or cross-boundary dependencies (framework, network, persistence) that blocks replacement, isolation, or focused testing.
 - Imports/references that cross module or layer boundaries.
 - Shared mutable state or global variables.
 - God classes/modules with many responsibilities.
@@ -120,6 +120,7 @@ Adapter, ACL, Event-Driven, etc.)>
 - Propose incremental refactorings — each should be independently shippable.
 - Prefer converting strong connascence to weaker forms over eliminating coupling entirely.
 - Flag when decoupling would be premature (components always change together, abstraction not yet justified).
+- Avoid abstraction-for-abstraction's-sake: keep concrete implementations in cohesive, single-consumer internals unless there is clear boundary or volatility pressure.
 - Suggest tests to add before or alongside each refactoring to preserve behavior.
 - Keep the plan ordered by priority: highest-severity items first.
 

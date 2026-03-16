@@ -29,7 +29,7 @@ Treat slices as self-contained behaviors, not miniature layered architectures. S
 2. **Check for anti-patterns.** See [references/02-sharing-testing-and-evolution.md](references/02-sharing-testing-and-evolution.md) § Common Anti-Patterns. Key signals:
    - A `Common/` or `Shared/` junk drawer coupling unrelated features
    - One slice importing another slice's handler or internal types
-   - Repository interfaces, service abstractions, or mapper layers inside a single-consumer slice
+   - Premature repository interfaces, service abstractions, or mapper layers inside a stable single-consumer slice
    - Handlers exceeding ~200 lines without domain model extraction
    - A BFF layer accumulating business logic
 3. **Audit shared code.** Apply the three-tier framework. Check that feature-local sharing stays within its module and no premature abstractions exist (Rule of Three).
