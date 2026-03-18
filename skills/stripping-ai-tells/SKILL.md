@@ -10,6 +10,14 @@ category: Writing & Communication
 
 Apply these three passes in order to any text.
 
+Calibrate edit intensity from user intent. If the user asks for a light polish,
+make minimal edits. If they ask to fully humanize or aggressively strip AI
+language, rewrite more deeply while preserving meaning.
+
+If the user specifies explicit format constraints (template, required bullets,
+required headings, word count, or tone), keep those constraints and edit within
+them.
+
 ### Pass 1: Vocabulary Sweep
 
 Scan for flagged AI words and phrases. For each hit: delete if possible,
@@ -54,7 +62,8 @@ Check for and fix these patterns:
 - **Em-dash overuse** — more than 2–3 per 1000 words is suspicious. Replace
   with commas, colons, periods, or split into two sentences.
 - **Bullet lists as default** — convert to prose where argumentation or
-  narrative would serve better.
+  narrative would serve better, unless the user explicitly requires list
+  format.
 
 For detailed explanations and detection techniques, see
 [references/01-detection.md](references/01-detection.md).
@@ -68,7 +77,8 @@ For detailed explanations and detection techniques, see
   "landmark achievement" unless backed by evidence
 - Add specific examples, anecdotes, or concrete details where the text makes
   abstract claims
-- Take a position where the text currently just explains all sides neutrally
+- Preserve the author's intended stance — remove faux-neutral filler, but do
+  not invent stronger claims than the source supports
 - Check for rhythm uniformity — if three consecutive paragraphs have similar
   sentence lengths and cadence, vary them
 
@@ -92,6 +102,9 @@ neither contains a specific fact, name, number, or opinion — AI tone.
 - **Oxford commas are a style choice,** not an AI tell.
 - **Structured documents need structure.** Reports and proposals *should* have
   headers and sections — do not flatten them.
+- **Explicit format requirements come first.** If the user requires bullets,
+  section headers, or a specific template, preserve that structure and strip AI
+  tells inside it.
 - **Pattern density is the real signal.** Any single tell is meaningless. A
   piece with "delve," three tricolons, six em dashes, a throat-clearing intro,
   and uniform paragraph length is almost certainly AI-assisted. A piece with

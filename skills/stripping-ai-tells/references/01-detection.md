@@ -141,6 +141,9 @@ outline. Not every paragraph needs a subheader.
 ChatGPT defaults to bullet lists for everything. Bullets work for reference
 material; they fail for argumentation, storytelling, or persuasion.
 
+If the format is explicitly constrained (template, checklist, mandated
+bullets), keep lists and tighten the wording instead of flattening structure.
+
 ## Tonal Tells
 
 ### Sycophantic Openers
@@ -155,7 +158,8 @@ positivity.
 hedge per section is fine. When every claim is wrapped in cotton wool, the
 writing loses authority.
 
-**Fix:** Pick a position. State it. Add one real caveat, not three vague ones.
+**Fix:** State the claim at the confidence level the source supports. Keep one
+real caveat, not three vague ones.
 
 ### Importance Puffery
 
@@ -171,8 +175,11 @@ Travel-brochure copy applied to everything.
 
 ### Explanation Over Argument
 
-AI summarizes all perspectives neutrally rather than taking a position. The
-result is informative but inert — no thesis, no tension, no stakes.
+AI often summarizes all perspectives neutrally, even when the user asked for a
+clear recommendation or claim. The result is informative but inert.
+
+**Fix:** Match stance to intent. For persuasive tasks, make the thesis clear.
+For neutral summaries, keep neutrality but remove empty balancing language.
 
 ## Model-Specific Fingerprints
 

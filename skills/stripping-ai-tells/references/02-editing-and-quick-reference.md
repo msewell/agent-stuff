@@ -21,8 +21,8 @@ Real writing has texture: rhythm shifts, emphasis, the occasional rough edge.
 > transformation.
 
 What changed: throat-clearing intro deleted, seven flagged words removed, vague
-claims replaced with a concrete point, sentence count reduced, an actual
-position taken.
+claims replaced with a concrete point, sentence count reduced, and the stance
+clarified without overstating the claim.
 
 ---
 
