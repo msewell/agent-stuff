@@ -27,6 +27,10 @@ embed structured key-value pairs inside commit messages.
 in `git log`, use trailers. If the metadata is post-hoc, verbose, or
 machine-generated, use notes.
 
+When authoring commits, keep subject/body format aligned with the repository's
+commit convention; this skill focuses on metadata structure, storage, and
+querying.
+
 ## Workflows
 
 Identify the task, then follow the matching workflow.
@@ -41,11 +45,11 @@ Identify the task, then follow the matching workflow.
    git notes --ref=ai/attribution add -m \
      '{"schema":"ai-context/1.0","agent":{"tool":"claude-code","model":"claude-opus-4-6"}}' HEAD
    ```
-3. For **trailers** — add at commit time:
-   ```bash
-   git commit -m "Fix race condition" \
-     --trailer "AI-Agent: claude-code/claude-opus-4-6" \
-     --trailer "Constraint: Must remain backward-compatible"
+3. For **trailers** — include footer lines in the commit message during
+   commit creation (using your team's normal commit flow), for example:
+   ```text
+   AI-Agent: claude-code/claude-opus-4-6
+   Constraint: Must remain backward-compatible
    ```
 4. Verify: `git notes --ref=ai/attribution show HEAD` or
    `git log -1 --format='%(trailers)' HEAD`.
@@ -112,10 +116,10 @@ git notes --ref=ai/attribution append -m 'more' HEAD    # Append
 git notes --ref=ai/attribution show HEAD                 # Read
 git log --show-notes=ai/attribution                      # Show in log
 
-# Trailers
-git commit --trailer "AI-Agent: claude/opus"             # Add at commit
+# Trailers (read/query)
 git log -1 --format='%(trailers)' HEAD                   # Read all
 git log --format='%(trailers:key=Constraint)' -- file    # Filter by key
+git log -1 --format=%B HEAD | git interpret-trailers --parse  # Parse raw message
 
 # Sync
 git push origin 'refs/notes/*'                           # Push all notes

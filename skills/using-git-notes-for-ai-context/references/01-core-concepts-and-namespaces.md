@@ -53,7 +53,10 @@ git notes --ref=ai/attribution remove HEAD
 ## Git Trailers
 
 Trailers are structured key-value pairs at the end of commit messages,
-separated from the body by a blank line:
+separated from the body by a blank line.
+
+Use the repository's normal commit-message convention for subject/body format;
+this section focuses on trailer structure and parsing semantics.
 
 ```
 Fix race condition in session handler
@@ -69,9 +72,6 @@ AI-Agent: claude-code/claude-opus-4-6
 ```
 
 ```bash
-# Add trailers at commit time
-git commit -m "Fix race condition" --trailer "AI-Agent: claude-code/claude-opus-4-6"
-
 # Parse trailers from a commit
 git log -1 --format='%(trailers)' HEAD
 

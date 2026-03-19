@@ -13,7 +13,10 @@
 ## Decision Context: The Lore Protocol
 
 The [Lore protocol](https://arxiv.org/abs/2603.15566) (March 2026) encodes
-decision records directly in commit messages using git trailers:
+decision records directly in commit messages using git trailers.
+
+Use repository commit conventions for subject/body text; the example below is
+illustrative of trailer fields and decision content:
 
 ```
 Migrate session store from Redis to PostgreSQL
