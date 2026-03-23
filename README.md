@@ -84,7 +84,7 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | Name | Description |
 |------|-------------|
 | [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates |
-| [review-scope](prompts/review-scope.md) | Review changes within a scope for long-term maintainability |
+| [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities |
 <!-- PROMPTS:END -->
 
 <!-- Run `.scripts/gen-index.sh` to regenerate the index. -->

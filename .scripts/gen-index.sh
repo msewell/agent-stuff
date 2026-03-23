@@ -11,6 +11,9 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 README="$REPO_ROOT/README.md"
 
+# Validate prompts before regenerating index
+(cd "$REPO_ROOT/.scripts" && npm run --silent validate-prompts) || { echo "Prompt validation failed — index not updated." >&2; exit 1; }
+
 replace_section() {
   local start_marker="$1"
   local end_marker="$2"

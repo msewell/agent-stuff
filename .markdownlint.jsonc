@@ -1,0 +1,6 @@
+{
+  // Disable rules that conflict with prompt template conventions
+  "MD013": false,  // line length — prompts are prose, not code
+  "MD033": false,  // inline HTML — we use <!-- comments --> for attribution
+  "MD041": false   // first line should be heading — frontmatter comes first
+}
