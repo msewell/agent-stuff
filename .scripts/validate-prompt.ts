@@ -2,17 +2,11 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
 import yaml from "js-yaml";
 import _Ajv from "ajv";
+import { printDiagnostics, type Diagnostic } from "./validation-common.js";
+
 const Ajv = _Ajv as unknown as typeof _Ajv.default;
 
 // ── Types ──────────────────────────────────────────────────────────────────
-
-interface Diagnostic {
-  file: string;
-  check: string;
-  severity: "error" | "warning";
-  message: string;
-  line?: number;
-}
 
 interface Frontmatter {
   description?: string;
@@ -216,18 +210,5 @@ for (const file of files) {
 
 // ── Output ─────────────────────────────────────────────────────────────────
 
-const errors = allDiagnostics.filter((d) => d.severity === "error");
-const warnings = allDiagnostics.filter((d) => d.severity === "warning");
-
-for (const d of allDiagnostics) {
-  const loc = d.line ? `:${d.line}` : "";
-  const tag = d.severity === "error" ? "\x1b[31mERR\x1b[0m" : "\x1b[33mWARN\x1b[0m";
-  console.log(`${tag}  ${d.file}${loc}  [${d.check}] ${d.message}`);
-}
-
-if (allDiagnostics.length === 0) {
-  console.log(`\x1b[32m✓\x1b[0m  ${files.length} file(s) passed all checks.`);
-}
-
-console.log(`\n${errors.length} error(s), ${warnings.length} warning(s)`);
-process.exit(errors.length > 0 ? 1 : 0);
+const { errors } = printDiagnostics(allDiagnostics, `${files.length} file(s) passed all checks.`);
+process.exit(errors > 0 ? 1 : 0);

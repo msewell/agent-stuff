@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate-prompts": "tsx validate-prompt.ts ../prompts/ && markdownlint-cli2 '../prompts/*.md' --config ../.markdownlint.jsonc"
+    "validate-prompts": "tsx validate-prompt.ts ../prompts/ && markdownlint-cli2 '../prompts/*.md' --config ../.markdownlint.jsonc",
+    "validate-skill": "tsx validate-skill.ts",
+    "validate-guide": "tsx validate-guide.ts",
+    "validate-staged": "tsx validate-staged.ts"
   },
   "devDependencies": {
     "@types/node": "*",
