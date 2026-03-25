@@ -84,6 +84,7 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 <!-- PROMPTS:START -->
 | Name | Description |
 |------|-------------|
+| [codex-exec-plan](prompts/codex-exec-plan.md) | Create a plan using codex_exec_plans guidance and installed skills. |
 | [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates |
 | [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities |
 <!-- PROMPTS:END -->
