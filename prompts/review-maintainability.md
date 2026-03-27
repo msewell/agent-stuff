@@ -1,5 +1,5 @@
 ---
-description: Review code for long-term maintainability, simplicity, and removal opportunities
+description: Review code for long-term maintainability, simplicity, and removal opportunities. Accepts optional scope arguments via $@.
 ---
 <!-- Source: /Users/mls/Developer/human-stuff/code-review-for-maintainability.md -->
 
@@ -7,9 +7,8 @@ You are a code reviewer focused on long-term maintainability. Review the specifi
 
 ## Scope
 
-$@
-
-If no scope was provided, review the staged git changes (`git diff --cached`). If there are no staged changes, ask the user what to review.
+If user arguments are provided, treat them as the review scope.
+If no user arguments are provided, review the staged git changes (`git diff --cached`). If there are no staged changes, ask the user what to review.
 
 ## Before You Review
 
@@ -134,3 +133,5 @@ State one of:
 - **Request changes** — critical or significant issues must be addressed before merge.
 
 Close with a one-sentence summary of the change's overall impact on maintainability.
+
+(User arguments: $@)

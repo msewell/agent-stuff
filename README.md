@@ -85,9 +85,9 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 <!-- PROMPTS:START -->
 | Name | Description |
 |------|-------------|
-| [codex-exec-plan](prompts/codex-exec-plan.md) | Create a plan using codex_exec_plans guidance and installed skills. |
-| [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates |
-| [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities |
+| [codex-exec-plan](prompts/codex-exec-plan.md) | Create a plan using codex_exec_plans guidance and installed skills. Accepts optional user arguments via $@. |
+| [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates. Accepts optional user arguments via $@. |
+| [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities. Accepts optional scope arguments via $@. |
 <!-- PROMPTS:END -->
 
 <!-- Run `.scripts/gen-index.sh` to regenerate the index. -->

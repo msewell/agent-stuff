@@ -101,7 +101,25 @@ function extractFrontmatter(
 // ── Argument Placeholders ──────────────────────────────────────────────────
 
 const VALID_PLACEHOLDER = /^\$([1-9]|@|ARGUMENTS|\{@:\d+(:\d+)?\})$/;
+const HAS_ARGUMENT_PLACEHOLDER = /\$(?:@|ARGUMENTS|[1-9]|\{@:\d+(?::\d+)?\})/;
 const ALL_DOLLAR_REFS = /\$(\{[^}]*\}|[A-Z_a-z0-9]+)/g;
+
+function checkRequiredArgumentPlaceholder(content: string, file: string, bodyStartLine: number): Diagnostic[] {
+  const lines = content.split("\n");
+  const body = lines.slice(bodyStartLine - 1).join("\n");
+
+  if (HAS_ARGUMENT_PLACEHOLDER.test(body)) return [];
+
+  return [
+    {
+      file,
+      check: "placeholder-required",
+      severity: "error",
+      message: "Prompt body must include at least one argument placeholder (e.g., $@, $1, $ARGUMENTS, ${@:1}).",
+      line: Math.min(bodyStartLine, lines.length || 1),
+    },
+  ];
+}
 
 function checkPlaceholders(content: string, file: string, bodyStartLine: number): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
@@ -168,6 +186,7 @@ function validateFile(filePath: string): Diagnostic[] {
 
   const { bodyStartLine, diagnostics: fmDiags } = extractFrontmatter(content, filePath);
   diagnostics.push(...fmDiags);
+  diagnostics.push(...checkRequiredArgumentPlaceholder(content, filePath, bodyStartLine));
   diagnostics.push(...checkPlaceholders(content, filePath, bodyStartLine));
 
   return diagnostics;
