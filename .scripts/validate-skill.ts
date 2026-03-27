@@ -224,66 +224,14 @@ function validateSkill(skillDirInput: string): Diagnostic[] {
 
   const referencesDir = resolve(skillDir, "references");
   let referenceFileNames: string[] = [];
+  let hasReferencesDir = true;
+
   try {
     referenceFileNames = readdirSync(referencesDir)
       .filter((f) => extname(f) === ".md")
       .sort((a, b) => a.localeCompare(b));
   } catch {
-    diagnostics.push({
-      file: "references",
-      severity: "error",
-      check: "layout",
-      message: "Missing references/ directory.",
-    });
-    return diagnostics;
-  }
-
-  if (referenceFileNames.length === 0) {
-    diagnostics.push({
-      file: "references",
-      severity: "error",
-      check: "layout",
-      message: "No reference .md files found in references/.",
-    });
-  }
-
-  const seenNums = new Set<number>();
-  for (const fileName of referenceFileNames) {
-    const match = /^(\d{2})-([a-z0-9][a-z0-9-]*)\.md$/.exec(fileName);
-    if (!match) {
-      diagnostics.push({
-        file: `references/${fileName}`,
-        severity: "error",
-        check: "reference-name",
-        message: "Reference filename must match 'NN-kebab-case.md'.",
-      });
-      continue;
-    }
-    const n = Number.parseInt(match[1]!, 10);
-    if (seenNums.has(n)) {
-      diagnostics.push({
-        file: `references/${fileName}`,
-        severity: "error",
-        check: "reference-numbering",
-        message: `Duplicate reference number ${match[1]}.`,
-      });
-    }
-    seenNums.add(n);
-  }
-
-  if (seenNums.size > 0) {
-    const max = Math.max(...Array.from(seenNums));
-    for (let n = 1; n <= max; n++) {
-      if (!seenNums.has(n)) {
-        const expected = String(n).padStart(2, "0");
-        diagnostics.push({
-          file: "references",
-          severity: "error",
-          check: "reference-numbering",
-          message: `Missing reference file number ${expected}.`,
-        });
-      }
-    }
+    hasReferencesDir = false;
   }
 
   const skillLinks = parseMarkdownLinks(skillContent);
@@ -303,69 +251,128 @@ function validateSkill(skillDirInput: string): Diagnostic[] {
     }
   }
 
-  for (const fileName of referenceFileNames) {
-    const refRel = `references/${fileName}`;
-    if (!skillRefTargets.has(refRel)) {
+  if (!hasReferencesDir) {
+    if (skillRefTargets.size > 0) {
       diagnostics.push({
         file: "SKILL.md",
         severity: "error",
         check: "reference-linking",
-        message: `Missing link to ${refRel} from SKILL.md.`,
+        message: "SKILL.md links to references/*.md but references/ directory is missing.",
       });
     }
-
-    const refPath = resolve(referencesDir, fileName);
-    const refContent = readFileSync(refPath, "utf-8");
-    const refLines = refContent.split("\n");
-    const refDisplay = `references/${fileName}`;
-
-    if (refLines.length > 300) {
+  } else {
+    if (referenceFileNames.length === 0) {
       diagnostics.push({
-        file: refDisplay,
+        file: "references",
         severity: "error",
-        check: "reference-size",
-        message: `Reference has ${refLines.length} lines; must be <= 300.`,
+        check: "layout",
+        message: "No reference .md files found in references/.",
       });
     }
 
-    if (refLines.length > 100 && !refLines.some((line) => line.trim() === "## Table of Contents")) {
-      diagnostics.push({
-        file: refDisplay,
-        severity: "error",
-        check: "reference-toc",
-        message: "Reference files over 100 lines must include '## Table of Contents'.",
-      });
+    const seenNums = new Set<number>();
+    for (const fileName of referenceFileNames) {
+      const match = /^(\d{2})-([a-z0-9][a-z0-9-]*)\.md$/.exec(fileName);
+      if (!match) {
+        diagnostics.push({
+          file: `references/${fileName}`,
+          severity: "error",
+          check: "reference-name",
+          message: "Reference filename must match 'NN-kebab-case.md'.",
+        });
+        continue;
+      }
+      const n = Number.parseInt(match[1]!, 10);
+      if (seenNums.has(n)) {
+        diagnostics.push({
+          file: `references/${fileName}`,
+          severity: "error",
+          check: "reference-numbering",
+          message: `Duplicate reference number ${match[1]}.`,
+        });
+      }
+      seenNums.add(n);
     }
 
-    const refLinks = parseMarkdownLinks(refContent);
-    for (const link of refLinks) {
-      if (link.target.includes("\\")) {
+    if (seenNums.size > 0) {
+      const max = Math.max(...Array.from(seenNums));
+      for (let n = 1; n <= max; n++) {
+        if (!seenNums.has(n)) {
+          const expected = String(n).padStart(2, "0");
+          diagnostics.push({
+            file: "references",
+            severity: "error",
+            check: "reference-numbering",
+            message: `Missing reference file number ${expected}.`,
+          });
+        }
+      }
+    }
+
+    for (const fileName of referenceFileNames) {
+      const refRel = `references/${fileName}`;
+      if (!skillRefTargets.has(refRel)) {
+        diagnostics.push({
+          file: "SKILL.md",
+          severity: "error",
+          check: "reference-linking",
+          message: `Missing link to ${refRel} from SKILL.md.`,
+        });
+      }
+
+      const refPath = resolve(referencesDir, fileName);
+      const refContent = readFileSync(refPath, "utf-8");
+      const refLines = refContent.split("\n");
+      const refDisplay = `references/${fileName}`;
+
+      if (refLines.length > 300) {
         diagnostics.push({
           file: refDisplay,
           severity: "error",
-          check: "paths",
-          message: `Windows-style path separator in link target '${link.target}'.`,
-          line: computeLineFromOffset(refContent, link.index),
+          check: "reference-size",
+          message: `Reference has ${refLines.length} lines; must be <= 300.`,
         });
       }
-      if (/^references\/.+\.md$/i.test(link.target)) {
+
+      if (refLines.length > 100 && !refLines.some((line) => line.trim() === "## Table of Contents")) {
         diagnostics.push({
           file: refDisplay,
           severity: "error",
-          check: "nested-references",
-          message: `Nested reference link '${link.target}' is not allowed. Link from SKILL.md instead.`,
-          line: computeLineFromOffset(refContent, link.index),
+          check: "reference-toc",
+          message: "Reference files over 100 lines must include '## Table of Contents'.",
         });
       }
-    }
 
-    if (/\bCurrent as of\b/i.test(refContent) || /\b(?:19|20)\d{2}\b/.test(refContent)) {
-      diagnostics.push({
-        file: refDisplay,
-        severity: "warning",
-        check: "time-sensitive",
-        message: "Potential time-sensitive wording detected; verify currency and avoid hardcoded years.",
-      });
+      const refLinks = parseMarkdownLinks(refContent);
+      for (const link of refLinks) {
+        if (link.target.includes("\\")) {
+          diagnostics.push({
+            file: refDisplay,
+            severity: "error",
+            check: "paths",
+            message: `Windows-style path separator in link target '${link.target}'.`,
+            line: computeLineFromOffset(refContent, link.index),
+          });
+        }
+        if (/^references\/.+\.md$/i.test(link.target)) {
+          diagnostics.push({
+            file: refDisplay,
+            severity: "error",
+            check: "nested-references",
+            message: `Nested reference link '${link.target}' is not allowed. Link from SKILL.md instead.`,
+            line: computeLineFromOffset(refContent, link.index),
+          });
+        }
+      }
+
+      if (/\bCurrent as of\b/i.test(refContent) || /\b(?:19|20)\d{2}\b/.test(refContent)) {
+        diagnostics.push({
+          file: refDisplay,
+          severity: "warning",
+          check: "time-sensitive",
+          message: "Potential time-sensitive wording detected; verify currency and avoid hardcoded years.",
+        });
+      }
     }
   }
 
