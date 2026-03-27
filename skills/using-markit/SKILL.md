@@ -1,6 +1,6 @@
 ---
 name: using-markit
-description: Converts files and URLs to markdown with markit for agent workflows. Selects deterministic modes (--json for machine-readable parsing, -q for raw markdown output), handles installation and conversion failures, and applies safe defaults for optional AI description/transcription. Use when users ask to convert or extract text, turn a document or webpage into markdown, transcribe audio, or describe images from PDF, DOCX, PPTX, XLSX, HTML, EPUB, CSV, JSON, XML, ZIP, URL, image, or audio sources.
+description: Converts known files and URLs to markdown with markit for agent workflows. Selects deterministic modes (--json for machine-readable parsing, -q for raw markdown output), handles installation and conversion failures, and applies safe defaults for optional AI description/transcription. Use when users already have specific sources and ask to convert or extract text, turn a document or webpage into markdown, transcribe audio, or describe images from PDF, DOCX, PPTX, XLSX, HTML, EPUB, CSV, JSON, XML, ZIP, URL, image, or audio sources.
 category: Agent Tooling
 ---
 
@@ -10,11 +10,16 @@ Use this skill to run `markit` reliably in terminal-based agent workflows.
 
 ## Scope
 
-- Convert files and URLs to markdown.
+- Convert known files and known URLs to markdown.
 - Use deterministic output modes for downstream automation.
 - Troubleshoot common failures.
 
 Do not cover plugin authoring, provider authoring, or onboarding context files unless the user explicitly asks.
+
+## Non-goals
+
+- Open-web discovery, ranking, or source-finding.
+- Recency-filtered/domain-filtered research workflows.
 
 ## Defaults
 
@@ -31,6 +36,7 @@ Do not cover plugin authoring, provider authoring, or onboarding context files u
    - Identify source type: local file, URL, or stdin.
    - For binary formats (PDF, DOCX, images, audio), prefer file paths over stdin.
    - Confirm whether output should be parsed (`--json`) or emitted as markdown (`-q`).
+   - If the user needs source discovery first (not conversion of known sources), stop and request specific URLs or files.
 
 2. **Preflight command availability**
    - Check tool presence:

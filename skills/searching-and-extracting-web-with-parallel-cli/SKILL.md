@@ -1,6 +1,6 @@
 ---
 name: searching-and-extracting-web-with-parallel-cli
-description: Runs Parallel CLI web search and URL extraction in non-interactive, JSON-first mode for AI agents. Chooses between `parallel-cli search` and `parallel-cli extract`, applies fast defaults, and adds source/date filters when needed. Use when the user asks to search the web, find current sources, fetch or summarize URL content, or gather citations from specific domains.
+description: Runs Parallel CLI web search and URL extraction in non-interactive, JSON-first mode for AI agents. Chooses between `parallel-cli search` and `parallel-cli extract`, applies fast defaults, and adds source/date filters when needed. Use when the user asks to discover current web sources, gather citations from specific domains, or extract targeted information from known URLs.
 category: Agent Tooling
 allowed-tools: Bash
 ---
@@ -21,12 +21,19 @@ allowed-tools: Bash
 - Require `parallel-cli` to be installed and authenticated.
 - Avoid assuming `jq`/`xargs` are available; keep commands portable.
 
+## Non-goals
+
+- General file/URL-to-markdown conversion tasks.
+- OCR, image description, or audio transcription.
+- Unbounded browsing without a concrete search or extraction objective.
+
 ## Workflow
 
 1. Determine intent:
-   - Use `search` when the user provides a question/topic.
-   - Use `extract` when the user provides specific URLs.
-   - Use both when the user needs discovery first, then page-level content.
+   - Use `search` when the user provides a question/topic and needs source discovery.
+   - Use `extract` when the user provides specific URLs and needs targeted extraction.
+   - Use both when the user needs discovery first, then page-level extraction.
+   - If the task is only to convert already-known sources into markdown, use a direct conversion command instead.
 
 2. Run `search` with agent-safe defaults:
    - Always include `--json`.
