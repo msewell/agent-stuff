@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Regenerates the index tables in README.md from artifact frontmatter.
-# Scans for SKILL.md files and prompts/*.md files.
+# Scans for SKILL.md files, extension package.json files, and prompts/*.md files.
 #
 # Rules enforced for skills:
 #   - Every SKILL.md must have a `category:` field (hard error)
@@ -148,6 +148,52 @@ EOF
 
 replace_section "<!-- SKILLS:START -->" "<!-- SKILLS:END -->" "$SKILLS_INDEX"
 rm "$SKILLS_INDEX"
+
+# --- Extensions ---
+EXTENSIONS_INDEX="$(mktemp)"
+
+python3 - "$REPO_ROOT" "$EXTENSIONS_INDEX" <<'EOF'
+import json
+import os
+import sys
+
+repo_root, output_path = sys.argv[1], sys.argv[2]
+extensions_root = os.path.join(repo_root, "extensions")
+
+rows = []
+if os.path.isdir(extensions_root):
+    for dirpath, dirnames, filenames in os.walk(extensions_root):
+        dirnames[:] = [d for d in dirnames if d not in (".git", "node_modules")]
+        if "package.json" not in filenames:
+            continue
+
+        pkg_path = os.path.join(dirpath, "package.json")
+        try:
+            with open(pkg_path) as f:
+                pkg = json.load(f)
+        except Exception:
+            continue
+
+        name = pkg.get("name") or os.path.basename(dirpath)
+        desc = pkg.get("description", "")
+        rel_path = os.path.relpath(dirpath, repo_root)
+        rows.append((name, rel_path, desc))
+
+rows.sort(key=lambda row: row[0].lower())
+
+lines_out = ["| Name | Description |", "|------|-------------|"]
+if rows:
+    for name, rel_path, desc in rows:
+        lines_out.append(f"| [{name}]({rel_path}) | {desc} |")
+else:
+    lines_out.append("| _None yet_ | Add extension packages under `extensions/` with a `package.json`. |")
+
+with open(output_path, "w") as f:
+    f.write("\n".join(lines_out) + "\n")
+EOF
+
+replace_section "<!-- EXTENSIONS:START -->" "<!-- EXTENSIONS:END -->" "$EXTENSIONS_INDEX"
+rm "$EXTENSIONS_INDEX"
 
 # --- Prompts ---
 PROMPTS_INDEX="$(mktemp)"

@@ -1,6 +1,6 @@
 # agent-stuff
 
-A collection of reusable agent artifacts — skills, prompts, and more.
+A collection of reusable agent artifacts — skills, prompts, extensions, and more.
 
 For the love of [Bob](https://en.wikipedia.org/wiki/J._R._%22Bob%22_Dobbs), if you use any of this stuff, use [pi](https://pi.dev/), not Claude Code.
 
@@ -14,6 +14,7 @@ For the love of [Bob](https://en.wikipedia.org/wiki/J._R._%22Bob%22_Dobbs), if y
   - [Writing & Communication](#writing--communication)
   - [Agent Tooling](#agent-tooling)
   - [System Architecture](#system-architecture)
+- [Extensions](#extensions)
 - [Prompts](#prompts)
 <!-- TOC:END -->
 
@@ -82,6 +83,16 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [mermaid-sequence-diagrams](skills/mermaid-sequence-diagrams) | Generates, reviews, and fixes Mermaid sequence diagrams following syntax rules and best practices. Use when creating sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns. |
 | [reducing-coupling](skills/reducing-coupling) | Analyzes a codebase scope for coupling issues, diagnoses coupling types using the Connascence framework, and proposes a comprehensive refactoring plan with concrete code changes. Use when asked to find coupling, reduce dependencies, decouple modules, or improve modularity in a codebase. |
 <!-- SKILLS:END -->
+
+## Extensions
+
+Install any extension package from this repo by pointing `pi install` at the extension directory.
+
+<!-- EXTENSIONS:START -->
+| Name | Description |
+|------|-------------|
+| [pi-copy-latest-macos](extensions/pi-copy-latest-macos) | Minimal pi extension: /copy copies the latest assistant output to macOS clipboard |
+<!-- EXTENSIONS:END -->
 
 ## Prompts
 
