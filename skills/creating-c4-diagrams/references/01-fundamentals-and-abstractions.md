@@ -1,5 +1,10 @@
 # C4 Model Fundamentals and Abstractions
 
+## Table of Contents
+
+- [What Is the C4 Model?](#what-is-the-c4-model)
+- [Core Abstractions](#core-abstractions)
+
 ## What Is the C4 Model?
 
 The C4 model is a lean, hierarchical approach to describing software architecture created by Simon Brown between 2006–2011. It provides:

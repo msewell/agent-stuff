@@ -1,5 +1,10 @@
 # ADR Integration and Risk Modeling with C4
 
+## Table of Contents
+
+- [Architecture Decision Records (ADR) Integration](#architecture-decision-records-adr-integration)
+- [Risk Modeling with C4](#risk-modeling-with-c4)
+
 ## Architecture Decision Records (ADR) Integration
 
 Architecture diagrams show the **outcomes** of decisions. Architecture Decision Records document the **reasoning** behind those decisions. Together, they answer both *"what does our architecture look like?"* and *"why does it look this way?"*

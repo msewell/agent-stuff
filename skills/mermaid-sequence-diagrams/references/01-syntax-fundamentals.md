@@ -1,5 +1,11 @@
 # Syntax Fundamentals
 
+## Table of Contents
+
+- [Basic Structure](#basic-structure)
+- [Participants and Actors](#participants-and-actors)
+- [Arrows and Message Semantics](#arrows-and-message-semantics)
+
 ## Basic Structure
 
 Every Mermaid sequence diagram starts with the `sequenceDiagram` keyword:

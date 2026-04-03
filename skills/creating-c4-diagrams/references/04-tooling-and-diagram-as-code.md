@@ -1,5 +1,11 @@
 # C4 Tooling and Diagram-as-Code
 
+## Table of Contents
+
+- [Tooling Ecosystem](#tooling-ecosystem)
+- [Structurizr DSL](#structurizr-dsl)
+- [Mermaid for C4](#mermaid-for-c4)
+
 ## Tooling Ecosystem
 
 ### Tool Categories

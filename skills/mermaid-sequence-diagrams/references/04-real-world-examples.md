@@ -1,5 +1,12 @@
 # Real-World Examples
 
+## Table of Contents
+
+- [REST API: Authentication with JWT](#rest-api-authentication-with-jwt)
+- [OAuth 2.0 Authorization Code Flow](#oauth-20-authorization-code-flow)
+- [Webhook Delivery with Retry Backoff](#webhook-delivery-with-retry-backoff)
+- [Saga Pattern: Order Fulfillment](#saga-pattern-order-fulfillment)
+
 ## REST API: Authentication with JWT
 
 ```mermaid

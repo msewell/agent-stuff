@@ -1,5 +1,11 @@
 # Styling, Best Practices, and Anti-Patterns
 
+## Table of Contents
+
+- [Styling and Configuration](#styling-and-configuration)
+- [Design Best Practices](#design-best-practices)
+- [Common Anti-Patterns and Fixes](#common-anti-patterns-and-fixes)
+
 ## Styling and Configuration
 
 ### Inline Directives

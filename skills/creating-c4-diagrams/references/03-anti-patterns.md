@@ -1,5 +1,11 @@
 # C4 Anti-Patterns and Common Mistakes
 
+## Table of Contents
+
+- [Abstraction Errors](#abstraction-errors)
+- [Boundary and Scope Errors](#boundary-and-scope-errors)
+- [Notation and Communication Errors](#notation-and-communication-errors)
+
 Based on Simon Brown's GOTO 2024 talk *"The C4 Model — Misconceptions, Misuses & Mistakes"* and extensive community analysis.
 
 ## Abstraction Errors

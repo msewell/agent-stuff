@@ -1,5 +1,12 @@
 # Control Flow and Notes
 
+## Table of Contents
+
+- [Control Flow Blocks](#control-flow-blocks)
+- [Notes](#notes)
+- [Participant Grouping with box](#participant-grouping-with-box)
+- [Advanced Lifecycle Features](#advanced-lifecycle-features)
+
 ## Control Flow Blocks
 
 ### Conditionals: alt / else

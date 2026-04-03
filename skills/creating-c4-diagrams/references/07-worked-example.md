@@ -1,5 +1,12 @@
 # Worked Example: Online Bookstore (PageTurn)
 
+## Table of Contents
+
+- [System Description](#system-description)
+- [Level 1: System Context](#level-1-system-context)
+- [Level 2: Container Diagram](#level-2-container-diagram)
+- [Level 3: Component Diagram](#level-3-component-diagram)
+
 This models a complete system from Level 1 through deployment using Structurizr DSL (primary) and Mermaid (alternative).
 
 ## System Description

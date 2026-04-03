@@ -1,5 +1,12 @@
 # C4 Notation and Styling Guidelines
 
+## Table of Contents
+
+- [Every Diagram Must Have](#every-diagram-must-have)
+- [Every Element Must Have](#every-element-must-have)
+- [Every Relationship (Arrow) Must Have](#every-relationship-arrow-must-have)
+- [Visual Constraints](#visual-constraints)
+
 C4 is notation-independent — there are no mandatory shapes, colors, or visual conventions. However, these guidelines ensure your diagrams are clear and unambiguous.
 
 ## Every Diagram Must Have

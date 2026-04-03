@@ -1,12 +1,14 @@
 ---
 name: mermaid-sequence-diagrams
-description: Generates, reviews, and fixes Mermaid sequence diagrams following syntax rules and best practices. Use when creating sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns.
+description: Generates, reviews, and fixes Mermaid-only sequence diagrams following syntax rules and best practices. Use when creating Mermaid sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large Mermaid sequence diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns.
 category: System Architecture
 ---
 
 # Mermaid Sequence Diagrams
 
 Generate, review, and fix Mermaid sequence diagrams that are syntactically correct, visually clear, and follow established best practices.
+
+This skill is intentionally Mermaid-specific: keep the output in Mermaid `sequenceDiagram` syntax.
 
 ## Generating a New Diagram
 
@@ -75,8 +77,8 @@ sequenceDiagram
 
 ## References
 
-- `references/01-syntax-fundamentals.md` — Participants, actors, specialized types, arrow reference, activation syntax.
-- `references/02-control-flow-and-notes.md` — alt/opt/loop/par/critical/break/rect blocks, notes, sequence numbers, boxes, create/destroy.
-- `references/03-styling-and-best-practices.md` — Themes, configuration, design principles, message labeling, anti-patterns, version compatibility.
-- `references/04-real-world-examples.md` — JWT auth, OAuth 2.0, webhooks, saga pattern, event-driven microservices, retry backoff, circuit breaker.
-- `references/05-cheat-sheet.md` — Arrow quick reference, control flow quick reference, participant types, escape sequences, CLI validation commands.
+- [references/01-syntax-fundamentals.md](references/01-syntax-fundamentals.md) — Participants, actors, specialized types, arrow reference, activation syntax.
+- [references/02-control-flow-and-notes.md](references/02-control-flow-and-notes.md) — alt/opt/loop/par/critical/break/rect blocks, notes, sequence numbers, boxes, create/destroy.
+- [references/03-styling-and-best-practices.md](references/03-styling-and-best-practices.md) — Themes, configuration, design principles, message labeling, anti-patterns, version compatibility.
+- [references/04-real-world-examples.md](references/04-real-world-examples.md) — JWT auth, OAuth 2.0, webhooks, saga pattern, event-driven microservices, retry backoff, circuit breaker.
+- [references/05-cheat-sheet.md](references/05-cheat-sheet.md) — Arrow quick reference, control flow quick reference, participant types, escape sequences, CLI validation commands.
