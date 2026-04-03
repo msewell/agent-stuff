@@ -82,6 +82,7 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [designing-deep-modules](skills/designing-deep-modules) | Guides designing, reviewing, and refactoring modules for depth — maximizing functionality hidden behind minimal interfaces. Analyzes module boundaries, identifies shallow modules and classitis, applies deep module heuristics (pull complexity downward, define errors out of existence, design for the common case), and produces refactoring plans. Covers information hiding, leaky abstractions, and abstraction boundaries based on Ousterhout's A Philosophy of Software Design. Use when designing module interfaces, reviewing code for shallow abstractions, refactoring pass-through layers, evaluating API surface area, reducing interface complexity, or applying deep module principles at any scale (functions, classes, packages, services, APIs). |
 | [mermaid-sequence-diagrams](skills/mermaid-sequence-diagrams) | Generates, reviews, and fixes Mermaid sequence diagrams following syntax rules and best practices. Use when creating sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns. |
 | [reducing-coupling](skills/reducing-coupling) | Analyzes a codebase scope for coupling issues, diagnoses coupling types using the Connascence framework, and proposes a comprehensive refactoring plan with concrete code changes. Use when asked to find coupling, reduce dependencies, decouple modules, or improve modularity in a codebase. |
+| [rendering-clean-diagrams](skills/rendering-clean-diagrams) | Generates clean, well-laid-out diagrams using text-to-diagram DSLs (Mermaid, D2, Graphviz, PlantUML). Selects the right tool and diagram type, produces focused diagram code, validates output via CLI rendering, and embeds results in Markdown or standalone SVG/PNG. Use when creating flowcharts, sequence diagrams, architecture diagrams, ER diagrams, state machines, mindmaps, dependency graphs, knowledge graphs, or any visual diagram, when embedding diagrams in GitHub Markdown or documentation, or when the user asks for a diagram, graph, chart, or visualization of a system, process, workflow, or data model. |
 <!-- SKILLS:END -->
 
 ## Extensions
@@ -91,7 +92,7 @@ Install any extension package from this repo by pointing `pi install` at the ext
 <!-- EXTENSIONS:START -->
 | Name | Description |
 |------|-------------|
-| [pi-copy-latest-macos](extensions/pi-copy-latest-macos) | Minimal pi extension: /copy copies the latest assistant output to macOS clipboard |
+| _None yet_ | Add extension packages under `extensions/` with a `package.json`. |
 <!-- EXTENSIONS:END -->
 
 ## Prompts
