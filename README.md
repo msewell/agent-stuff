@@ -92,7 +92,7 @@ Install any extension package from this repo by pointing `pi install` at the ext
 <!-- EXTENSIONS:START -->
 | Name | Description |
 |------|-------------|
-| _None yet_ | Add extension packages under `extensions/` with a `package.json`. |
+| [pi-extension-code-last](extensions/pi-extension-code-last) | Pi extension that opens the last assistant message in VS Code |
 <!-- EXTENSIONS:END -->
 
 ## Prompts

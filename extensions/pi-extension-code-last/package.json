@@ -1,0 +1,24 @@
+{
+  "name": "pi-extension-code-last",
+  "version": "0.1.0",
+  "description": "Pi extension that opens the last assistant message in VS Code",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "pi": {
+    "extensions": ["./extensions"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.2",
+    "typescript": "^5.9.3",
+    "@types/node": "^24.5.2"
+  }
+}
