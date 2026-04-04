@@ -50,9 +50,9 @@
 
 ### 5. The Mixed-Purpose Checklist
 
-**Symptom:** A single message that is simultaneously a status update, a request for action, and a decision brief.
+**Symptom:** A single message that is simultaneously a handoff, a request for action, and a meeting follow-up.
 
-**Why it fails:** The reader cannot figure out what to do. The action gets buried. The decision gets deferred. The status update gets skimmed.
+**Why it fails:** The reader cannot figure out what to do. The action gets buried. The handoff details get skimmed. The meeting follow-up becomes unclear.
 
 **Fix:** One checklist, one purpose. If both an update and a decision are needed, send two clearly separated sections -- or two messages.
 
@@ -103,7 +103,7 @@ Run this against any checklist before sending. If an item fails, fix it or cut i
 ### Purpose
 
 - [ ] The first line tells the reader what this checklist is and whether they need to act
-- [ ] The checklist serves one purpose -- not a status update and a request and a decision brief jammed together
+- [ ] The checklist serves one purpose -- not a handoff and a request and a meeting follow-up jammed together
 - [ ] Every item earns its line -- removing it would create a real risk of something being missed
 - [ ] The checklist is matched to the right medium (Slack for quick/ephemeral, email for external/archival, doc for reference, ticket for tracked work)
 

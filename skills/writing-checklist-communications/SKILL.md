@@ -1,6 +1,6 @@
 ---
 name: writing-checklist-communications
-description: "Writes and improves checklist-based professional communications -- status updates, requests for action, decision briefs, handoffs, meeting agendas, and process runbooks. Applies structured templates, item-writing rules (verb + object + criteria), and anti-pattern checks to produce clear, actionable checklists. Use when writing a status update, weekly update, or sprint update, drafting a handoff document, creating a decision brief, preparing a meeting agenda, meeting notes, or follow-up, building a runbook, delegating or requesting action from someone, reviewing or improving an existing checklist, or when the user mentions checklists, status reports, meeting minutes, handoff docs, or action items."
+description: "Writes and improves checklist-based professional communications -- requests for action, handoffs, meeting agendas/follow-ups, and process runbooks. Applies structured templates, item-writing rules (verb + object + criteria), and anti-pattern checks to produce clear, actionable checklists. Use when drafting a request for action, creating a handoff document, preparing a meeting agenda, writing meeting follow-up notes, building a runbook, delegating work, asking for specific action by a deadline, or reviewing and improving an existing checklist-based communication."
 category: Writing & Communication
 ---
 
@@ -12,14 +12,12 @@ category: Writing & Communication
 
    | Type | Use when |
    |---|---|
-   | Status Update | Reporting progress, blockers, decisions needed |
    | Request for Action | Asking someone for specific work by a deadline |
-   | Decision Brief | Presenting options and a recommendation for sign-off |
    | Handoff | Transferring ownership of work completely |
    | Meeting Agenda / Follow-Up | Making meetings produce decisions and actions |
    | Process Runbook | Enabling first-attempt execution of a repeatable process |
 
-   If the type is ambiguous, default to Request for Action when the user needs something done, or Status Update when reporting.
+   If the type is ambiguous, default to Request for Action when the user needs something done.
 
 2. **Read the template and guidance** for that type in [references/01-checklist-types-and-templates.md](references/01-checklist-types-and-templates.md).
 
@@ -66,33 +64,34 @@ Nine rules for every item:
 
 ## Edge cases
 
-- **Mixed-purpose message**: Split into separate checklists -- one per purpose. A status update combined with a request buries the request.
+- **Mixed-purpose message**: Split into separate checklists -- one per purpose. A handoff combined with a request buries the request.
 - **Medium-specific formatting**: Slack -- 7 items max, one screen. Email -- headers, ask at top. Project tools (Jira, Linear) -- native subtasks, link to docs. Docs (Notion, Confluence) -- collapsible sections for FAQ and context.
 - **Existing draft improvement**: Identify the type, check each item against the formula and rules, flag anti-patterns, rewrite failing items, restructure to match the template.
 
 ## Example
 
-**Input:** "Write a status update for Project Atlas. We shipped the auth flow to prod and fixed the rate limiter bug. Next sprint we're starting the billing integration. We're blocked on the API credentials from the payments team."
+**Input:** "Draft a request for action to get production API credentials from the payments team by tomorrow so billing integration can start."
 
 **Output:**
 
 ```
-## Status Update -- Project Atlas -- 2026-04-03
+## Request: Production API credentials for billing integration
 
-**Overall: At Risk**
+**Why this matters:** Billing integration cannot start without credentials; this blocks sprint scope.
+**Deadline:** 2026-04-05 17:00
 
-### Done
-- [x] Ship auth flow to prod
-- [x] Fix rate limiter bug (#422)
+### What I need from you
+- [ ] Provision production API credentials for Project Atlas -- @Priya -- by 2026-04-05
+- [ ] Confirm credential delivery in #atlas-engineering -- @Priya -- by 2026-04-05
 
-### Next
-- [ ] Start billing integration -- @Jordan -- by 2026-04-10
+### Context (if needed)
+Billing integration begins next sprint. Auth flow is already in production.
 
-### Blockers
-- [ ] Obtain API credentials from payments team -- Impact: blocks billing integration -- Need: @Priya to provision credentials by 2026-04-04
+### What I've already done
+Opened access request ticket #4221 and shared required scopes in the ticket.
 ```
 
 ## Reference material
 
-- **Templates and guidance for all 6 types**: [references/01-checklist-types-and-templates.md](references/01-checklist-types-and-templates.md)
+- **Templates and guidance for all checklist types**: [references/01-checklist-types-and-templates.md](references/01-checklist-types-and-templates.md)
 - **Anti-patterns and validation**: [references/02-anti-patterns-and-validation.md](references/02-anti-patterns-and-validation.md) -- 7 failure modes, meta-checklist for final validation

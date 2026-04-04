@@ -2,52 +2,10 @@
 
 ## Table of Contents
 
-- [Status Update](#status-update)
 - [Request for Action](#request-for-action)
-- [Decision Brief](#decision-brief)
 - [Handoff](#handoff)
 - [Meeting Agenda and Follow-Up](#meeting-agenda-and-follow-up)
 - [Process Runbook](#process-runbook)
-
----
-
-## Status Update
-
-**Purpose:** Close the loop. Tell people what happened, what is next, and what is in the way -- without them having to ask.
-
-**When to use:** Weekly syncs, async standups, stakeholder updates, end-of-sprint reports.
-
-**Principle:** Separate facts from plans from blockers. Never mix them. The reader skims one section without reading the others.
-
-### Template
-
-```
-## Status Update -- [Project Name] -- [Date]
-
-**Overall: [On Track / At Risk / Blocked]**
-
-### Done
-- [ ] [Completed item with measurable result]
-- [ ] [Completed item with measurable result]
-
-### Next
-- [ ] [Upcoming task] -- @owner -- by [date]
-- [ ] [Upcoming task] -- @owner -- by [date]
-
-### Blockers
-- [ ] [Blocker] -- Impact: [what it delays] -- Need: [specific ask]
-
-### Decisions Needed
-- [ ] [Decision] -- Deadline: [date] -- Context: [one line]
-```
-
-### Guidance
-
-- **Lead with the overall status.** Green/yellow/red or On Track/At Risk/Blocked. Stakeholders read this first and sometimes only this.
-- **"Done" is outcomes, not activity.** "Shipped password reset flow to prod" -- not "Worked on auth." Tie accomplishments to impact.
-- **Blockers must include what you need.** A blocker without an ask is a complaint. State the specific action, from whom, and by when.
-- **Decisions Needed is the highest-value section.** This preempts the next two questions. If leadership needs to act, say so explicitly.
-- **Use the same format every time.** Consistency lets readers find information by position, not by reading.
 
 ---
 
@@ -68,9 +26,9 @@
 **Deadline:** [Date and time]
 
 ### What I need from you
-- [ ] [Specific action] -- by [date]
-- [ ] [Specific action] -- by [date]
-- [ ] [Specific action] -- by [date]
+- [ ] [Specific action] -- @owner -- by [date]
+- [ ] [Specific action] -- @owner -- by [date]
+- [ ] [Specific action] -- @owner -- by [date]
 
 ### Context (if needed)
 [2-3 sentences max. Link to docs rather than inlining detail.]
@@ -84,60 +42,8 @@
 - **Put the ask above the context.** Lead with what is needed; provide context below for those who want it.
 - **Number the asks.** This lets the recipient respond "Done with 1 and 3, need clarification on 2" instead of writing a paragraph.
 - **"What I've already done" prevents the most common reply.** The number one response to any request is "Did you already try X?" Preempt it.
-- **One message, one request type.** Do not combine a status update with a request for action. The request gets lost.
+- **One message, one request type.** Do not combine a handoff with a request for action. The request gets lost.
 - **If the email thread hits 3 replies without resolution, switch to a call.** The checklist failed. Escalate the medium.
-
----
-
-## Decision Brief
-
-**Purpose:** Present options, tradeoffs, and a recommendation so the decision-maker can say yes or no -- not "tell me more."
-
-**When to use:** Architecture decisions, vendor selection, budget approvals, any fork in the road that requires sign-off.
-
-**Principle:** Eliminate ambiguity. The reader understands the options, the stakes, and the recommendation without asking a single follow-up question.
-
-### Template
-
-```
-## Decision: [What needs to be decided]
-
-**Deadline:** [When this decision is needed by]
-**Decision-maker:** @[name]
-**Recommender:** @[name]
-
-### Situation
-[2-3 sentences. What's happening now that forces a decision.]
-
-### Options
-
-**Option A: [Name]**
-- Upside: [specific benefit]
-- Downside: [specific cost or risk]
-- Effort: [T-shirt size or hours]
-
-**Option B: [Name]**
-- Upside: [specific benefit]
-- Downside: [specific cost or risk]
-- Effort: [T-shirt size or hours]
-
-**Option C: Do nothing**
-- Consequence: [What happens if we don't decide]
-
-### Recommendation
-[State the pick and the top 1-2 reasons why. Be direct.]
-
-### What I need
-- [ ] Approve Option [X] -- or -- raise concerns by [date]
-```
-
-### Guidance
-
-- **Always include "do nothing" as an option.** It forces articulation of the cost of inaction, which is often the strongest argument for deciding now.
-- **Separate facts from judgment.** The Situation and Options sections are factual. The Recommendation is judgment. Keep them distinct so the decision-maker can disagree with the conclusion without disputing the data.
-- **Tradeoffs, not just pros.** Every option has a downside. Listing only upsides is selling, not briefing. Decision-makers trust the person who names the risks.
-- **The SBAR model maps here directly.** Situation, Background, Assessment, Recommendation -- originated in Navy submarine communications. It builds from shared facts to a clear ask.
-- **Keep it to one page.** If the decision cannot be explained in one page, compress further. Link out to supporting material.
 
 ---
 
@@ -243,7 +149,7 @@
 - **Every agenda item has an owner and a goal type.** "Discuss the roadmap" is not an agenda item. "Decide Q3 priority order -- @PM -- 15 min" is.
 - **Send the follow-up within 2 hours.** Same-day. The longer the wait, the more versions of what was decided will exist in people's heads.
 - **Decisions Made is the most important section of the follow-up.** Actions without decisions lack context. Decisions without actions lack teeth. Lead with decisions.
-- **If a meeting does not produce decisions or actions, question whether it needed to happen.** A purely informational meeting should have been an async status update.
+- **If a meeting does not produce decisions or actions, question whether it needed to happen.** A purely informational meeting should have been async.
 
 ---
 
