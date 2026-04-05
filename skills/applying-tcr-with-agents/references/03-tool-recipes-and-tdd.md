@@ -24,7 +24,7 @@ Fire a TCR cycle after every file modification:
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit",
         "command": "bash -c './tcr.sh \"npm test\" || exit 0'"
       }
     ]

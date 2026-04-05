@@ -17,6 +17,20 @@ surviving change keeps the system green. Broken code never persists.
    being committed by `git add -A`).
 4. Verify the project has at least one git commit and a working test command.
 
+## Incompatibility with classical TDD red-phase discipline
+
+In classical TDD, a lone failing test is written first and confirmed to fail
+before any implementation is written. **TCR makes that impossible:** a
+failing test triggers a full revert, destroying the test itself. There is no
+stable red phase.
+
+When using TCR, replace the red/green/refactor cycle with the rule in step 3
+below: test and implementation are written together as one coherent atomic
+change. This is TCR's substitute for the red phase — the discipline comes
+from keeping the unit as small as possible, not from a separate failing-test
+step. Do not apply a red-first TDD workflow alongside mechanical TCR
+automation.
+
 ## Workflow
 
 Work in small, atomic steps. Each step includes both a test and the
