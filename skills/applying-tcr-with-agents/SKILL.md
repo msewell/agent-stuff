@@ -55,10 +55,17 @@ implementation to pass it, committed as a single unit.
    the same mistake. Do not attempt to "fix the fix" — start fresh from
    the clean state.
 7. **Repeat** until the feature is complete.
-8. **Squash before pushing:**
+8. **Squash before pushing.** TCR auto-commits (`tcr: green`, `tcr: green
+   (attempt 3)`) are ephemeral bookkeeping — they are not project history.
+   Squash them into one meaningful commit before pushing:
    ```bash
    git rebase -i $(git merge-base HEAD main)
    ```
+   Mark all TCR commits as `squash` (or `s`) except the first, then write
+   a single commit message that describes *what* changed and *why* — not
+   how many TCR attempts it took. Format: imperative mood, ≤50 character
+   subject, body for non-trivial changes. The TCR commits are evidence of
+   process; the squashed commit is the record of intent.
 
 ### Guardrails
 
