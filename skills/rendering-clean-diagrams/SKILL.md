@@ -1,108 +1,112 @@
 ---
 name: rendering-clean-diagrams
-description: "Generates clean, well-laid-out diagrams using text-to-diagram DSLs (Mermaid, D2, Graphviz, PlantUML). Focuses on tool selection, syntax-safe authoring, and reliable render/validation pipelines for flowcharts, state diagrams, ER diagrams, mindmaps, dependency graphs, knowledge graphs, and non-C4 architecture sketches. Also handles sequence diagrams with either Mermaid or PlantUML based on delivery context. Use when the user asks for a diagram, graph, chart, or visualization and needs production-ready Markdown/SVG/PNG output."
+description: "Generates clean, readable diagrams from text DSLs (Mermaid, D2, Graphviz, PlantUML), chooses suitable layout engines, and runs validation/render loops to produce embeddable SVG/PNG/Markdown outputs. Use when a user asks for a diagram, graph, chart, visualization, flowchart, sequence diagram, ERD, state machine, architecture sketch, dependency graph, mindmap, or requests diagram code that an LLM should render reliably."
 category: System Architecture
-compatibility: "Requires at least one diagram CLI: @mermaid-js/mermaid-cli (npm), d2 (brew), graphviz (brew/apt), or plantuml (Java JAR). Kroki (Docker) as universal alternative. Optional for C4 output: Structurizr DSL rendering support (local or via Kroki)."
+compatibility: "Requires at least one renderer (Mermaid CLI, D2, Graphviz, or PlantUML with Java). Optional: Kroki API access for unified rendering."
 ---
 
 # Rendering Clean Diagrams
 
-## Golden rule
+## Quick start
 
-Never compute coordinates or generate raw SVG. Describe structure and relationships in a diagram DSL and let a layout engine handle positioning.
-
-## Scope guardrails
-
-- Treat this as a **general diagram rendering** workflow.
-- For **explicit C4 requests** (System Context, Container, Component, Dynamic, Deployment), use strict C4 notation and tooling (Structurizr DSL preferred; Mermaid C4 acceptable for quick Markdown).
-- For **Mermaid-specific sequence requests**, keep output in Mermaid sequence syntax.
-
-## Tool selection
-
-| Where it will be viewed | Diagram type | Tool |
-|---|---|---|
-| GitHub/GitLab Markdown | Any Mermaid-supported | **Mermaid** (renders natively) |
-| Docs / PDF / standalone SVG | Flowchart, state, ER | **D2** (cleanest SVG, single binary) |
-| GitHub/GitLab Markdown | Sequence diagram (inline docs) | **Mermaid** |
-| Docs / PDF / standalone SVG | Sequence diagram (UML-heavy or exported docs) | **PlantUML** |
-| Docs / PDF / standalone SVG | Architecture / containers (non-C4) | **D2** (best container support) |
-| Any | C4 architecture diagrams | **Structurizr DSL** (preferred), Mermaid C4 for quick Markdown |
-| Docs / PDF / standalone SVG | Directed / dependency graph | **Graphviz `dot`** (best hierarchical layout) |
-| Docs / PDF / standalone SVG | Network / knowledge graph | **Graphviz `neato` or `fdp`** |
-| Mixed toolchain | Multiple types | **Kroki** (unified API, 20+ languages) |
-
-When using Mermaid and better layout is needed, enable ELK if the renderer supports it:
-
-```
----
-config:
-  layout: elk
----
-flowchart TB
-    A --> B --> C
-```
-
-> **Note:** GitHub renders Mermaid with Dagre only (no ELK). To get ELK layout on GitHub, render locally and commit the SVG.
-
-For detailed tool comparisons and layout algorithm guidance, see [references/01-tools-and-architecture.md](references/01-tools-and-architecture.md).
+1. Choose the diagram type from the user intent (flowchart, sequence, ERD, state, architecture, dependency, mindmap, network).
+2. Apply the default tool choice:
+   - **GitHub-native Markdown rendering required:** Mermaid
+   - **Standalone SVG/PNG or docs pipeline:** D2
+   - **UML-heavy sequence diagrams:** PlantUML
+   - **Highest control for directed/dependency graphs:** Graphviz (`dot`)
+3. Generate diagram code with a strict node budget (usually 3-5 nodes unless the user asks otherwise).
+4. Render immediately and fix errors in a generate → validate → fix loop.
+5. Deliver both source diagram code and rendered output path/link.
 
 ## Workflow
 
-1. **Classify the request intent** before generating code:
-   - C4-specific architecture request → use C4 notation and tooling.
-   - Mermaid-specific sequence request or inline Markdown sequence → Mermaid sequence syntax.
-   - Otherwise follow the general tool-selection table.
-2. **Select tool** from the table above.
-3. **Generate diagram code** following these rules:
-   - Specify direction explicitly: `TB`/`LR` (Mermaid), `direction: down` (D2), `rankdir=TB` (Graphviz).
-   - Set a complexity budget by diagram type:
-     - Flowchart/state/ER/mindmap/dependency/knowledge graph: **3–7 nodes**.
-     - Sequence diagram: **3–7 participants** and **8–20 messages**.
-     - Architecture/system sketch (non-C4): **6–15 elements**.
-   - Label all edges.
-   - Group related nodes into subgraphs or containers.
-   - Avoid bare special characters in labels (`: ; ( ) [ ] { } # &`) — wrap labels in double quotes.
-   - Use structural hints for positioning ("database at lowest dependency layer"), never coordinates.
-   - For flowcharts, avoid bidirectional arrows and limit merge points to one per 5 nodes.
-4. **Render and validate** with the CLI:
-   ```bash
-   # Mermaid
-   npx @mermaid-js/mermaid-cli -i diagram.mmd -o diagram.svg 2>&1
-   # D2
-   d2 diagram.d2 diagram.svg 2>&1
-   # Graphviz
-   dot -Tsvg diagram.dot -o diagram.svg 2>&1
-   # PlantUML
-   java -jar plantuml.jar -tsvg diagram.puml 2>&1
-   ```
-5. **Fix on failure** — feed stderr back and correct the syntax. Converges in 1–2 iterations.
-6. **Visual check** (optional) — if vision is available, render to PNG and verify readability and accuracy.
+1. **Classify the diagram problem before writing code.**
+   - Time-ordered interactions → sequence diagram
+   - Decision/process logic → flowchart
+   - Data entities and cardinality → ERD
+   - State transitions → state diagram
+   - Layered components/services → architecture diagram
+   - Non-directional concept clusters → network/knowledge graph
 
-## Syntax pitfalls by tool
+2. **Select a layout family that matches meaning.**
+   - Hierarchical/layered for directional flow
+   - Orthogonal for box-and-connector clarity (ER/class-style)
+   - Force-directed only when directional flow is not primary
 
-**Mermaid:**
-- `:` or `()` in labels without quotes → write `A["Step: one"]` not `A[Step: one]`
-- Missing `end` after subgraph blocks
-- Mixing `---` (thick link) with `-->` (arrow)
+3. **Generate minimal structure-first DSL.**
+   - Define nodes, edges, labels, and groups.
+   - Do not hardcode coordinates.
+   - Keep labels short and parser-safe.
 
-**D2:**
-- Reserved words as node IDs (`class`, `style`, `shape`) — rename or quote
-- `-->` does not exist — use `->` for connections
-- Incorrect container nesting syntax
+4. **Apply tool-specific defaults.**
+   - Mermaid: set `TB` or `LR`; keep syntax strict.
+   - D2: set `direction: down` unless another direction is clearer.
+   - Graphviz: choose engine explicitly (`dot`, `neato`, `fdp`, etc.).
+   - PlantUML: use the correct diagram block syntax and delimiters.
 
-**Graphviz:**
-- `->` in undirected `graph` — use `--`; `->` is for `digraph` only
-- Unquoted multi-word labels — always quote: `label="My Label"`
+5. **Run validation loop before final output.**
+   - Render with the selected CLI/API.
+   - If render fails, feed exact error text back into regeneration.
+   - Repeat until render succeeds.
 
-**PlantUML:**
-- Missing `@startuml` / `@enduml` delimiters
-- Mixing syntax from different diagram types in one block
-- Arrow style matters: `->`, `-->`, `->>` have different semantics
+6. **Perform readability pass.**
+   - Remove unnecessary nodes/edges.
+   - Ensure one dominant reading direction.
+   - Split into multiple diagrams if clutter appears.
 
-## Diagram type guidance
+## Defaults and escape hatches
 
-For per-type best practices with code examples (flowcharts, sequence, architecture, ER, state machines, mindmaps, knowledge graphs), see [references/02-best-practices-by-diagram-type.md](references/02-best-practices-by-diagram-type.md).
+- Default to **Mermaid** only when native GitHub rendering is required.
+- Default to **D2** for most generated diagrams in controlled pipelines.
+- Use **PlantUML** for UML-first sequence/component/deployment needs.
+- Use **Graphviz dot** when edge-crossing minimization and ranking control matter more than syntax simplicity.
+- If a tool is unavailable, switch to the nearest equivalent and preserve diagram semantics.
 
-## Rendering pipelines and decision tree
+## Validation commands
 
-For rendering options (CLI, Kroki, GitHub Markdown, ELK, CI/CD), the full tool-selection decision tree, common pitfalls, and further reading, see [references/03-techniques-rendering-and-pitfalls.md](references/03-techniques-rendering-and-pitfalls.md).
+Use exactly one command family that matches the chosen tool:
+
+```bash
+# Mermaid
+mmdc -i input.mmd -o output.svg
+
+# D2
+d2 input.d2 output.svg
+
+# Graphviz
+dot -Tsvg input.dot -o output.svg
+
+# PlantUML
+java -jar plantuml.jar -tsvg input.puml
+```
+
+If command stderr reports parsing/layout errors, regenerate code and rerun.
+
+## Output contract
+
+Return:
+
+1. Chosen diagram type and tool (with one-sentence reason)
+2. Diagram source code block
+3. Render command used
+4. Output location or embedded Markdown image reference
+5. Any simplifications made (if scope was reduced for clarity)
+
+## Edge cases
+
+- **Too many nodes requested:** Propose a primary diagram plus follow-up sub-diagrams.
+- **Conflicting requirements (native GitHub + advanced layout):** Provide Mermaid-for-GitHub and rendered SVG from D2/Graphviz as an alternative artifact.
+- **Parser breaks on labels:** Quote labels or remove special characters.
+- **Unclear directionality:** Ask whether the user wants process flow, structure, or interaction timeline before generating.
+
+## References
+
+Use these on demand for detailed guidance.
+
+- Foundations, tool comparison, and layout families:
+  [references/01-foundations-and-tooling.md](references/01-foundations-and-tooling.md)
+- Diagram-specific patterns and examples:
+  [references/02-diagram-patterns-by-type.md](references/02-diagram-patterns-by-type.md)
+- Prompting, validation loops, rendering pipelines, and pitfalls:
+  [references/03-generation-validation-and-operations.md](references/03-generation-validation-and-operations.md)
