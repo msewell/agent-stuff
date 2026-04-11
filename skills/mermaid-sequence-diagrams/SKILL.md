@@ -1,7 +1,7 @@
 ---
 name: mermaid-sequence-diagrams
 description: Generates, reviews, and fixes Mermaid-only sequence diagrams following syntax rules and best practices. Use when creating Mermaid sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large Mermaid sequence diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns.
-category: System Architecture
+category: Diagramming & Visualization
 ---
 
 # Mermaid Sequence Diagrams

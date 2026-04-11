@@ -3,8 +3,8 @@
 ## Table of Contents
 
 - [Flowcharts](#flowcharts)
-- [Sequence Diagrams](#sequence-diagrams)
-- [Architecture/System Diagrams](#architecturesystem-diagrams)
+- [Basic Sequence Diagrams (General)](#basic-sequence-diagrams-general)
+- [Architecture/System Diagrams (Non-C4)](#architecturesystem-diagrams-non-c4)
 - [Entity-Relationship Diagrams (ERD)](#entity-relationship-diagrams-erd)
 - [State Machine Diagrams](#state-machine-diagrams)
 - [Mindmaps and Tree Diagrams](#mindmaps-and-tree-diagrams)
@@ -59,17 +59,17 @@ D -> E
 
 ---
 
-## Sequence Diagrams
+## Basic Sequence Diagrams (General)
 
 **Default tool**
-- Mermaid for simple sequence diagrams
-- PlantUML for advanced sequence semantics
+- Mermaid when GitHub-native Markdown rendering is required
+- PlantUML when UML-style sequence notation is explicitly requested
 
 **Generation rules**
 1. Explicitly declare participants.
 2. Keep participants to ~3-5 unless user requests more.
-3. Use activation blocks to show processing scope.
-4. Label key messages with API/event names.
+3. Keep each message label short and action-oriented.
+4. Keep the timeline short; split long interactions into phases.
 
 **Mermaid pattern**
 
@@ -79,44 +79,28 @@ sequenceDiagram
   participant S as Service
   participant D as Database
   C->>S: POST /users
-  activate S
   S->>D: INSERT user
-  activate D
   D-->>S: OK
-  deactivate D
   S-->>C: 201 Created
-  deactivate S
-```
-
-**PlantUML pattern**
-
-```plantuml
-@startuml
-actor Client
-participant Service
-database DB
-Client -> Service: POST /users
-activate Service
-Service -> DB: INSERT user
-activate DB
-DB --> Service: OK
-deactivate DB
-Service --> Client: 201 Created
-deactivate Service
-@enduml
 ```
 
 **Avoid**
-- Unexplained arrow-style mixing (sync vs async)
-- Excessive self-calls
 - Too many participants in one timeline
+- Messages that encode full payloads inline
+- Unexplained mixing of sync/async semantics
+
+**Scope note**
+This reference intentionally stays at the basic sequence level. Advanced Mermaid sequence semantics (detailed control-flow blocks, activation auditing, and parser-level troubleshooting) are out of scope for this skill.
 
 ---
 
-## Architecture/System Diagrams
+## Architecture/System Diagrams (Non-C4)
 
 **Default tool**
 - D2
+
+**Scope note**
+Use this pattern for general architecture sketches, not formal C4 level modeling.
 
 **Generation rules**
 1. Group nodes by layer/domain (frontend, backend, data, external).

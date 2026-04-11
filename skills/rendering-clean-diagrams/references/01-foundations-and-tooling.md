@@ -208,7 +208,7 @@ Best for:
 |---|---|---|
 | Flowchart | Hierarchical | Primary information is directional process flow |
 | Sequence | Purpose-built timeline | Interaction order matters more than generic graph layout |
-| Architecture/C4-like | Hierarchical | Layer boundaries and service tiers are key |
+| Architecture (non-C4 level modeling) | Hierarchical | Layer boundaries and service tiers are key |
 | ERD | Orthogonal | Right-angle links improve table/entity readability |
 | State machine | Hierarchical | Transitions have directional semantics |
 | Dependency graph | Hierarchical | "Depends on" is directional |
@@ -223,7 +223,7 @@ Apply these defaults unless the user asks otherwise:
 
 1. Need native GitHub Markdown rendering -> Mermaid.
 2. Need clean rendered artifacts in controlled pipeline -> D2.
-3. Need UML-heavy sequence/component/deployment semantics -> PlantUML.
+3. Need UML-heavy sequence semantics -> PlantUML.
 4. Need strict hierarchical quality and crossing control -> Graphviz `dot`.
 
 If requirements conflict:

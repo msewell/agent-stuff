@@ -1,170 +1,148 @@
 ---
 name: writing-anki-cards
-description: "Generates and reviews Anki flashcards following spaced-repetition best practices, then pushes them directly into Anki via AnkiConnect. Produces atomic, precisely-worded cloze and Q/A cards from source material. Reviews existing cards for formulation problems and updates them in place. Use when the user asks to create Anki cards, flashcards, or spaced-repetition prompts from text, notes, articles, or documentation, or when asked to review, improve, or fix existing Anki cards."
+description: "Generates high-quality Anki flashcards from source material and adds them directly to Anki via AnkiConnect. Produces atomic cloze and Q/A cards, skips duplicates safely, and returns a succinct run report. Use when the user asks to create Anki cards, flashcards, or spaced-repetition prompts from notes, articles, docs, or text."
 category: Writing & Communication
-compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159)"
+compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159), Python 3, jq, and pyyaml"
 ---
 
-# Writing Anki Cards
+# Writing Anki Cards (Add-Only)
 
-## Workflow: Generate cards from source material
+This skill is **add-only**: generate cards and insert notes into Anki.
+Do not run review/update/delete workflows.
 
-1. **Verify AnkiConnect.**
+Use the bundled deterministic helper script:
+
+```bash
+PIPELINE="$(dirname "$SKILL_PATH")/scripts/anki_add_pipeline.py"
+```
+
+## Quick start
+
+1. Ensure Anki is running with AnkiConnect.
+2. Generate note candidates into a JSON array file.
+3. Run script preflight.
+4. Run script add-notes.
+5. Return the script summary.
+
+## Prerequisites
+
+- Anki + AnkiConnect (2055492159)
+- `python3`
+- `jq`
+- `pyyaml` (recommended: `python3 -m venv .venv && source .venv/bin/activate && pip install pyyaml`)
+
+## Canonical workflow (script-first)
+
+1. **Read source material** and derive card candidates.
+2. **Formulate cards** using:
+   - [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md)
+   - [references/02-advanced-techniques.md](references/02-advanced-techniques.md)
+3. **Write notes JSON** to a temp file (contract below).
+4. **Run preflight**:
    ```bash
-   curl -s localhost:8765 -X POST -d '{"action":"version","version":6}'
+   python3 "$PIPELINE" preflight --deck "<deck>"
    ```
-   Expected: `{"result":6,"error":null}`. If this fails, stop and tell the user to open Anki with AnkiConnect installed (addon 2055492159).
+5. **Run add pipeline**:
+   ```bash
+   python3 "$PIPELINE" add-notes \
+     --deck "<deck>" \
+     --notes-json "/tmp/anki-notes.json" \
+     --source-identity "<source-url-or-path-or-title>" \
+     --source-text-file "/tmp/source.txt"
+   ```
+6. **Return succinct report** from script output.
 
-2. **Determine target deck.** Use the deck name the user provides. If none specified, ask. AnkiConnect auto-creates new decks on first note insertion.
+## Notes JSON contract
 
-3. **Read source material.** Read the provided text, file, or content.
+Input to `add-notes` must be a JSON array of note objects:
 
-4. **Formulate cards.** Consult [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md) for the full rules. Key defaults:
-   - **Cloze** (`modelName: "Cloze"`) for factual and contextual knowledge — one `{{c1::...}}` deletion per card, keep deletions short and specific
-   - **Basic** (`modelName: "Basic"`) for "why" and "how" questions
-   - Decompose aggressively — one atomic fact per card
-   - Add a topic prefix for disambiguation (e.g., `*Electronics*: ...`)
-   - Target 5–20 cards per well-studied source
-
-5. **Self-review.** Check every card against this checklist:
-   - Atomic: tests exactly one thing
-   - Precise: admits exactly one answer
-   - Context-free: comprehensible in isolation
-   - Trim: no unnecessary words
-   - Not a list, not yes/no
-   - Volatile facts date-stamped
-   Fix any violations before proceeding. For deeper review criteria, consult [references/02-advanced-techniques.md](references/02-advanced-techniques.md).
-
-6. **Push to Anki.** Batch-push all cards using `addNotes` (see [AnkiConnect payloads](#ankiconnect-payloads) below). Check the response array — `null` entries indicate failures.
-
-7. **Report results.** Show the user: card count, deck name, and the full list of cards generated with their types.
-
-## Workflow: Review existing cards
-
-1. **Verify AnkiConnect** (same as generate workflow).
-
-2. **Fetch cards.** Get a search query from the user (deck name, tags, or Anki search syntax). Retrieve note IDs with `findNotes`, then contents with `notesInfo`.
-
-3. **Analyze.** Review each card against [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md). Flag:
-   - Multi-part answers (atomicity violation)
-   - Ambiguous prompts admitting multiple valid answers
-   - Missing topic context
-   - Yes/no questions wasting retrieval capacity
-   - Unordered sets or step enumerations
-   - Excess wording
-
-4. **Fix and update.** Rewrite problem cards and push fixes via `updateNoteFields`. When a card must be split (atomicity violation), delete the original with `deleteNotes` and push replacement cards with `addNotes`. Report all changes made.
-
-## Example
-
-**Source material:**
-
-> The blood-brain barrier (BBB) is a highly selective semipermeable border of endothelial cells that prevents solutes in the circulating blood from non-selectively crossing into the extracellular fluid of the central nervous system. It allows the passage of water, some gases, and lipid-soluble molecules by passive diffusion, as well as the selective transport of glucose and amino acids. Its dysfunction is implicated in neurodegenerative diseases such as Alzheimer's and multiple sclerosis.
-
-**Generated cards:**
-
-Cloze — `modelName: "Cloze"`, field `Text`:
-1. `The blood-brain barrier is formed by {{c1::endothelial cells}} that line brain capillaries.`
-2. `The blood-brain barrier allows {{c1::lipid-soluble}} molecules to cross by passive diffusion.`
-3. `Glucose crosses the blood-brain barrier via {{c1::selective active transport}}, not passive diffusion.`
-4. `*Neurology*: Dysfunction of the {{c1::blood-brain barrier}} is implicated in Alzheimer's disease and multiple sclerosis.`
-
-Basic — `modelName: "Basic"`, fields `Front`/`Back`:
-5. `Front: Why can't most blood-borne solutes enter the brain freely?` / `Back: The blood-brain barrier's tight endothelial junctions block non-selective crossing into CNS extracellular fluid.`
-
-Each card tests one fact, admits one answer, and is comprehensible in isolation.
-
-## Card type defaults
-
-| Type | When | Model | Fields |
-|---|---|---|---|
-| **Cloze** (default) | Facts, definitions, terminology, contextual knowledge | `Cloze` | `Text`, `Extra` |
-| **Basic** | "Why" and "how" questions, explanations, causal reasoning | `Basic` | `Front`, `Back` |
-| **Basic (and reversed card)** | Only when bidirectional recall is genuinely needed (foreign vocabulary, symbol↔name) | `Basic (and reversed card)` | `Front`, `Back` |
-
-Default to Cloze. Reserve reversed cards for cases where both recognition and production are needed — every reversal doubles review load.
-
-## AnkiConnect payloads
-
-All requests: `POST http://localhost:8765`, JSON body, always include `"version": 6`.
-
-**Batch add notes:**
 ```json
-{
-  "action": "addNotes",
-  "version": 6,
-  "params": {
-    "notes": [
-      {
-        "deckName": "Target Deck",
-        "modelName": "Cloze",
-        "fields": {
-          "Text": "The {{c1::mitochondria}} is the powerhouse of the cell.",
-          "Extra": ""
-        },
-        "tags": ["biology", "cell-biology"]
-      },
-      {
-        "deckName": "Target Deck",
-        "modelName": "Basic",
-        "fields": {
-          "Front": "Why do mitochondria have their own DNA?",
-          "Back": "They originated as independent prokaryotes engulfed by ancestral eukaryotic cells (endosymbiotic theory)."
-        },
-        "tags": ["biology", "cell-biology"]
-      }
-    ]
+[
+  {
+    "modelName": "Cloze",
+    "fields": {
+      "Text": "Warmth is judged before {{c1::competence}}.",
+      "Back Extra": ""
+    },
+    "tags": ["warmth-competence"]
+  },
+  {
+    "modelName": "Basic",
+    "fields": {
+      "Front": "Why lead with warmth?",
+      "Back": "Because competence-first signaling can read as cold before trust is established."
+    },
+    "tags": ["warmth-competence"]
   }
-}
+]
 ```
 
-**Update note fields:**
-```json
-{
-  "action": "updateNoteFields",
-  "version": 6,
-  "params": {
-    "note": {
-      "id": 1234567890,
-      "fields": {"Front": "Updated question", "Back": "Updated answer"}
-    }
-  }
-}
+Rules:
+- `modelName` must be `Cloze` or `Basic`.
+- `Cloze` fields must be `Text` and `Back Extra`.
+- `Basic` fields must be `Front` and `Back`.
+- Optional `tags` is a string array.
+
+## What the script guarantees
+
+The helper script handles deterministic operations:
+
+- AnkiConnect/version preflight
+- Model/field preflight (strict):
+  - `Basic`: `Front`, `Back`
+  - `Cloze`: `Text`, `Back Extra`
+- Deck preflight + auto-create if missing
+- Deterministic source hash (`sha256(normalized_identity + "\n" + normalized_text)`)
+- Stable source tag + batch tag generation
+- Tag sanitization
+- YAML checklist persistence in `/tmp/anki-add-run-<hash>-<deck>.yaml`
+- Resume semantics (`pending|in_progress|done|failed`)
+- Duplicate preflight (`canAddNotesWithErrorDetail`)
+- Batched insertion (`addNotes`, execution chunk size default 25)
+- Newline normalization (`\n` → `<br>` in `Front`, `Back`, `Text`, `Back Extra`)
+- Soft warnings:
+  - `Front`/`Text` > 220 chars
+  - `Back`/`Back Extra` > 600 chars
+
+If checklist YAML is corrupt/unparseable, script renames it to
+`*.corrupt.<timestamp>.yaml` and starts a fresh checklist.
+
+## Chunking policy
+
+- For large sources (estimated >30 cards), split conceptually by section while generating notes.
+- Script execution/checkpoint chunking defaults to 25 notes (`--execution-chunk-size`).
+
+## Resume commands
+
+Check run status:
+
+```bash
+python3 "$PIPELINE" resume-status --checklist "/tmp/anki-add-run-<hash>-<deck>.yaml"
 ```
 
-**Delete notes:**
-```json
-{"action": "deleteNotes", "version": 6, "params": {"notes": [1234567890]}}
-```
+Re-run the same `add-notes` command to resume unfinished chunks.
 
-**Find and retrieve notes:**
-```json
-{"action": "findNotes", "version": 6, "params": {"query": "deck:MyDeck"}}
-```
-```json
-{"action": "notesInfo", "version": 6, "params": {"notes": [1234567890, 1234567891]}}
-```
+## Duplicate policy
 
-### Gotchas
+Do not fail the overall run because of duplicates.
+Skip non-addable notes and continue.
 
-- Use `<br>` for newlines in fields — raw `\n` won't render.
-- All model fields must be present as keys (use `""` for empty fields).
-- Duplicates are rejected by default (same first field + model + deck).
-- `addNotes` doesn't roll back on partial failure — check each returned ID for `null`.
-- Cloze `Text` field must contain at least one `{{c1::...}}` deletion or the note will fail.
+## Fallback (manual API reference only)
 
-## Tagging
+If script use is impossible, use AnkiConnect directly:
+- `version`, `modelNames`, `modelFieldNames`, `deckNames`, `createDeck`
+- `canAddNotesWithErrorDetail`
+- `addNotes`
 
-Auto-generate tags from the source material's topic hierarchy. Use lowercase, hyphenated: `machine-learning`, `linear-algebra`. When the source is identifiable, add a source tag: `source::deep-learning-book-ch3`.
+## Final response format
 
-## Edge cases
-
-- **Unclear source material**: If the material is too dense or ambiguous to decompose into atomic cards, flag it. Do not generate cards for content the user hasn't understood — suggest they study it first.
-- **Procedural knowledge**: Decompose into decision points, critical steps, and rationale — never enumerate steps as a list. See Principle 17 in [references/02-advanced-techniques.md](references/02-advanced-techniques.md).
-- **Interfering concepts**: When generating cards for similar items, add distinguishing context and create explicit comparison cards ("How does X differ from Y?").
-- **Large source material**: For sources that would yield 30+ cards, break into logical sections and process each separately to maintain quality.
-
-## Reference material
-
-- **Core principles (1–9)**: [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md) — atomicity, precision, understanding, sets, yes/no, context-free, wording, interference, cloze defaults
-- **Advanced techniques (10–19)**: [references/02-advanced-techniques.md](references/02-advanced-techniques.md) — conceptual depth, imagery, personalization, editing, redundancy, procedural decomposition, salience prompts, date-stamping, quick-reference checklist
+- **Deck:** `<deck>`
+- **Generated:** `<n>`
+- **Attempted:** `<n>`
+- **Added:** `<n>`
+- **Skipped (duplicates/non-addable):** `<n>`
+- **Failed:** `<n>`
+- **Warnings:** `<n>`
+- **Source tag:** `<source::... or source-hash::...>`
+- **Batch tag:** `<batch::...>`
+- **Checklist file:** `</tmp/anki-add-run-<hash>-<deck>.yaml>`

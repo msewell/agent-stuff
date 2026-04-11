@@ -219,7 +219,7 @@ Use this routing in order:
    - Yes -> Mermaid
    - No -> continue
 
-2. Is this UML-first (especially sequence/component/deployment)?
+2. Is this UML-first sequence notation?
    - Yes -> PlantUML
    - No -> continue
 
@@ -227,7 +227,7 @@ Use this routing in order:
    - Yes -> Graphviz `dot`
    - No -> continue
 
-4. Is this a general architecture/flow/state/ER output with controlled rendering pipeline?
+4. Is this a general (non-C4) architecture/flow/state/ER output with controlled rendering pipeline?
    - Yes -> D2
 
 5. Is this non-directional concept/network clustering?
@@ -272,4 +272,4 @@ When uncertain, choose D2 for rendered artifacts and Mermaid for GitHub-native d
 - Mermaid docs: https://mermaid.js.org/
 - Graphviz dot guide: https://graphviz.org/pdf/dotguide.pdf
 - ELK reference: https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html
-- Structurizr DSL: https://docs.structurizr.com/
+
