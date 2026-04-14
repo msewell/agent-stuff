@@ -34,15 +34,17 @@ PIPELINE="$(dirname "$SKILL_PATH")/scripts/anki_add_pipeline.py"
 ## Canonical workflow (script-first)
 
 1. **Read source material** and derive card candidates.
-2. **Formulate cards** using:
+2. **Run large-source gate** (required workflow for sources over 2,500 words; see below).
+3. **Formulate cards** using:
    - [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md)
    - [references/02-advanced-techniques.md](references/02-advanced-techniques.md)
-3. **Write notes JSON** to a temp file (contract below).
-4. **Run preflight**:
+   - Apply **density and card-type calibration targets** from `Density and card-type calibration (default targets)` before writing notes JSON.
+4. **Write notes JSON** to a temp file (contract below).
+5. **Run preflight**:
    ```bash
    python3 "$PIPELINE" preflight --deck "<deck>"
    ```
-5. **Run add pipeline**:
+6. **Run add pipeline**:
    ```bash
    python3 "$PIPELINE" add-notes \
      --deck "<deck>" \
@@ -50,7 +52,8 @@ PIPELINE="$(dirname "$SKILL_PATH")/scripts/anki_add_pipeline.py"
      --source-identity "<source-url-or-path-or-title>" \
      --source-text-file "/tmp/source.txt"
    ```
-6. **Return succinct report** from script output.
+7. **Return succinct report** from script output.
+
 
 ## Notes JSON contract
 
@@ -83,6 +86,20 @@ Rules:
 - `Basic` fields must be `Front` and `Back`.
 - Optional `tags` is a string array.
 
+## Source-independent wording (required)
+
+Cards must be understandable in isolation and must not reference the source artifact.
+
+Do **not** use phrasing like:
+- "this guide" / "the guide"
+- "this article" / "this chapter"
+- "the author says"
+- "in the text/document/source"
+
+Rewrite these to domain wording instead, e.g.:
+- "In PBI refinement..."
+- "For throughput forecasting..."
+
 ## What the script guarantees
 
 The helper script handles deterministic operations:
@@ -109,8 +126,23 @@ If checklist YAML is corrupt/unparseable, script renames it to
 
 ## Chunking policy
 
-- For large sources (estimated >30 cards), split conceptually by section while generating notes.
-- Script execution/checkpoint chunking defaults to 25 notes (`--execution-chunk-size`).
+- **Content chunking (required for >2,500-word sources):** build semantic chunks around chapter/section boundaries at ~2,500 words/chunk and persist the chunk plan file before generating notes.
+- Track chunk-level card min/max targets from density rules (5–10 cards per 1,000 words).
+- Process chunks to completion; do not stop after partial progress unless user explicitly approves early stop.
+- Script execution/checkpoint chunking remains 25 notes by default (`--execution-chunk-size`).
+
+## Density and card-type calibration (default targets)
+
+Use these as planning heuristics (not hard quotas), then enforce card quality rules.
+
+- **Cards per 1,000 words:** **5–10**
+- **Cloze:Basic ratio:** **2:1 to 3:1**
+
+Calibration checks:
+- If card density is below range, check for under-extraction of key ideas.
+- If card density is above range, check for over-splitting, low-value cards, or memorizing material not yet understood.
+- If Cloze/Basic mix falls outside range, rebalance unless the source structure strongly justifies it.
+- Keep atomicity and single-answer retrieval as higher priority than hitting numeric targets.
 
 ## Resume commands
 
@@ -137,6 +169,12 @@ If script use is impossible, use AnkiConnect directly:
 ## Final response format
 
 - **Deck:** `<deck>`
+- **Total words (accurate):** `<n>`
+- **Chapter word-count min/max:** `<min>` / `<max>`
+- **Source metrics file:** `</tmp/anki-source-metrics-<source-hash>.json>`
+- **Chunk plan file:** `</tmp/anki-chunk-plan-<source-hash>.yaml>`
+- **Chunks planned/completed:** `<n>` / `<n>`
+- **Document card target min/max:** `<min>` / `<max>`
 - **Generated:** `<n>`
 - **Attempted:** `<n>`
 - **Added:** `<n>`
