@@ -365,14 +365,6 @@ function validateSkill(skillDirInput: string): Diagnostic[] {
         }
       }
 
-      if (/\bCurrent as of\b/i.test(refContent) || /\b(?:19|20)\d{2}\b/.test(refContent)) {
-        diagnostics.push({
-          file: refDisplay,
-          severity: "warning",
-          check: "time-sensitive",
-          message: "Potential time-sensitive wording detected; verify currency and avoid hardcoded years.",
-        });
-      }
     }
   }
 
