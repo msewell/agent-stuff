@@ -34,7 +34,7 @@ Read only the file needed for the current task:
    - Choose **inheritance** only when all conditions hold: true is-a relation, Liskov-safe substitutability, and stable hierarchy.
 
 3. **Design the target shape**
-   - Define minimal collaborator interfaces.
+   - Define minimal collaborator contracts; introduce interfaces/protocols where volatility, multiple implementations, or independent testing justify them.
    - Use constructor injection for required collaborators.
    - Keep inheritance depth shallow (target ≤2 below unavoidable framework bases).
 

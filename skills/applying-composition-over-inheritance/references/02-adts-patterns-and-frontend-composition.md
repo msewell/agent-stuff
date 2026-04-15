@@ -131,7 +131,7 @@ Use DI as the mechanism that assembles composed objects.
 Default rules:
 
 1. Use constructor injection for required dependencies.
-2. Inject interfaces/protocols, not concrete infrastructure classes.
+2. Inject narrow contracts. Use interfaces/protocols at volatile boundaries; use concrete types in stable single-consumer internals.
 3. Keep wiring in one composition root per application layer.
 4. Do not resolve dependencies from service locators inside business classes.
 
