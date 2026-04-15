@@ -15,9 +15,9 @@
 
 Agent Skills are a lightweight, open format for extending AI agent capabilities
 with specialized knowledge and workflows. Originally developed by Anthropic and
-released as an open standard in December 2025, they are now supported by 30+
-agent products — including Claude Code, OpenAI Codex, Gemini CLI, Cursor,
-VS Code Copilot, GitHub Copilot, Amp, Goose, Roo Code, and many more.
+released as an open standard, they are now supported across many agent
+products — including Claude Code, OpenAI Codex, Gemini CLI, Cursor,
+VS Code Copilot, GitHub Copilot, Amp, Goose, Roo Code, and more.
 
 At its core, a skill is a **folder containing a `SKILL.md` file**. This file
 includes metadata (name and description) and instructions that tell an agent how

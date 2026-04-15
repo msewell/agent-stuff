@@ -24,7 +24,7 @@ category: Agent Tooling
 6. **Add scripts only if needed.** Include bundled scripts when the same code
    is rewritten repeatedly or deterministic reliability matters.
 7. **Validate.** Check against the pre-ship checklist in
-   [references/organizing-and-checklist.md](references/organizing-and-checklist.md).
+   [references/08-organizing-and-checklist.md](references/08-organizing-and-checklist.md).
 
 ## Workflow: Reviewing an existing skill
 
@@ -83,11 +83,11 @@ description: "[What it does]. [What it produces or transforms]. Use when [specif
 
 Consult these for detailed guidance on specific topics:
 
-- **Format & specification**: [references/overview-and-format.md](references/overview-and-format.md)
-- **Core principles**: [references/core-principles.md](references/core-principles.md) — context window economy, degrees of freedom, making choices
-- **Metadata & body structure**: [references/metadata-and-structure.md](references/metadata-and-structure.md) — name/description rules, body sections, terminology
-- **Progressive disclosure**: [references/progressive-disclosure.md](references/progressive-disclosure.md) — three-level loading, reference patterns
-- **Bundled resources**: [references/bundled-resources.md](references/bundled-resources.md) — scripts, references, assets guidance
-- **Design patterns**: [references/design-patterns.md](references/design-patterns.md) — template, workflow, feedback loop, routing patterns
-- **Anti-patterns & testing**: [references/anti-patterns-and-testing.md](references/anti-patterns-and-testing.md) — common mistakes, evaluation-driven development, two-instance workflow
-- **Organizing & checklist**: [references/organizing-and-checklist.md](references/organizing-and-checklist.md) — scaling skills, pre-ship checklist, quick-start template
+- **Format & specification**: [references/01-overview-and-format.md](references/01-overview-and-format.md)
+- **Core principles**: [references/02-core-principles.md](references/02-core-principles.md) — context window economy, degrees of freedom, making choices
+- **Metadata & body structure**: [references/03-metadata-and-structure.md](references/03-metadata-and-structure.md) — name/description rules, body sections, terminology
+- **Progressive disclosure**: [references/04-progressive-disclosure.md](references/04-progressive-disclosure.md) — three-level loading, reference patterns
+- **Bundled resources**: [references/05-bundled-resources.md](references/05-bundled-resources.md) — scripts, references, assets guidance
+- **Design patterns**: [references/06-design-patterns.md](references/06-design-patterns.md) — template, workflow, feedback loop, routing patterns
+- **Anti-patterns & testing**: [references/07-anti-patterns-and-testing.md](references/07-anti-patterns-and-testing.md) — common mistakes, evaluation-driven development, two-instance workflow
+- **Organizing & checklist**: [references/08-organizing-and-checklist.md](references/08-organizing-and-checklist.md) — scaling skills, pre-ship checklist, quick-start template

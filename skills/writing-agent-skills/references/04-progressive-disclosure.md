@@ -128,7 +128,7 @@ live in reference files.
 
 2. **Use relative paths from the skill root:**
    ```markdown
-   See [the reference guide](references/REFERENCE.md) for details.
+   See `reference-guide.md` for details.
    Run: scripts/extract.py
    ```
 

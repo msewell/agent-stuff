@@ -141,7 +141,7 @@ If you're a skills maintainer for your team:
 - [ ] At least three evaluation scenarios created
 - [ ] Tested with real usage scenarios (not just test cases)
 - [ ] Tested with all target models (Haiku, Sonnet, Opus, etc.)
-- [ ] Validated with `skills-ref validate`
+- [ ] Validated with your team's skill validation process (if available)
 - [ ] Team feedback incorporated (if applicable)
 
 ---

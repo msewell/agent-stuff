@@ -38,8 +38,8 @@ deep from `SKILL.md`.
 
 ```markdown
 # BAD
-If you're doing this before August 2025, use the old API.
-After August 2025, use the new API.
+If you're doing this before the migration date, use the old API.
+After the migration date, use the new API.
 ```
 
 ```markdown
