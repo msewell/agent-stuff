@@ -92,6 +92,7 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [designing-backend-error-messages](skills/designing-backend-error-messages) | Designs backend API error contracts with a REST-default approach using RFC 9457 Problem Details, stable machine-readable codes, retry semantics, validation error payloads, observability, and security-safe messaging. Reviews existing error handling against a binary rubric and proposes concrete fixes. Produces optional artifacts such as errors.yaml entries, Problem Details examples, OpenAPI fragments, and runbook templates. Use when creating or revising backend error responses, auditing API error quality, mapping status/code behavior, or documenting error handling for REST, gRPC, GraphQL, and async services. |
 | [designing-deep-modules](skills/designing-deep-modules) | Guides designing, reviewing, and refactoring modules for depth — maximizing functionality hidden behind minimal interfaces. Analyzes module boundaries, identifies shallow modules and classitis, applies deep module heuristics (pull complexity downward, define errors out of existence, design for the common case), and produces refactoring plans. Covers information hiding, leaky abstractions, and abstraction boundaries based on Ousterhout's A Philosophy of Software Design. Use when designing module interfaces, reviewing code for shallow abstractions, refactoring pass-through layers, evaluating API surface area, reducing interface complexity, or applying deep module principles at any scale (functions, classes, packages, services, APIs). |
 | [reducing-coupling](skills/reducing-coupling) | Analyzes a codebase scope for coupling issues, diagnoses coupling types using the Connascence framework, and proposes a comprehensive refactoring plan with concrete code changes. Use when asked to find coupling, reduce dependencies, decouple modules, or improve modularity in a codebase. |
+| [threat-modeling](skills/threat-modeling) | Produces structured threat models for software systems using STRIDE on data flow diagrams. Generates DFDs with trust boundaries, identifies threats per element, scores risks, and defines concrete mitigations. Outputs a complete threat model Markdown document through phased, interactive delivery. Use when threat modeling a system, analyzing security threats, identifying attack surfaces, performing STRIDE analysis, assessing security risks in architecture, creating a threat model document, or when the user mentions threat model, attack surface, trust boundaries, STRIDE, or security risk analysis. |
 <!-- SKILLS:END -->
 
 ## Extensions
@@ -109,10 +110,10 @@ Install any extension package from this repo by pointing `pi install` at the ext
 <!-- PROMPTS:START -->
 | Name | Description |
 |------|-------------|
-| [codex-exec-plan](prompts/codex-exec-plan.md) | Create a plan using codex_exec_plans guidance and installed skills. Accepts optional user arguments via $@. |
-| [missing-tools](prompts/missing-tools.md) | Capture missing tools that would improve research speed and quality, then write requirements/context to MISSING_TOOLS.md. Accepts optional user arguments via $@. |
-| [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates. Accepts optional user arguments via $@. |
-| [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities. Accepts optional scope arguments via $@. |
+| [codex-exec-plan](prompts/codex-exec-plan.md) | Create a plan using codex_exec_plans guidance and installed skills. |
+| [missing-tools](prompts/missing-tools.md) | Capture missing tools that would improve research speed and quality, then write requirements/context to MISSING_TOOLS.md. |
+| [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates. |
+| [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities. |
 <!-- PROMPTS:END -->
 
 <!-- Run `.scripts/gen-index.sh` to regenerate the index. -->

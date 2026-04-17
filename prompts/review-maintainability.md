@@ -1,5 +1,6 @@
 ---
-description: Review code for long-term maintainability, simplicity, and removal opportunities. Accepts optional scope arguments via $@.
+description: Review code for long-term maintainability, simplicity, and removal opportunities.
+argument-hint: "[scope]"
 ---
 <!-- Source: /Users/mls/Developer/human-stuff/code-review-for-maintainability.md -->
 

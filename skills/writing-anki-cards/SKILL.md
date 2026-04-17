@@ -2,7 +2,7 @@
 name: writing-anki-cards
 description: "Generates high-quality Anki flashcards from source material and adds them directly to Anki via AnkiConnect. Produces atomic cloze and Q/A cards, skips duplicates safely, and returns a succinct run report. Use when the user asks to create Anki cards, flashcards, or spaced-repetition prompts from notes, articles, docs, or text."
 category: Writing & Communication
-compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159), Python 3, jq, and pyyaml"
+compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159), Python 3, jq, pyyaml, and pi CLI"
 ---
 
 # Writing Anki Cards (Add-Only)
@@ -10,169 +10,226 @@ compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159
 This skill is **add-only**: generate cards and insert notes into Anki.
 Do not run review/update/delete workflows.
 
-Use the bundled deterministic helper script:
-
 ```bash
-PIPELINE="$(dirname "$SKILL_PATH")/scripts/anki_add_pipeline.py"
+SKILL_DIR="$(dirname "$SKILL_PATH")"
+PIPELINE="$SKILL_DIR/scripts/anki_add_pipeline.py"
+REFS="$SKILL_DIR/references"
 ```
 
 ## Quick start
 
 1. Ensure Anki is running with AnkiConnect.
-2. Generate note candidates into a JSON array file.
-3. Run script preflight.
-4. Run script add-notes.
-5. Return the script summary.
+2. Save source to `/tmp/source.txt` and run the source gate.
+3. Read the card formulation principles.
+4. For each chunk: generate → evaluate → fix.
+5. Merge, preflight, add notes, return report.
 
 ## Prerequisites
 
 - Anki + AnkiConnect (2055492159)
-- `python3`
-- `jq`
-- `pyyaml` (recommended: `python3 -m venv .venv && source .venv/bin/activate && pip install pyyaml`)
+- `python3`, `jq`
+- `pyyaml`: `python3 -m venv .venv && source .venv/bin/activate && pip install pyyaml`
+- `pi` CLI (for the per-chunk evaluator)
 
-## Canonical workflow (script-first)
+## Canonical workflow
 
-1. **Read source material** and derive card candidates.
-2. **Run large-source gate** (required workflow for sources over 2,500 words; see below).
-3. **Formulate cards** using:
-   - [references/01-card-formulation-principles.md](references/01-card-formulation-principles.md)
-   - [references/02-advanced-techniques.md](references/02-advanced-techniques.md)
-   - Apply **density and card-type calibration targets** from `Density and card-type calibration (default targets)` before writing notes JSON.
-4. **Write notes JSON** to a temp file (contract below).
-5. **Run preflight**:
-   ```bash
-   python3 "$PIPELINE" preflight --deck "<deck>"
-   ```
-6. **Run add pipeline**:
-   ```bash
-   python3 "$PIPELINE" add-notes \
-     --deck "<deck>" \
-     --notes-json "/tmp/anki-notes.json" \
-     --source-identity "<source-url-or-path-or-title>" \
-     --source-text-file "/tmp/source.txt"
-   ```
-7. **Return succinct report** from script output.
+**1. Save source material** to `/tmp/source.txt`.
+
+**2. Run source gate** — always, regardless of source size.
+Produces a chunk plan and source metrics YAML before any cards are written.
+See [Source gate](#source-gate-step-2) below.
+
+**3. Read card formulation principles** using the `read` tool — mandatory before writing any cards:
+- [Card formulation principles](references/01-card-formulation-principles.md)
+- [Advanced techniques](references/02-advanced-techniques.md)
+- `read "$REFS/01-card-formulation-principles.md"`
+- `read "$REFS/02-advanced-techniques.md"`
+
+**4. For each chunk — generate → evaluate → fix:**
+
+a. Generate cards from that chunk's source sections → write `/tmp/anki-chunk-N.yaml`
+b. Run the per-chunk evaluator → read free-form output.
+   See [Per-chunk evaluator](#per-chunk-evaluator-step-4b) below.
+c. **Rewrite `/tmp/anki-chunk-N.yaml` completely** based on evaluation output.
+   Do not make surgical edits — the evaluator may identify structural issues
+   (missing coverage, ratio drift, systematic patterns) that require adding or
+   removing cards, not just editing existing ones.
+
+Process each chunk to completion before starting the next. Do not stop mid-source
+unless the user explicitly approves an early exit.
+
+**5. Merge all reviewed chunks:**
+```bash
+cat /tmp/anki-chunk-*.yaml > /tmp/anki-notes.yaml
+```
+
+**6. Run preflight:**
+```bash
+python3 "$PIPELINE" preflight --deck "<deck>"
+```
+
+**7. Run add pipeline:**
+```bash
+python3 "$PIPELINE" add-notes \
+  --deck "<deck>" \
+  --notes-file "/tmp/anki-notes.yaml" \
+  --source-identity "<source-url-or-path-or-title>" \
+  --source-text-file "/tmp/source.txt"
+```
+
+**8. Return succinct report** from script output.
+
+## Source gate (step 2)
+
+Always run — for sources ≤2,500 words, produce a single-chunk plan.
+
+1. Count total words in `/tmp/source.txt`.
+2. List section headings with approximate word counts.
+3. Group sections into ~2,500-word semantic chunks. If total ≤2,500 words, one chunk covers the full source.
+4. Compute per-chunk card targets (5–10 cards per 1,000 words).
+5. Write `/tmp/anki-source-metrics-<hash>.yaml`:
+
+```yaml
+source_hash: "6f0fa16a8c25"
+total_words: 8303
+sections:
+  - heading: "§1. Introduction"
+    words: 225
+  - heading: "§2. Manifesto"
+    words: 300
+```
+
+6. Write `/tmp/anki-chunk-plan-<hash>.yaml`:
+
+```yaml
+source_hash: "6f0fa16a8c25"
+total_words: 8303
+card_target_min: 41
+card_target_max: 83
+chunks:
+  - id: 1
+    sections: "§1–§5"
+    approx_words: 2100
+    card_min: 10
+    card_max: 21
+    status: pending
+```
+
+The hash is the first 12 characters of `sha256(normalized_source_identity + "\n" + normalized_source_text)` — the same value the pipeline script computes internally.
+
+## Per-chunk evaluator (step 4b)
+
+After writing `/tmp/anki-chunk-N.yaml`, build and run the evaluator.
+Template: [Evaluator prompt](references/03-evaluator-prompt.md)
 
 
-## Notes JSON contract
+```bash
+PROMPT=$(python3 -c "
+import sys
+t = open(sys.argv[1]).read()
+c = open(sys.argv[2]).read()
+print(t.replace('{{CHUNK_YAML}}', c))
+" "$REFS/03-evaluator-prompt.md" "/tmp/anki-chunk-N.yaml")
 
-Input to `add-notes` must be a JSON array of note objects:
+pi --mode json --no-session --no-skills --no-extensions \
+   --no-tools --no-context-files \
+   --model opencode-go/glm-5.1 "$PROMPT" 2>/dev/null \
+   | jq -rj '..|.delta? // empty'
+```
 
-```json
-[
-  {
-    "modelName": "Cloze",
-    "fields": {
-      "Text": "Warmth is judged before {{c1::competence}}.",
-      "Back Extra": ""
-    },
-    "tags": ["warmth-competence"]
-  },
-  {
-    "modelName": "Basic",
-    "fields": {
-      "Front": "Why lead with warmth?",
-      "Back": "Because competence-first signaling can read as cold before trust is established."
-    },
-    "tags": ["warmth-competence"]
-  }
-]
+The evaluator returns three sections: a card-by-card verdict, a chunk-level synthesis
+(coverage gaps, ratio, systematic patterns, interference), and a concrete action list.
+Read all three before rewriting the chunk. Evaluate the feedback critically — the
+evaluator can be wrong, over-strict, or miss domain context. Accept findings that
+improve clarity and retrieval; push back on those that would make cards worse.
+
+## Notes YAML contract
+
+Notes files are YAML lists. **Always double-quote all field values** — this single rule
+prevents all YAML parse errors (colons in values, boolean-like words, and `{{...}}` syntax
+are all safe inside double quotes).
+
+```yaml
+# Section comments are native in YAML — use them freely
+# === Chunk 1: §1–§5 Foundations (2,100 words) | target: 10–21 cards ===
+
+- modelName: Cloze
+  fields:
+    Text: "Warmth is judged before {{c1::competence}}."
+    Back Extra: ""
+  tags: [warmth-competence]
+
+- modelName: Basic
+  fields:
+    Front: "Why lead with warmth?"
+    Back: "Competence-first signaling reads as cold before trust is established."
+  tags: [warmth-competence]
 ```
 
 Rules:
 - `modelName` must be `Cloze` or `Basic`.
-- `Cloze` fields must be `Text` and `Back Extra`.
-- `Basic` fields must be `Front` and `Back`.
-- Optional `tags` is a string array.
+- `Cloze` fields: `Text` and `Back Extra`.
+- `Basic` fields: `Front` and `Back`.
+- `tags`: optional flow sequence `[tag1, tag2]`.
 
 ## Source-independent wording (required)
 
-Cards must be understandable in isolation and must not reference the source artifact.
+Cards must be comprehensible in isolation. Do **not** reference the source artifact.
 
-Do **not** use phrasing like:
-- "this guide" / "the guide"
-- "this article" / "this chapter"
-- "the author says"
-- "in the text/document/source"
+❌ "this guide", "the guide", "this article", "the author says", "in the text/document",
+or any proper name unique to a worked example in the source (system names, fictional
+entities, organisation names used only as examples).
 
-Rewrite these to domain wording instead, e.g.:
-- "In PBI refinement..."
-- "For throughput forecasting..."
+✅ Rewrite to domain wording: "In threat modeling…", "For REST APIs…", "When designing…"
 
 ## What the script guarantees
 
-The helper script handles deterministic operations:
-
 - AnkiConnect/version preflight
-- Model/field preflight (strict):
-  - `Basic`: `Front`, `Back`
-  - `Cloze`: `Text`, `Back Extra`
+- Model/field preflight (`Basic`: `Front`, `Back`; `Cloze`: `Text`, `Back Extra`)
 - Deck preflight + auto-create if missing
 - Deterministic source hash (`sha256(normalized_identity + "\n" + normalized_text)`)
-- Stable source tag + batch tag generation
-- Tag sanitization
-- YAML checklist persistence in `/tmp/anki-add-run-<hash>-<deck>.yaml`
+- Stable source tag + batch tag; tag sanitization
+- YAML checklist at `/tmp/anki-add-run-<hash>-<deck>.yaml`
 - Resume semantics (`pending|in_progress|done|failed`)
 - Duplicate preflight (`canAddNotesWithErrorDetail`)
-- Batched insertion (`addNotes`, execution chunk size default 25)
-- Newline normalization (`\n` → `<br>` in `Front`, `Back`, `Text`, `Back Extra`)
-- Soft warnings:
-  - `Front`/`Text` > 220 chars
-  - `Back`/`Back Extra` > 600 chars
-
-If checklist YAML is corrupt/unparseable, script renames it to
-`*.corrupt.<timestamp>.yaml` and starts a fresh checklist.
-
-## Chunking policy
-
-- **Content chunking (required for >2,500-word sources):** build semantic chunks around chapter/section boundaries at ~2,500 words/chunk and persist the chunk plan file before generating notes.
-- Track chunk-level card min/max targets from density rules (5–10 cards per 1,000 words).
-- Process chunks to completion; do not stop after partial progress unless user explicitly approves early stop.
-- Script execution/checkpoint chunking remains 25 notes by default (`--execution-chunk-size`).
+- Batched insertion (default execution chunk size: 25)
+- Newline normalization (`\n` → `<br>` in all fields)
+- Soft warnings: `Front`/`Text` > 220 chars; `Back`/`Back Extra` > 600 chars
 
 ## Density and card-type calibration (default targets)
 
-Use these as planning heuristics (not hard quotas), then enforce card quality rules.
-
-- **Cards per 1,000 words:** **5–10**
-- **Cloze:Basic ratio:** **2:1 to 3:1**
+- **Cards per 1,000 words:** 5–10
+- **Cloze:Basic ratio:** 2:1 to 3:1
 
 Calibration checks:
-- If card density is below range, check for under-extraction of key ideas.
-- If card density is above range, check for over-splitting, low-value cards, or memorizing material not yet understood.
-- If Cloze/Basic mix falls outside range, rebalance unless the source structure strongly justifies it.
-- Keep atomicity and single-answer retrieval as higher priority than hitting numeric targets.
+- Below density → under-extraction; above → over-splitting or low-value cards.
+- Outside ratio range → rebalance unless source structure strongly justifies it.
+- Atomicity and single-answer retrieval take priority over hitting numeric targets.
 
 ## Resume commands
-
-Check run status:
 
 ```bash
 python3 "$PIPELINE" resume-status --checklist "/tmp/anki-add-run-<hash>-<deck>.yaml"
 ```
 
-Re-run the same `add-notes` command to resume unfinished chunks.
+Re-run the same `add-notes` command to resume unfinished execution chunks.
 
 ## Duplicate policy
 
-Do not fail the overall run because of duplicates.
-Skip non-addable notes and continue.
+Skip non-addable notes and continue. Do not fail the run for duplicates.
 
 ## Fallback (manual API reference only)
 
-If script use is impossible, use AnkiConnect directly:
-- `version`, `modelNames`, `modelFieldNames`, `deckNames`, `createDeck`
-- `canAddNotesWithErrorDetail`
-- `addNotes`
+If script use is impossible: `version`, `modelNames`, `modelFieldNames`, `deckNames`,
+`createDeck`, `canAddNotesWithErrorDetail`, `addNotes`.
 
 ## Final response format
 
 - **Deck:** `<deck>`
 - **Total words (accurate):** `<n>`
-- **Chapter word-count min/max:** `<min>` / `<max>`
-- **Source metrics file:** `</tmp/anki-source-metrics-<source-hash>.json>`
-- **Chunk plan file:** `</tmp/anki-chunk-plan-<source-hash>.yaml>`
+- **Section word-count min/max:** `<min>` / `<max>`
+- **Source metrics file:** `/tmp/anki-source-metrics-<source-hash>.yaml`
+- **Chunk plan file:** `/tmp/anki-chunk-plan-<source-hash>.yaml`
 - **Chunks planned/completed:** `<n>` / `<n>`
 - **Document card target min/max:** `<min>` / `<max>`
 - **Generated:** `<n>`
@@ -181,6 +238,6 @@ If script use is impossible, use AnkiConnect directly:
 - **Skipped (duplicates/non-addable):** `<n>`
 - **Failed:** `<n>`
 - **Warnings:** `<n>`
-- **Source tag:** `<source::... or source-hash::...>`
+- **Source tag:** `<source::...>`
 - **Batch tag:** `<batch::...>`
-- **Checklist file:** `</tmp/anki-add-run-<hash>-<deck>.yaml>`
+- **Checklist file:** `/tmp/anki-add-run-<hash>-<deck>.yaml`

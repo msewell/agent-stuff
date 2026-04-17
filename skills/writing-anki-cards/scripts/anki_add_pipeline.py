@@ -303,11 +303,14 @@ def preflight_or_raise(anki_url: str, deck: str, create_deck_if_missing: bool = 
 
 def load_notes(path: Path) -> list[dict[str, Any]]:
     with path.open("r", encoding="utf-8") as f:
-        data = json.load(f)
+        if path.suffix in (".yaml", ".yml"):
+            data = yaml.safe_load(f)
+        else:
+            data = json.load(f)
     if not isinstance(data, list):
-        raise PipelineError("Notes JSON must be an array")
+        raise PipelineError("Notes file must be a YAML or JSON array")
     if not data:
-        raise PipelineError("Notes JSON is empty")
+        raise PipelineError("Notes file is empty")
     out: list[dict[str, Any]] = []
     for idx, raw in enumerate(data):
         if not isinstance(raw, dict):
@@ -404,7 +407,7 @@ def cmd_resume_status(args: argparse.Namespace) -> None:
 def cmd_add_notes(args: argparse.Namespace) -> None:
     preflight_or_raise(args.anki_url, args.deck, create_deck_if_missing=True)
 
-    notes = load_notes(Path(args.notes_json))
+    notes = load_notes(Path(args.notes_file))
 
     source_identity = args.source_identity
     source_text = Path(args.source_text_file).read_text(encoding="utf-8")
@@ -568,7 +571,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_add = sub.add_parser("add-notes", help="Add pre-generated notes deterministically")
     p_add.add_argument("--deck", required=True)
-    p_add.add_argument("--notes-json", required=True, help="Path to notes JSON array")
+    p_add.add_argument("--notes-file", required=True, help="Path to notes YAML file (or JSON)")
     p_add.add_argument("--source-identity", required=True, help="Source URL/path/title")
     p_add.add_argument("--source-text-file", required=True, help="Path to source text content")
     p_add.add_argument(

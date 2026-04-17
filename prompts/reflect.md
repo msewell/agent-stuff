@@ -1,5 +1,6 @@
 ---
-description: Reflect on session learnings and propose AGENTS.md updates. Accepts optional user arguments via $@.
+description: Reflect on session learnings and propose AGENTS.md updates.
+argument-hint: "[focus] [exclusions]"
 ---
 Review this entire session from the beginning.
 Treat user arguments as reflection filters and constraints (focus areas, exclusions, output style, strictness).
