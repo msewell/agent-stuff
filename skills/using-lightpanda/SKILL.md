@@ -1,6 +1,6 @@
 ---
 name: using-lightpanda
-description: "Operates Lightpanda, a Zig-based headless browser with no rendering pipeline, as an AI agent's browser tool via native MCP or CDP. Covers MCP tool selection (goto, markdown, semantic_tree, interactiveElements, structuredData, click, fill), output mode strategy, the observe-decide-act loop, actions grounded in node IDs, token-efficient page reading, and Chrome fallback triggers. Use when browsing the web with Lightpanda, fetching or scraping pages, navigating and interacting with websites, extracting page content as markdown or structured data, clicking or filling form elements via Lightpanda MCP tools, or when the user mentions Lightpanda."
+description: "Operates Lightpanda, a Zig-based headless browser with no rendering pipeline, as an AI agent's browser tool via native MCP or CDP. Covers MCP tool selection (goto, markdown, semantic_tree, interactiveElements, structuredData, click, fill), output mode strategy, the observe-decide-act loop, actions grounded in node IDs, token-efficient page reading, and Chrome fallback triggers. Use when tasks require interactive or stateful web navigation on JS-heavy sites (multi-step flows, form fill/click actions, DOM-aware extraction by node ID), or when the user explicitly asks to use Lightpanda."
 category: Agent Tooling
 compatibility: "Requires lightpanda binary on PATH or a running lightpanda serve/mcp instance"
 ---
@@ -22,6 +22,21 @@ Three modes of operation:
 
 Sub-100ms cold start. ~9–11× faster and ~9–16× less memory than headless
 Chrome on equivalent workloads. Beta maturity — ~95% site compatibility.
+
+## Scope
+
+- Interactive, stateful browsing flows where the agent must `goto`, `click`,
+  and `fill` over multiple steps.
+- JS-dependent pages where static HTTP fetches miss important content.
+- Targeted extraction from rendered page state using `markdown`,
+  `structuredData`, or a scoped node subtree.
+
+## Non-goals
+
+- Open-web source discovery or ranking.
+- Bulk multi-URL research extraction tasks.
+- Generic URL-to-markdown conversion when no page interaction is needed.
+- Non-HTML document conversion (PDF/DOCX/PPTX/audio/image workflows).
 
 ## When Lightpanda won't work
 
@@ -143,8 +158,10 @@ the page changed.
    JS is async.
 3. **Re-observe after navigation.** Every `goto` or `click` that triggers
    navigation invalidates prior observations.
-4. **Abort on repeated failures.** If five consecutive tool calls error, stop
-   and report the problem. Do not loop on broken selectors or crashed pages.
+4. **Abort on repeated failures.** If three consecutive actions fail on the
+   same URL, stop and trigger fallback guidance. If five consecutive tool calls
+   fail overall, stop and report the problem. Do not loop on broken selectors
+   or crashed pages.
 5. **Budget context.** Prefer `interactiveElements` (small) over
    `semantic_tree` (medium) over full `markdown` (large). Scope to a subtree
    via node ID when possible.
@@ -162,12 +179,13 @@ the page changed.
 - **Dumping full-page `markdown` on every turn.** Scope to a section or use
   `structuredData` when structured data is the goal.
 - **Retrying endlessly on a failing page.** Lightpanda has a ~5% SPA
-  incompatibility tail. After 2–3 failures on the same URL, report the issue
-  and suggest a Chrome fallback.
+  incompatibility tail. After 3 consecutive failures on the same URL, report
+  the issue and suggest a Chrome fallback.
 
 ## Chrome fallback
 
-When a page fails (navigation timeout, JS crash, repeated empty output):
+When a page fails (navigation timeout, JS crash, repeated empty output, or
+3 consecutive failures on the same URL):
 
 1. Report the failure to the user with the URL and error.
 2. Suggest retrying with Chrome/Chromium if available.

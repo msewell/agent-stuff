@@ -20,6 +20,9 @@ Do not cover plugin authoring, provider authoring, or onboarding context files u
 
 - Open-web discovery, ranking, or source-finding.
 - Recency-filtered/domain-filtered research workflows.
+- Interactive browser automation workflows (click/fill/login/stateful
+  navigation).
+- DOM action tasks that depend on browser node IDs.
 
 ## Defaults
 
@@ -164,13 +167,17 @@ markit formats
 ### Failure triage
 
 1. Verify CLI availability:
+
    ```bash
    markit --version
    ```
+
 2. If missing, install globally:
+
    ```bash
    npm install -g markit-ai
    ```
+
 3. For unsupported formats, check `markit formats` and pick a supported source.
 4. For file errors, re-check absolute/relative path and current working directory.
 5. For URL failures, retry once, then surface the failing URL and command output.

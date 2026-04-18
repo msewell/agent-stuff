@@ -9,15 +9,20 @@ allowed-tools: Bash
 
 ## Prerequisites
 
+- `parallel-cli` must be installed and available on `PATH`.
+- Verify authentication once per task when needed:
+  - `parallel-cli auth`
 
 ## Non-goals
 
 - General file/URL-to-markdown conversion tasks.
 - OCR, image description, or audio transcription.
 - Unbounded browsing without a concrete search or extraction objective.
-- `parallel-cli` must be installed and authenticated.
-- Verify once per task when needed:
-  - `parallel-cli auth`
+- Interactive browser automation workflows (click/fill/login/stateful
+  navigation).
+- Single-page interaction loops where the agent must act on DOM elements by
+  node ID.
+- `parallel-cli` setup and account provisioning guidance.
 
 ## Default command profiles
 
@@ -55,6 +60,7 @@ parallel-cli extract <url1> <url2> <url3> \
 ```
 
 Notes:
+
 - `extract --no-excerpts` alone is invalid (it errors unless full content is requested).
 
 ## Refinement strategy
