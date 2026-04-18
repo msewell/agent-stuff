@@ -1,0 +1,13 @@
+{
+  "name": "pi-extension-markdownlint-on-write",
+  "version": "0.1.0",
+  "description": "Pi extension that runs markdownlint-cli2 after markdown write/edit tool calls",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./extensions"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}

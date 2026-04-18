@@ -1,6 +1,6 @@
 # pi-extension-code-last
 
-A pi extension that adds `/code-last` to open the last assistant message in a new VS Code window.
+A standalone pi extension package that adds `/code-last` to open the last assistant message in a new VS Code window.
 
 ## What it does
 
@@ -22,7 +22,7 @@ Load directly:
 pi -e ./extensions/code-last.ts
 ```
 
-Or install this package (manually later) and run:
+Or install/load this package and run:
 
 ```text
 /code-last
