@@ -131,7 +131,7 @@ c = open(sys.argv[2]).read()
 print(t.replace('{{CHUNK_YAML}}', c))
 " "$REFS/03-evaluator-prompt.md" "/tmp/anki-chunk-N.yaml")
 
-pi --mode json --no-session --no-skills --no-extensions \
+timeout 180 pi --mode json --no-session --no-skills --no-extensions \
    --no-tools --no-context-files \
    --model opencode-go/glm-5.1 "$PROMPT" 2>/dev/null \
    | jq -rj '..|.delta? // empty'
