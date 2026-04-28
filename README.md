@@ -105,7 +105,6 @@ Install any extension package from this repo by pointing `pi install` at the ext
 | Name | Description |
 |------|-------------|
 | [pi-extension-code-last](extensions/pi-extension-code-last) | Pi extension that opens the last assistant message in VS Code |
-| [pi-extension-markdownlint-on-write](extensions/pi-extension-markdownlint-on-write) | Pi extension that runs markdownlint-cli2 after markdown write/edit tool calls |
 <!-- EXTENSIONS:END -->
 
 ## Prompts
