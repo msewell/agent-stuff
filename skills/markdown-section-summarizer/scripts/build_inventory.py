@@ -4,13 +4,27 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import pysbd.languages as _pysbd_langs
+
 from mdsum_core import build_inventory, write_json
+
+SUPPORTED_LANGUAGES = sorted(_pysbd_langs.LANGUAGE_CODES.keys())
 
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Build per-section sentence inventory from a markdown file.")
     p.add_argument("input", type=Path, help="Input markdown file")
     p.add_argument("-o", "--output", type=Path, required=True, help="Output inventory JSON path")
+    p.add_argument(
+        "--language",
+        required=True,
+        choices=SUPPORTED_LANGUAGES,
+        metavar="LANG",
+        help=(
+            "pysbd language code for sentence segmentation. "
+            f"Supported: {', '.join(SUPPORTED_LANGUAGES)}"
+        ),
+    )
     return p.parse_args()
 
 
@@ -29,7 +43,7 @@ def main() -> int:
         print(f"ERROR: failed to read input file {args.input}: {exc}")
         return 1
 
-    inventory = build_inventory(source_text, source_file=str(args.input.resolve()))
+    inventory = build_inventory(source_text, source_file=str(args.input.resolve()), language=args.language)
 
     try:
         write_json(args.output, inventory)

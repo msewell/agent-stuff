@@ -147,13 +147,15 @@ Now the specific, useful fact is retrieved.
 
 Every card must be fully comprehensible in isolation — as if a stranger found it on the ground.
 
+Assume Anki review is effectively **front-only**: the reviewer may not see deck name, tags, or source metadata while answering. The prompt itself must carry enough topic context to disambiguate what domain the card is about.
+
 ### Missing topic context
 
-When reviewing interleaved subjects, a card like "Memory is an example of a {{non-combinatorial}} circuit" could confuse someone also studying cognitive science. Add a context prefix:
+When reviewing interleaved subjects, a card like "Memory is an example of a {{non-combinatorial}} circuit" could confuse someone also studying cognitive science. If the prompt could plausibly belong to multiple domains, add topic context directly to the card:
 
 > *Electronics*: Memory is an example of a {{c1::non-combinatorial (sequential)}} circuit.
 
-A prefix, a field label, or context woven into the sentence all work. The goal is instant disambiguation.
+A prefix, a field label, or context woven into the sentence all work. The goal is instant disambiguation from the prompt alone.
 
 ### Source-dependent phrasing
 

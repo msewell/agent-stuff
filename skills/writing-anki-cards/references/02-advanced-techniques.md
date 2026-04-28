@@ -184,7 +184,7 @@ Before adding a card, verify:
 - [ ] **Atomic**: tests exactly one thing
 - [ ] **Precise**: admits exactly one answer
 - [ ] **Understood**: the answer can be explained without the card
-- [ ] **Context-free**: comprehensible in isolation, with topic cues if needed
+- [ ] **Context-free**: comprehensible in isolation from the prompt alone (assume no deck/tag visibility), with topic cues if needed
 - [ ] **Trim**: no unnecessary words
 - [ ] **Appropriate type**: cloze for contextual facts, Q/A for "why/how," reversed only when bidirectional recall is needed
 - [ ] **Not a list**: if it enumerates, it's been decomposed or given a mnemonic

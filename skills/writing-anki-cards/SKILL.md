@@ -172,15 +172,23 @@ Rules:
 - `Basic` fields: `Front` and `Back`.
 - `tags`: optional flow sequence `[tag1, tag2]`.
 
-## Source-independent wording (required)
+## Source-independent and self-contextual wording (required)
 
-Cards must be comprehensible in isolation. Do **not** reference the source artifact.
+Cards must be comprehensible in isolation. Assume the reviewer sees only the card prompt
+(`Front` for Basic, `Text` for Cloze) — not deck name, tags, or source metadata.
+
+Before keeping a card, run this check: **if this prompt appeared alone in a mixed-deck
+review session, would the topic be unambiguous?** If not, add topic context directly to the
+prompt (prefix, field label, or context woven into the sentence).
+
+Do **not** reference the source artifact.
 
 ❌ "this guide", "the guide", "this article", "the author says", "in the text/document",
 or any proper name unique to a worked example in the source (system names, fictional
 entities, organisation names used only as examples).
 
-✅ Rewrite to domain wording: "In threat modeling…", "For REST APIs…", "When designing…"
+✅ Rewrite to domain wording with explicit topic context when needed:
+"In threat modeling…", "For REST APIs…", "In electronics…", "When designing…"
 
 ## What the script guarantees
 

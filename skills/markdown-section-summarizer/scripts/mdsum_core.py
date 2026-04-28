@@ -15,6 +15,28 @@ import pysbd
 PREAMBLE_ID = "_preamble"
 SCHEMA_VERSION = "1.0"
 
+# Matches YAML frontmatter at the very start of a file: ---\n...\n---\n
+_FRONTMATTER_RE = re.compile(r'\A---[ \t]*\n.*?\n(?:---|\.\.\.)[ \t]*(?:\n|$)', re.DOTALL)
+
+# Matches inline image embeds: ![alt text](path "optional title")
+_IMAGE_RE = re.compile(r'!\[[^\]]*\]\([^)]*\)')
+
+
+def strip_frontmatter(text: str) -> str:
+    """Replace YAML frontmatter with blank lines to preserve source line numbers."""
+    m = _FRONTMATTER_RE.match(text)
+    if not m:
+        return text
+    matched = m.group(0)
+    return '\n' * matched.count('\n') + text[m.end():]
+
+
+def _extract_images(text: str) -> tuple[str, list[str]]:
+    """Strip image markdown from text, returning (cleaned_text, list_of_image_strings)."""
+    images = _IMAGE_RE.findall(text)
+    clean = _IMAGE_RE.sub('', text).strip()
+    return clean, images
+
 
 @dataclass
 class Section:
@@ -23,6 +45,9 @@ class Section:
     level: int | None
     heading: str | None
     text_parts: list[str] = field(default_factory=list)
+    images: list[str] = field(default_factory=list)
+    start_line: int = 1   # 1-indexed line in source file
+    end_line: int | None = None  # 1-indexed, inclusive; set after full parse
 
     @property
     def text(self) -> str:
@@ -53,12 +78,17 @@ def parse_markdown_sections(markdown_text: str) -> list[Section]:
 
     Content is assigned to the nearest active heading section.
     Content before the first heading is assigned to PREAMBLE_ID.
+    YAML frontmatter is stripped before parsing (replaced with blank lines
+    to preserve source line numbers). Image embeds are extracted from prose
+    and stored separately; they do not contribute to sentence counts.
     """
+    markdown_text = strip_frontmatter(markdown_text)
     md = MarkdownIt("commonmark")
     tokens = md.parse(markdown_text)
+    total_lines = len(markdown_text.splitlines())
 
     sections: list[Section] = [
-        Section(id=PREAMBLE_ID, order=0, level=None, heading=None)
+        Section(id=PREAMBLE_ID, order=0, level=None, heading=None, start_line=1)
     ]
     by_id: dict[str, Section] = {PREAMBLE_ID: sections[0]}
 
@@ -88,11 +118,13 @@ def parse_markdown_sections(markdown_text: str) -> list[Section]:
                 heading_counters[deeper] = 0
 
             section_id = ".".join(str(heading_counters[j]) for j in range(1, level + 1))
+            start_line = (tok.map[0] + 1) if tok.map else 1
             section = Section(
                 id=section_id,
                 order=len(sections),
                 level=level,
                 heading=heading_text,
+                start_line=start_line,
             )
             sections.append(section)
             by_id[section_id] = section
@@ -110,9 +142,19 @@ def parse_markdown_sections(markdown_text: str) -> list[Section]:
             continue
 
         current_id = heading_stack[-1][1] if heading_stack else PREAMBLE_ID
-        text = _normalize_inline_text(tok.content)
-        if text:
-            by_id[current_id].text_parts.append(text)
+        raw = _normalize_inline_text(tok.content)
+        clean_text, images = _extract_images(raw)
+        if images:
+            by_id[current_id].images.extend(images)
+        if clean_text:
+            by_id[current_id].text_parts.append(clean_text)
+
+    # Compute end lines: each section ends on the line before the next one begins.
+    for i, sec in enumerate(sections):
+        if i + 1 < len(sections):
+            sec.end_line = sections[i + 1].start_line - 1
+        else:
+            sec.end_line = total_lines
 
     return sections
 
@@ -137,9 +179,9 @@ def target_sentence_count(n_source_sentences: int) -> int:
     return int(math.floor(math.sqrt(max(0, n_source_sentences))))
 
 
-def build_inventory(markdown_text: str, *, source_file: str | None = None) -> dict[str, Any]:
+def build_inventory(markdown_text: str, *, source_file: str | None = None, language: str = "en") -> dict[str, Any]:
     sections = parse_markdown_sections(markdown_text)
-    segmenter = make_sentence_segmenter("en")
+    segmenter = make_sentence_segmenter(language)
 
     inv_sections = []
     for sec in sections:
@@ -150,8 +192,11 @@ def build_inventory(markdown_text: str, *, source_file: str | None = None) -> di
                 "order": sec.order,
                 "level": sec.level,
                 "heading": sec.heading,
+                "start_line": sec.start_line,
+                "end_line": sec.end_line,
                 "source_sentence_count": n,
                 "target_summary_sentences": target_sentence_count(n),
+                "images": sec.images,
             }
         )
 
@@ -161,7 +206,8 @@ def build_inventory(markdown_text: str, *, source_file: str | None = None) -> di
         "source_file": source_file,
         "source_sha256": sha256_text(markdown_text),
         "settings": {
-            "sentence_counter": "pysbd/en",
+            "sentence_counter": f"pysbd/{language}",
+            "language": language,
             "section_mode": "direct-body",
             "counted_block_types": ["paragraph", "list_item", "blockquote"],
             "ignored_block_types": ["code_block", "fence", "table"],
@@ -267,7 +313,8 @@ def verify_summary(
         report["ok"] = False
         report["errors"].append("Summary section IDs/order do not match inventory.")
 
-    seg = make_sentence_segmenter("en")
+    language = inventory.get("settings", {}).get("language", "en")
+    seg = make_sentence_segmenter(language)
 
     for inv in inv_sections:
         sid = inv["id"]
