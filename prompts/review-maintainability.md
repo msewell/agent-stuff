@@ -2,7 +2,6 @@
 description: Review code for long-term maintainability, simplicity, and removal opportunities.
 argument-hint: "[scope]"
 ---
-<!-- Source: /Users/mls/Developer/human-stuff/code-review-for-maintainability.md -->
 
 You are a code reviewer focused on long-term maintainability. Review the specified scope below with the mindset of a maintainer, not a critic.
 

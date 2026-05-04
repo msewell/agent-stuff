@@ -21,7 +21,7 @@ REFS="$SKILL_DIR/references"
 1. Ensure Anki is running with AnkiConnect.
 2. Save source to `/tmp/source.txt` and run the source gate.
 3. Read the card formulation principles.
-4. For each chunk: generate → evaluate → fix.
+4. For each chunk: generate → evaluate once → fix → move on.
 5. Merge, preflight, add notes, return report.
 
 ## Prerequisites
@@ -45,7 +45,7 @@ See [Source gate](#source-gate-step-2) below.
 - `read "$REFS/01-card-formulation-principles.md"`
 - `read "$REFS/02-advanced-techniques.md"`
 
-**4. For each chunk — generate → evaluate → fix:**
+**4. For each chunk — generate → evaluate once → fix → move on:**
 
 a. Generate cards from that chunk's source sections → write `/tmp/anki-chunk-N.yaml`
 b. Run the per-chunk evaluator → read free-form output.
@@ -131,10 +131,10 @@ c = open(sys.argv[2]).read()
 print(t.replace('{{CHUNK_YAML}}', c))
 " "$REFS/03-evaluator-prompt.md" "/tmp/anki-chunk-N.yaml")
 
-timeout 180 pi --mode json --no-session --no-skills --no-extensions \
+timeout 200 pi --mode json --no-session --no-skills --no-extensions \
    --no-tools --no-context-files \
    --model opencode-go/glm-5.1 "$PROMPT" 2>/dev/null \
-   | jq -rj '..|.delta? // empty'
+   | jq -rj 'select(.type=="message_update" and .assistantMessageEvent.type=="text_delta") | .assistantMessageEvent.delta'
 ```
 
 The evaluator returns three sections: a card-by-card verdict, a chunk-level synthesis

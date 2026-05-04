@@ -1,7 +1,7 @@
 ---
 name: using-markit
 description: Converts known files and URLs to markdown with markit for agent workflows. Selects deterministic modes (--json for machine-readable parsing, -q for raw markdown output), handles installation and conversion failures, and applies safe defaults for optional AI description/transcription. Use when users already have specific sources and ask to convert or extract text, turn a document or webpage into markdown, transcribe audio, or describe images from PDF, DOCX, PPTX, XLSX, HTML, EPUB, CSV, JSON, XML, ZIP, URL, image, or audio sources.
-category: Agent Tooling
+category: Writing & Communication
 ---
 
 # Using Markit
