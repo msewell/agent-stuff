@@ -156,7 +156,7 @@ are all safe inside double quotes).
 - modelName: Cloze
   fields:
     Text: "Warmth is judged before {{c1::competence}}."
-    Back Extra: ""
+    Back Extra: "Example: In a kickoff meeting, a technically strong answer can still land poorly if it sounds dismissive before trust exists."
   tags: [warmth-competence]
 
 - modelName: Basic
@@ -171,6 +171,19 @@ Rules:
 - `Cloze` fields: `Text` and `Back Extra`.
 - `Basic` fields: `Front` and `Back`.
 - `tags`: optional flow sequence `[tag1, tag2]`.
+
+## Clarifying examples on card backs
+
+Where applicable, include a brief clarifying example on the back side of the card:
+- For `Basic`, put it in `Back`.
+- For `Cloze`, put it in `Back Extra`.
+
+Use examples when they make an abstract idea concrete, distinguish likely-confused
+concepts, show application, or clarify a "why/how" answer. Omit examples for simple
+facts, dates, names, already-concrete definitions, or cases where the example would
+become the thing being memorized. Keep examples short and subordinate to the answer;
+do not turn the prompt into "give an example" unless example generation is itself the
+skill being trained.
 
 ## Source-independent and self-contextual wording (required)
 

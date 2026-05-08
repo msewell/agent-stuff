@@ -43,6 +43,10 @@ After reviewing every card individually, assess the chunk as a whole:
   wording, likely to cause confusion during review?
 - **Completeness** — is any important "why" or "how" dimension missing from an
   otherwise well-covered concept?
+- **Back-side examples** — do abstract, confusable, or application-heavy answers lack
+  a brief clarifying example in `Back` or `Back Extra`? Treat this as a soft
+  completeness issue, not an automatic card-level defect. Do not require examples for
+  simple facts, dates, names, or already-concrete answers.
 
 ## Output format
 
@@ -72,8 +76,9 @@ source material.
 
 1. Fix [N]: <what specifically to change and why>
 2. Add: a card about <specific concept> — <why it matters and what retrieval path>
-3. Remove [N]: <reason — low-value, duplicate, or unfixable>
-4. Self-correct: <any systematic tendency to eliminate, phrased as a rule>
+3. Add example to [N]: <brief back-side example that would clarify the answer>
+4. Remove [N]: <reason — low-value, duplicate, or unfixable>
+5. Self-correct: <any systematic tendency to eliminate, phrased as a rule>
 
 ---
 

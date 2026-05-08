@@ -78,6 +78,22 @@ This memorizes two things: the concept *and* the specific example this card dema
 
 Recognizing examples is more practically useful than generating them on command, and the retrieval is unambiguous.
 
+### Back-side clarifying examples
+
+Where applicable, add a brief example to the back side after the answer. Use `Back` for Basic cards and `Back Extra` for Cloze cards. Good examples make abstract ideas concrete, distinguish similar concepts, show application, or clarify why/how reasoning.
+
+Keep examples subordinate to retrieval: the prompt should still demand the core answer, not ask the reviewer to generate an example. Omit examples for simple facts, dates, names, already-concrete definitions, or when the example would become the thing being memorized.
+
+**Good:**
+
+> Q: *Distributed systems*: What does idempotency mean for an API operation?
+> A: Repeating the same operation has the same intended effect as doing it once. Example: retrying `PUT /users/123/email` with the same email should not create duplicate changes.
+
+**Too example-dependent:**
+
+> Q: What is an example of idempotency?
+> A: `PUT /users/123/email`.
+
 ### Trap: Unclear desired specificity
 
 **Before:**

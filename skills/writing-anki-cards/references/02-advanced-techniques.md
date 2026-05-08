@@ -190,4 +190,5 @@ Before adding a card, verify:
 - [ ] **Not a list**: if it enumerates, it's been decomposed or given a mnemonic
 - [ ] **Not yes/no**: if binary, reframed to retrieve specific information
 - [ ] **Stamped**: volatile facts include a date or version
+- [ ] **Clarified when useful**: abstract, confusable, or application-heavy answers include a brief back-side example
 - [ ] **Worth it**: the user will genuinely benefit from remembering this in a year
