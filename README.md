@@ -14,6 +14,7 @@ For the love of [Bob](https://en.wikipedia.org/wiki/J._R._%22Bob%22_Dobbs), if y
   - [Writing & Communication](#writing--communication)
   - [Agent Tooling](#agent-tooling)
   - [Diagramming & Visualization](#diagramming--visualization)
+  - [Product & Planning](#product--planning)
   - [System Architecture](#system-architecture)
 - [Extensions](#extensions)
 - [Prompts](#prompts)
@@ -60,7 +61,6 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [writing-checklist-communications](skills/writing-checklist-communications) | Writes and improves checklist-based professional communications -- requests for action, handoffs, meeting agendas/follow-ups, and process runbooks. Applies structured templates, item-writing rules (verb + object + criteria), and anti-pattern checks to produce clear, actionable checklists. Use when drafting a request for action, creating a handoff document, preparing a meeting agenda, writing meeting follow-up notes, building a runbook, delegating work, asking for specific action by a deadline, or reviewing and improving an existing checklist-based communication. |
 | [writing-git-commit-messages](skills/writing-git-commit-messages) | Writes and reviews git commit messages following Conventional Commits and the seven fundamental rules. Produces well-formatted, atomic, automation-friendly commit messages. Use when writing a commit message, reviewing commit messages, committing code changes, or when the user mentions git commits, commit messages, or changelogs. |
 | [writing-persuasive-documents](skills/writing-persuasive-documents) | Writes and reviews persuasive professional documents — reports, proposals, memos, briefs, articles, and recommendations — using reader-centered principles: value-first openings, problem framing, tension language, cost of inaction, argument over explanation, and evidence building. Produces documents that change what readers think rather than showing what the writer knows. Use when drafting proposals, executive summaries, recommendations, business cases, or position papers, when reviewing or improving drafts for persuasiveness and impact, when restructuring a document to lead with the problem and stakes, or when the user mentions persuasive writing, making a case, or influencing a decision. |
-| [writing-project-status-reports](skills/writing-project-status-reports) | Writes and reviews high-signal project status reports using RAG indicators, layered structure, and exception-based reporting. Produces weekly, monthly, milestone, and sprint status reports in Markdown. Use when drafting a project status report, reviewing an existing status report for quality, creating executive summaries, setting up RAG health indicators, or advising on reporting cadence and format. |
 
 ### Agent Tooling
 
@@ -84,6 +84,13 @@ npx skills add msewell/agent-stuff/skills/<skill-name>
 | [creating-c4-diagrams](skills/creating-c4-diagrams) | Creates, reviews, and interprets C4 software architecture diagrams (System Context, Container, Component, Dynamic, Deployment). Produces Structurizr DSL or Mermaid C4 diagram code following C4 model best practices. Use when the requested output is explicitly C4, when reviewing existing C4 diagrams for correctness and anti-patterns, when generating Structurizr DSL workspaces, when producing Mermaid C4 diagrams for READMEs, or when using C4 diagrams as context for design decisions, code generation, risk analysis, or onboarding. |
 | [mermaid-sequence-diagrams](skills/mermaid-sequence-diagrams) | Generates, reviews, and fixes Mermaid-only sequence diagrams following syntax rules and best practices. Use when creating Mermaid sequence diagrams from system descriptions, reviewing existing Mermaid sequence diagrams for correctness, fixing parse errors, or refactoring large Mermaid sequence diagrams into focused sub-diagrams. Covers participants, arrows, activations, control flow, notes, styling, and common anti-patterns. |
 | [rendering-clean-diagrams](skills/rendering-clean-diagrams) | Generates clean, readable general-purpose diagrams from text DSLs (Mermaid, D2, Graphviz, PlantUML), chooses suitable layout engines, and runs validation/render loops to produce embeddable SVG/PNG/Markdown outputs. Use when a user asks for a flowchart, ERD, state machine, dependency graph, mindmap, network graph, architecture sketch, or basic sequence diagram that must render reliably. Not for explicit C4 modeling or deep Mermaid sequence-specific syntax work. |
+
+### Product & Planning
+
+| Artifact | Description |
+|----------|-------------|
+| [writing-okrs](skills/writing-okrs) | Writes, refines, and evaluates Objectives and Key Results (OKRs) for any team or org size. Applies a structured quality rubric (6 Objective dimensions, 8 Key Result dimensions), enforces committed vs. aspirational tagging, catches the necessary-but-not-sufficient trap, detects 20 named anti-patterns by severity, and produces complete OKR documents with baselines, targets, metric definitions, and initiative separation. Use when drafting new OKRs, improving or refining draft OKRs, scoring OKRs against a quality rubric, auditing an OKR program for anti-patterns, running planning-week reviews, or when the user mentions OKRs, key results, quarterly goals, objectives, Q1/Q2/Q3/Q4 goal-setting, or OKR planning. |
+| [writing-project-status-reports](skills/writing-project-status-reports) | Writes and reviews high-signal project status reports using RAG indicators, layered structure, and exception-based reporting. Produces weekly, monthly, milestone, and sprint status reports in Markdown. Use when drafting a project status report, reviewing an existing status report for quality, creating executive summaries, setting up RAG health indicators, or advising on reporting cadence and format. |
 
 ### System Architecture
 

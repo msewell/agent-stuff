@@ -1,7 +1,7 @@
 ---
 name: writing-project-status-reports
 description: "Writes and reviews high-signal project status reports using RAG indicators, layered structure, and exception-based reporting. Produces weekly, monthly, milestone, and sprint status reports in Markdown. Use when drafting a project status report, reviewing an existing status report for quality, creating executive summaries, setting up RAG health indicators, or advising on reporting cadence and format."
-category: Writing & Communication
+category: Product & Planning
 ---
 
 # Writing Project Status Reports
