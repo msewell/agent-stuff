@@ -10,6 +10,13 @@ compatibility: "Requires Anki desktop running with AnkiConnect addon (2055492159
 This skill is **add-only**: generate cards and insert notes into Anki.
 Do not run review/update/delete workflows.
 
+## Non-negotiable integrity rules
+
+- **No shortcuts.** Every single card that will be added to Anki must be reviewed before it is added.
+- **Evaluator required once for every chunk/card.** Run the evaluator exactly once on each drafted chunk, read its card-by-card verdict, and rewrite the chunk before adding. Do not run repeated evaluator loops after the rewrite unless the evaluator failed/incompletely reviewed the chunk or the user explicitly requests another pass. If the evaluator cannot be run, stop and ask the user how to proceed; do not add unreviewed cards.
+- **No mechanical card derivation.** Do not use scripts, regexes, templates, heading extraction, table extraction, sentence clozing, or other automated transformations to derive card contents mechanically from the source. Scripts may be used only for source metrics, YAML validation, AnkiConnect preflight, duplicate checks, and insertion—not for deciding card prompts or answers.
+- **Do not imply completion of steps that were skipped.** The final report must accurately reflect which chunks were evaluated and whether any cards were not reviewed.
+
 ```bash
 SKILL_DIR="$(dirname "$SKILL_PATH")"
 PIPELINE="$SKILL_DIR/scripts/anki_add_pipeline.py"
@@ -21,8 +28,8 @@ REFS="$SKILL_DIR/references"
 1. Ensure Anki is running with AnkiConnect.
 2. Save source to `/tmp/source.txt` and run the source gate.
 3. Read the card formulation principles.
-4. For each chunk: generate → evaluate once → fix → move on.
-5. Merge, preflight, add notes, return report.
+4. For each chunk: manually generate → evaluate every card once → rewrite → move on.
+5. Merge only reviewed chunks, preflight, add notes, return report.
 
 ## Prerequisites
 
@@ -45,15 +52,23 @@ See [Source gate](#source-gate-step-2) below.
 - `read "$REFS/01-card-formulation-principles.md"`
 - `read "$REFS/02-advanced-techniques.md"`
 
-**4. For each chunk — generate → evaluate once → fix → move on:**
+**4. For each chunk — manually generate → evaluate every card once → rewrite → move on:**
 
-a. Generate cards from that chunk's source sections → write `/tmp/anki-chunk-N.yaml`
-b. Run the per-chunk evaluator → read free-form output.
+a. Manually formulate cards from that chunk's source sections → write `/tmp/anki-chunk-N.yaml`.
+   Do not mechanically derive cards with scripts, regexes, heading/table extraction,
+   sentence clozing, or template expansion. Card prompts and answers must come from
+   deliberate card-design judgment.
+b. Run the per-chunk evaluator on `/tmp/anki-chunk-N.yaml` → read the full free-form output,
+   including the card-by-card verdict for every card.
    See [Per-chunk evaluator](#per-chunk-evaluator-step-4b) below.
 c. **Rewrite `/tmp/anki-chunk-N.yaml` completely** based on evaluation output.
    Do not make surgical edits — the evaluator may identify structural issues
    (missing coverage, ratio drift, systematic patterns) that require adding or
    removing cards, not just editing existing ones.
+d. Confirm every card remaining in `/tmp/anki-chunk-N.yaml` has either an evaluator `OK`
+   verdict or was rewritten in response to evaluator feedback. The post-rewrite chunk does
+   not need a second evaluator pass. If any card was neither reviewed by the evaluator nor
+   rewritten in response to evaluator feedback, do not merge or add that chunk.
 
 Process each chunk to completion before starting the next. Do not stop mid-source
 unless the user explicitly approves an early exit.
@@ -119,7 +134,10 @@ The hash is the first 12 characters of `sha256(normalized_source_identity + "\n"
 
 ## Per-chunk evaluator (step 4b)
 
-After writing `/tmp/anki-chunk-N.yaml`, build and run the evaluator.
+After writing `/tmp/anki-chunk-N.yaml`, build and run the evaluator once. This is mandatory
+for every chunk and every card before anything is added to Anki. A rewritten chunk does not
+need to be evaluated again unless the evaluator failed/incompletely reviewed it or the user
+explicitly requests another pass.
 Template: [Evaluator prompt](references/03-evaluator-prompt.md)
 
 
@@ -142,6 +160,10 @@ The evaluator returns three sections: a card-by-card verdict, a chunk-level synt
 Read all three before rewriting the chunk. Evaluate the feedback critically — the
 evaluator can be wrong, over-strict, or miss domain context. Accept findings that
 improve clarity and retrieval; push back on those that would make cards worse.
+
+If the evaluator fails, times out, or cannot review the full chunk, stop and ask the user
+whether to reduce chunk size, change evaluator model, or abort. Do not add cards from a
+chunk that has not received evaluator review.
 
 ## Notes YAML contract
 
@@ -203,6 +225,15 @@ entities, organisation names used only as examples).
 ✅ Rewrite to domain wording with explicit topic context when needed:
 "In threat modeling…", "For REST APIs…", "In electronics…", "When designing…"
 
+## Script boundaries
+
+Do not write or use scripts to generate card prompts, cloze deletions, Basic fronts/backs,
+or other note contents from the source. Mechanical extraction creates plausible-looking
+but unreviewed cards and is prohibited.
+
+The add pipeline script is allowed only after all card contents have been manually written,
+evaluated, and rewritten as needed.
+
 ## What the script guarantees
 
 - AnkiConnect/version preflight
@@ -252,6 +283,7 @@ If script use is impossible: `version`, `modelNames`, `modelFieldNames`, `deckNa
 - **Source metrics file:** `/tmp/anki-source-metrics-<source-hash>.yaml`
 - **Chunk plan file:** `/tmp/anki-chunk-plan-<source-hash>.yaml`
 - **Chunks planned/completed:** `<n>` / `<n>`
+- **Chunks evaluated:** `<n>` / `<n>`
 - **Document card target min/max:** `<min>` / `<max>`
 - **Generated:** `<n>`
 - **Attempted:** `<n>`
