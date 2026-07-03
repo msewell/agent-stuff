@@ -1,6 +1,6 @@
 ---
 name: explaining-code-changes
-description: Creates self-contained HTML explanations of code changes with background, intuition, code walkthroughs, diagrams, and interactive quiz questions. Use when the user asks to explain a diff, branch, commit, pull request, PR, or code change for learning, onboarding, handoff, or review preparation.
+description: Creates self-contained HTML learning walkthroughs of code changes with background, intuition, code walkthroughs, embedded diagrams, and a self-check quiz. Use when the user asks to explain a diff, branch, commit, pull request, PR, or code change for learning, onboarding, or handoff. Not for code review, approval/readiness verdicts, or merge decisions.
 category: Writing & Communication
 ---
 
@@ -28,7 +28,7 @@ Use one long responsive page with inline CSS and JavaScript. Include:
 2. **Background**: Explain the relevant existing system. Start broad enough for newcomers, then narrow to the pieces needed for this change.
 3. **Intuition**: Explain the core idea with concrete toy data, examples, and diagrams before detailed code.
 4. **Code walkthrough**: Group changes by concept or execution path, not by raw file order. Connect each code detail to the behavior or design idea it supports.
-5. **Quiz**: Provide five medium-difficulty multiple-choice questions with immediate feedback for each answer. Questions should test understanding of the change, not trivia or gotchas. Default to putting `data-correct` on each `.quiz-q` container and answer keys on its buttons; the JavaScript should read the correct key from the nearest question container.
+5. **Self-check quiz**: Provide five medium-difficulty multiple-choice questions with immediate feedback for each answer. This quiz is for self-study inside the explanation artifact; it must not certify readiness to approve, merge, or review the change. Questions should test understanding of the change, not trivia or gotchas. Default to putting `data-correct` on each `.quiz-q` container and answer keys on its buttons; the JavaScript should read the correct key from the nearest question container.
 
 ## Writing style
 
@@ -42,6 +42,7 @@ Write in a clear, example-driven systems-explanation style:
 
 ## Diagram and code rules
 
+- Diagrams are illustrative and embedded in the explanation. Prefer inline HTML/CSS or SVG to keep the file self-contained. Do not produce standalone diagram source or rendered diagram artifacts unless the user explicitly asks for that as part of the explanation.
 - Use simple HTML/CSS or inline SVG diagrams; do not use ASCII diagrams.
 - Reuse a small number of diagram families when possible, such as simplified UI sketches or system/data-flow diagrams.
 - Include realistic example data in system diagrams.
@@ -77,7 +78,8 @@ Before responding, verify:
 - **UI changes without screenshots**: Build simplified HTML/CSS sketches from the code and describe any uncertainty.
 - **Missing base branch or PR metadata**: Ask for the target range instead of guessing.
 - **Security-sensitive diffs**: Explain the design without reproducing exploitable details or secrets.
-- **User asks for review rather than explanation**: Prioritize review findings only if requested; otherwise produce an explanatory walkthrough.
+- **Explicit review, approval, or readiness request**: Do not issue approval verdicts, request-changes verdicts, or audit findings. Ask whether the user wants an explanatory walkthrough instead. If yes, frame risks and edge cases as teaching notes, not review findings.
+- **Standalone quiz or approval-gating quiz request**: Do not create the HTML walkthrough unless the user asks for an explanatory artifact. Ask whether they want a self-contained explanation file with an embedded self-check quiz.
 
 ## Minimal response format
 
