@@ -1,7 +1,7 @@
 ---
 name: slicing-pbis
 description: "Slices, reviews, and writes product backlog items (PBIs) using priority-ordered quality characteristics (Valuable > Completable > Negotiable > Independent > Commensurate > Small), vertical slicing, and the splitting meta-pattern. Produces well-formed, commensurately sized PBIs with binary acceptance criteria. Use when splitting large PBIs or user stories, reviewing backlog items for quality, writing new PBIs from requirements, refining a product backlog, decomposing epics into stories, or when the user mentions PBI slicing, story splitting, backlog refinement, or vertical slices."
-category: Software Engineering
+category: Product & Planning
 ---
 
 # Slicing Product Backlog Items
