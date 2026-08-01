@@ -2,6 +2,8 @@
 description: Use full ExecPlan guidance and template to draft or refine a living execution plan.
 argument-hint: "[task-or-scope]"
 ---
+Draft or refine an ExecPlan for the user arguments below, following this document to the letter. Write the plan to a new Markdown file. Check your installed skills first and use any that apply to what you will be building.
+
 # Using PLANS.md for multi-hour problem solving
 
 Modern coding agents can implement complex tasks that take significant time to research, design, and implement. The approach described here is a durable pattern for steering long-running work to successful completion across sessions.
@@ -52,7 +54,9 @@ This document describes the requirements for an execution plan ("ExecPlan"), a d
 
 When authoring an executable specification (ExecPlan), follow PLANS.md _to the letter_. If it is not in your context, refresh your memory by reading the entire PLANS.md file. Be thorough in reading (and re-reading) source material to produce an accurate specification. When creating a spec, start from the skeleton and flesh it out as you do your research.
 
-When implementing an executable specification (ExecPlan), do not prompt the user for "next steps"; simply proceed to the next milestone. Keep all sections up to date, add or split entries in the list at every stopping point to affirmatively state the progress made and next steps. Resolve ambiguities autonomously, and commit frequently.
+Before finalizing an ExecPlan, align with the user on decisions that materially affect product intent, system architecture, program design, or execution order. Investigate first. Ask only questions that research cannot answer. Give context, a recommendation, and tradeoffs with each question. Do not leave consequential decisions unresolved.
+
+When implementing an executable specification (ExecPlan), do not prompt the user for "next steps"; simply proceed to the next milestone. Keep all sections up to date, add or split entries in the list at every stopping point to affirmatively state the progress made and next steps. Resolve incidental ambiguities autonomously, and commit frequently.
 
 When discussing an executable specification (ExecPlan), record decisions in a log in the spec for posterity; it should be unambiguously clear why any change to the specification was made. ExecPlans are living documents, and it should always be possible to restart from _only_ the ExecPlan and no other work.
 
@@ -68,7 +72,7 @@ NON-NEGOTIABLE REQUIREMENTS:
 * Every ExecPlan must produce a demonstrably working behavior, not merely code changes to "meet a definition".
 * Every ExecPlan must define every term of art in plain language or do not use it.
 
-Purpose and intent come first. Begin by explaining, in a few sentences, why the work matters from a user's perspective: what someone can do after this change that they could not do before, and how to see it working. Then guide the reader through the exact steps to achieve that outcome, including what to edit, what to run, and what they should observe.
+Purpose and intent come first. Begin by explaining, in a few sentences, why the work matters from a user's perspective: what someone can do after this change that they could not do before, and how to see it working. State the problem in the affected user's terms, not technical ones, and name the signal you will read after shipping to judge the work worthwhile. Sketch any visible surface rather than describing it: a rough mockup, or the actual command and its output. Then guide the reader through the exact steps to achieve that outcome, including what to edit, what to run, and what they should observe.
 
 The agent executing your plan can list files, read files, search, run the project, and run tests. It does not know any prior context and cannot infer what you meant from earlier milestones. Repeat any assumption you rely on. Do not point to external blogs or docs; if knowledge is required, embed it in the plan itself in your own words. If an ExecPlan builds upon a prior ExecPlan and that file is checked in, incorporate it by reference. If it is not, you must include all relevant context from that plan.
 
@@ -78,7 +82,7 @@ Format and envelope are simple and strict. Each ExecPlan must be one single fenc
 
 When writing an ExecPlan to a Markdown (.md) file where the content of the file *is only* the single ExecPlan, you should omit the triple backticks.
 
-Write in plain prose. Prefer sentences over lists. Avoid checklists, tables, and long enumerations unless brevity would obscure meaning. Checklists are permitted only in the `Progress` section, where they are mandatory. Narrative sections must remain prose-first.
+Write in plain prose. Prefer sentences over lists. Avoid checklists, tables, and long enumerations unless brevity would obscure meaning. Checklists are permitted only in the `Progress` section, where they are mandatory. Narrative sections must remain prose-first. Program design artifacts are exempt: present file-tree diffs, call-stack trees, and signature blocks as indented blocks.
 
 ## Guidelines
 
@@ -89,6 +93,8 @@ Avoid common failure modes. Do not rely on undefined jargon. Do not describe "th
 Anchor the plan with observable outcomes. State what the user can do after implementation, the commands to run, and the outputs they should see. Acceptance should be phrased as behavior a human can verify ("after starting the server, navigating to [http://localhost:8080/health](http://localhost:8080/health) returns HTTP 200 with body OK") rather than internal attributes ("added a HealthCheck struct"). If a change is internal, explain how its impact can still be demonstrated (for example, by running tests that fail before and pass after, and by showing a scenario that uses the new behavior).
 
 Specify repository context explicitly. Name files with full repository-relative paths, name functions and modules precisely, and describe where new files should be created. If touching multiple areas, include a short orientation paragraph that explains how those parts fit together so a novice can navigate confidently. When running commands, show the working directory and exact command line. When outcomes depend on environment, state the assumptions and provide alternatives when reasonable.
+
+Separate system architecture from program design. Describe how affected services, endpoints, schemas, queues, and stores interact. Then describe the shape of the code: relevant file layout, control flow, key types, and method signatures. Make these decisions reviewable before implementation instead of deferring them to code review. Express program design as artifacts, not prose: such as a file-tree diff of what is added, changed, and deleted, or the signatures of key new functions with full paths. Add a call-stack tree only when the change adds an entry point, reorders existing calls, alters error propagation, or crosses a thread, process, or service boundary. Do not invent one otherwise.
 
 Be idempotent and safe. Write the steps so they can be run multiple times without causing damage or drift. If a step can fail halfway, include how to retry or adapt. If a migration or destructive operation is necessary, spell out backups or safe fallbacks. Prefer additive, testable changes that can be validated as you go.
 
@@ -101,6 +107,8 @@ Capture evidence. When your steps produce terminal output, short diffs, or logs,
 Milestones are narrative, not bureaucracy. If you break the work into milestones, introduce each with a brief paragraph that describes the scope, what will exist at the end of the milestone that did not exist before, the commands to run, and the acceptance you expect to observe. Keep it readable as a story: goal, work, result, proof. Progress and milestones are distinct: milestones tell the story, progress tracks granular work. Both must exist. Never abbreviate a milestone merely for the sake of brevity, do not leave out details that could be crucial to a future implementation.
 
 Each milestone must be independently verifiable and incrementally implement the overall goal of the execution plan.
+
+Organize milestones as vertical slices: thin increments that produce observable behavior through every affected layer needed for that increment. Do not group all database work, service work, API work, and frontend work into separate milestones. Make each slice exercisable through a browser, command, request, integration test, or similarly concrete demonstration. Order slices middle-out: start where behavior first becomes observable, then extend outward in both directions. Order slices to expose uncertain or high-risk decisions early. A slice may use mock data or a temporary adapter when that makes the result exercisable; state how a later slice removes or replaces it. Size each slice to be reviewable in one sitting and end it at a commit that leaves the tree working. Because implementation does not pause for approval, name in each slice the one or two files carrying its substance and the decision most likely to be wrong.
 
 ## Living plans and design decisions
 
@@ -161,9 +169,13 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
 
     Describe the current state relevant to this task as if the reader knows nothing. Name the key files and modules by full path. Define any non-obvious term you will use. Do not refer to prior plans.
 
+    ## Program Design
+
+    Pin the shape of the code before describing the work. Give a file-tree diff of additions, changes, and deletions, and the signatures of key new functions with full paths. Add a call-stack tree only if control flow changes.
+
     ## Plan of Work
 
-    Describe, in prose, the sequence of edits and additions. For each edit, name the file and location (function, module) and what to insert or change. Keep it concrete and minimal.
+    Describe, in prose, the sequence of vertical slices. For each slice, state its observable result, the edits and additions required, and how to exercise it before proceeding. Name each file and location (function, module) and what to insert or change. Keep it concrete and minimal.
 
     ## Concrete Steps
 
@@ -183,7 +195,7 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
 
     ## Interfaces and Dependencies
 
-    Be prescriptive. Name the libraries, modules, and services to use and why. Specify the types, traits/interfaces, and function signatures that must exist at the end of the milestone. Prefer stable names and paths such as `crate::module::function` or `package.submodule.Interface`. E.g.:
+    Be prescriptive. Name the libraries, modules, and services to use and why. Specify the types, traits/interfaces, and function signatures that must exist at the end of the milestone, elaborating on `Program Design`. Prefer stable names and paths such as `crate::module::function` or `package.submodule.Interface`. E.g.:
 
     In crates/foo/planner.rs, define:
 
