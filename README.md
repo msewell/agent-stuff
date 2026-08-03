@@ -131,7 +131,7 @@ Install any extension package from this repo by pointing `pi install` at the ext
 <!-- PROMPTS:START -->
 | Name | Description |
 |------|-------------|
-| [codex-exec-plan](prompts/codex-exec-plan.md) | Use full ExecPlan guidance and template to draft or refine a living execution plan. |
+| [exec-plan](prompts/exec-plan.md) | Use full ExecPlan guidance and template to draft or refine a living execution plan. |
 | [missing-tools](prompts/missing-tools.md) | Capture missing tools that would improve research speed and quality, then write requirements/context to MISSING_TOOLS.md. |
 | [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates. |
 | [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities. |
