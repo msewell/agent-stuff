@@ -123,6 +123,8 @@ Install any extension package from this repo by pointing `pi install` at the ext
 <!-- EXTENSIONS:START -->
 | Name | Description |
 |------|-------------|
+| [pi-extension-agent-comment-watcher](extensions/pi-extension-agent-comment-watcher) | Pi extension that reports explicit-path @agent review comments into the active session |
+| [pi-extension-brave-llm-context](extensions/pi-extension-brave-llm-context) | Brave LLM Context web-grounding tool for Pi |
 | [pi-extension-code-last](extensions/pi-extension-code-last) | Pi extension that opens the last assistant message in VS Code |
 <!-- EXTENSIONS:END -->
 

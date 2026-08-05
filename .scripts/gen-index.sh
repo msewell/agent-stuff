@@ -54,8 +54,9 @@ repo_root, output_path = sys.argv[1], sys.argv[2]
 # Collect all SKILL.md files
 skill_files = []
 for dirpath, dirnames, filenames in os.walk(repo_root):
-    # Skip .git and .archive
-    dirnames[:] = [d for d in dirnames if d not in ('.git', '.archive')]
+    # Skip repository metadata, archived artifacts, and package dependencies.
+    # Dependencies can contain example SKILL.md files that are not repo artifacts.
+    dirnames[:] = [d for d in dirnames if d not in ('.git', '.archive', 'node_modules')]
     if 'SKILL.md' in filenames:
         skill_files.append(os.path.join(dirpath, 'SKILL.md'))
 skill_files.sort()
