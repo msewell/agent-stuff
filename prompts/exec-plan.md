@@ -33,6 +33,7 @@ A plan is only effective if it stays current during execution. In practice, the 
 - Phrase acceptance as observable behavior, not internal code structure.
 - Commit plan updates alongside implementation changes at milestone boundaries.
 - Before handoff, verify a fresh session could continue from the plan alone.
+- At every milestone or stopping point and before handoff, aggressively prune redundant, superseded, or otherwise execution-irrelevant material from the plan. Retain or concisely summarize only the decision rationale, evidence, and recovery context needed to keep the current plan self-contained and safe to execute.
 
 Common failure modes to avoid:
 
@@ -67,7 +68,7 @@ When researching a design with challenging requirements or significant unknowns,
 NON-NEGOTIABLE REQUIREMENTS:
 
 * Every ExecPlan must be fully self-contained. Self-contained means that in its current form it contains all knowledge and instructions needed for a novice to succeed.
-* Every ExecPlan is a living document. Contributors are required to revise it as progress is made, as discoveries occur, and as design decisions are finalized. Each revision must remain fully self-contained.
+* Every ExecPlan is a living document. Contributors are required to revise it as progress is made, as discoveries occur, and as design decisions are finalized. Each revision must remain fully self-contained. At every milestone, stopping point, and handoff, aggressively remove or condense redundant, superseded, and execution-irrelevant content while preserving the minimum decision rationale, evidence, and recovery context needed to execute the current plan safely.
 * Every ExecPlan must enable a complete novice to implement the feature end-to-end without prior knowledge of this repo.
 * Every ExecPlan must produce a demonstrably working behavior, not merely code changes to "meet a definition".
 * Every ExecPlan must define every term of art in plain language or do not use it.
