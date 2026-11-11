@@ -151,9 +151,15 @@ print(t.replace('{{CHUNK_YAML}}', c))
 
 timeout 200 pi --mode json --no-session --no-skills --no-extensions \
    --no-tools --no-context-files \
-   --model opencode-go/glm-5.1 "$PROMPT" 2>/dev/null \
+   --model opencode-go/glm-5.3 "$PROMPT" 2>/dev/null \
    | jq -rj 'select(.type=="message_update" and .assistantMessageEvent.type=="text_delta") | .assistantMessageEvent.delta'
 ```
+
+Use the newest authenticated GLM chat model available under `opencode-go`: check
+`pi --list-models glm` before running the evaluator and update the `--model` value
+if a newer model replaces `glm-5.3`. Check that the Pi process exits successfully
+and that every card received a verdict; a blank or truncated `jq` output is not
+an evaluation.
 
 The evaluator returns three sections: a card-by-card verdict, a chunk-level synthesis
 (coverage gaps, ratio, systematic patterns, interference), and a concrete action list.

@@ -22,7 +22,7 @@ category: Agent Tooling
    ```
 3. Enable core plugins: Daily Notes, Templates, Backlinks, Outgoing Links, Tags, Graph View, Command Palette, Page Preview, Bookmarks, Canvas, Properties View.
 4. Install Tier 1 community plugins: Dataview, Templater, Obsidian Git, Tasks, Calendar.
-5. Create `_templates/daily.md`, `_templates/meeting.md`, `_templates/project.md`, `_templates/reference.md` using the templates in [references/templates-and-daily-notes.md](references/templates-and-daily-notes.md).
+5. Create `_templates/daily.md`, `_templates/meeting.md`, `_templates/project.md`, `_templates/reference.md` using the templates in [references/03-templates-and-daily-notes.md](references/03-templates-and-daily-notes.md).
 6. Configure Daily Notes: date format `YYYY-MM-DD`, location `daily/`, template `_templates/daily.md`, open on startup.
 7. Configure Templater: template folder `_templates`, enable folder templates (`daily/` → `_templates/daily.md`, `meetings/` → `_templates/meeting.md`), trigger on new file creation.
 8. Initialize Git: `git init`, create private remote, configure Obsidian Git plugin (auto backup every 10-30 min, auto pull on open, auto push after commit).
@@ -33,7 +33,7 @@ category: Agent Tooling
 - **Prefix system folders with `_`** (e.g., `_templates/`).
 - **Never nest deeper than one level.**
 - **Archive, don't delete.** Move stale notes to `archive/`.
-- For alternative approaches (PARA, Zettelkasten, LYT), see [references/vault-organization-and-style.md](references/vault-organization-and-style.md).
+- For alternative approaches (PARA, Zettelkasten, LYT), see [references/01-vault-organization-and-style.md](references/01-vault-organization-and-style.md).
 
 ## Frontmatter schema
 
@@ -60,6 +60,8 @@ Rules:
 When creating or editing `.md` files for an Obsidian vault:
 
 - Use **wikilinks**: `[[Note Title]]`, not `[Note Title](Note%20Title.md)`.
+- For image embeds that must work in **both Obsidian and standard Markdown previews**, use a short ASCII-only asset filename and a relative Markdown image link, e.g. `![Desk](./_resources/desk-150x70.jpg)`. Copy a legacy asset to that filename if necessary; do not use percent-encoded paths (such as `%20`, `%2C`, or `%24`) in Obsidian embeds merely because decoding them points to an existing file. For Obsidian-only notes, `![[path/to/image.jpg]]` is also valid, but VS Code's built-in preview will not render it.
+- After creating a note with embeds, check that **every link as written** resolves to an existing asset relative to the note, and, if a live preview is available, confirm that the image actually renders. A check that succeeds only after URL-decoding a path is not sufficient; do not claim visual verification without checking the preview.
 - Use **aliases** for readability: `[[Authentication Middleware|auth middleware]]`.
 - Use **block references** for precision: `[[Architecture Doc#^decision-rationale]]`.
 - Use `##` for top-level sections (reserve `#` for the note title).
@@ -105,7 +107,7 @@ LIMIT 20
 ```
 ````
 
-For DataviewJS, inline fields, and advanced patterns, see [references/dataview-git-and-workflows.md](references/dataview-git-and-workflows.md).
+For DataviewJS, inline fields, and advanced patterns, see [references/04-dataview-git-and-workflows.md](references/04-dataview-git-and-workflows.md).
 
 ## Canvas files
 
@@ -119,9 +121,9 @@ Canvas files (`.canvas`) use the [JSON Canvas](https://jsoncanvas.org) spec:
 
 Consult these for detailed guidance:
 
-- **Vault structure, style guide, MOCs, linking strategies:** [references/vault-organization-and-style.md](references/vault-organization-and-style.md)
-- **Core and community plugins, keyboard shortcuts:** [references/plugins-and-configuration.md](references/plugins-and-configuration.md)
-- **Templates, frontmatter conventions, daily/weekly notes:** [references/templates-and-daily-notes.md](references/templates-and-daily-notes.md)
-- **Dataview queries, Git backup, knowledge capture pipeline:** [references/dataview-git-and-workflows.md](references/dataview-git-and-workflows.md)
-- **AI plugins, MCP servers, agent skills, Canvas:** [references/ai-integrations-and-canvas.md](references/ai-integrations-and-canvas.md)
-- **Curated external links and resources:** [references/resources-and-links.md](references/resources-and-links.md)
+- **Vault structure, style guide, MOCs, linking strategies:** [references/01-vault-organization-and-style.md](references/01-vault-organization-and-style.md)
+- **Core and community plugins, keyboard shortcuts:** [references/02-plugins-and-configuration.md](references/02-plugins-and-configuration.md)
+- **Templates, frontmatter conventions, daily/weekly notes:** [references/03-templates-and-daily-notes.md](references/03-templates-and-daily-notes.md)
+- **Dataview queries, Git backup, knowledge capture pipeline:** [references/04-dataview-git-and-workflows.md](references/04-dataview-git-and-workflows.md)
+- **AI plugins, MCP servers, agent skills, Canvas:** [references/05-ai-integrations-and-canvas.md](references/05-ai-integrations-and-canvas.md)
+- **Curated external links and resources:** [references/06-resources-and-links.md](references/06-resources-and-links.md)

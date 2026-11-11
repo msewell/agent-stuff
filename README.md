@@ -26,6 +26,7 @@ For the love of [Bob](https://en.wikipedia.org/wiki/J._R._%22Bob%22_Dobbs), if y
   - [Product & Planning](#product--planning)
   - [System Architecture](#system-architecture)
 - [Extensions](#extensions)
+- [Claude Code Plugins](#claude-code-plugins)
 - [Prompts](#prompts)
 <!-- TOC:END -->
 
@@ -127,6 +128,12 @@ Install any extension package from this repo by pointing `pi install` at the ext
 | [pi-extension-brave-llm-context](extensions/pi-extension-brave-llm-context) | Brave LLM Context web-grounding tool for Pi |
 | [pi-extension-code-last](extensions/pi-extension-code-last) | Pi extension that opens the last assistant message in VS Code |
 <!-- EXTENSIONS:END -->
+
+## Claude Code Plugins
+
+These are Claude Code plugins, not Pi extensions; `pi install` does not apply.
+
+- [claude-pi-queue](plugins/claude-pi-queue) — holds follow-up messages until Claude Code finishes its current turn. See its README for setup.
 
 ## Prompts
 
