@@ -1,0 +1,37 @@
+# Choosing Architecture-Decision Methods
+
+Read only the methods that address the uncertainty at hand. These are decision aids, **not** a required sequence or proof that one option wins. Source dates distinguish current practitioner guidance from foundational methods; recheck volatile vendor claims.
+
+## Requirements are vague before a design exists
+
+- Use a **QAW-inspired scenario workshop**: collect business drivers; invite product, domain, operations, security, and other affected perspectives; brainstorm failure/change stimuli; consolidate; prioritize and refine a few into measurable responses. A small team session borrows the logic but is **not** a full SEI Quality Attribute Workshop. The [SEI QAW collection (2016)](https://www.sei.cmu.edu/library/quality-attribute-workshop-collection/) explicitly says the method does not require an existing architecture.
+- For a stakeholder's solution request, listen, probe its purpose, clarify the user flows, evaluate feasibility, then recommend. [Microsoft's architecture discovery guidance (updated December 2025)](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/design-business-requirements/) illustrates why “100% uptime” need not apply equally to checkout and order history. Avoid treating a vendor's illustrative recommendation as universal.
+
+## Domain seams or investment priorities are disputed
+
+- **EventStorming:** invite people who know the real exceptions; trace past-tense domain events through an end-to-end journey; mark conflicts, delays, and handoffs. Use the result to hypothesize boundaries; **do not** equate event clusters with services. The format's creators distinguish Big Picture, Process Modelling, and Software Design workshops [Avanscoperta (published 2025, updated 2026)](https://www.avanscoperta.it/en/eventstorming/).
+- **Brownfield context map:** identify existing models, owners, shared data, upstream/downstream influence, and whether teams can coordinate changes. Draw what exists, including awkward dependencies, before proposing an ideal boundary [Avanscoperta (published 2024, updated 2026)](https://www.avanscoperta.it/en/context-mapping/).
+- **Wardley/value-chain mapping:** anchor the map in user needs, then consider which capabilities differentiate the product and which might be bought or reused. Combine that view with bounded contexts and team ownership when investment or change flow is the question [Architecture for Flow Canvas (2025)](https://architectureforflow.com/canvas/). The map is a discussion hypothesis, not a forecast.
+
+## Several quality attributes or investments compete
+
+- Compare a small number of **decision-specific** dimensions and explain the trade-offs in words. Run sensitivity checks if subjective scores/weights seem to decide the result. A matrix makes reasoning visible, not objectively true [Software Architecture Guild, *Trade off analysis* (2025)](https://software-architecture-guild.com/guide/architecture/boundaries/trade-off-analysis/).
+- For a consequential **proposed architecture**, borrow ATAM's prioritized quality-attribute scenarios and identify risks, sensitivity points, and trade-off points. Do not call a short review a full ATAM: SEI says a complete evaluation commonly takes **three to four days** with trained evaluators and stakeholders [SEI ATAM collection (2018)](https://www.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/).
+- If large alternatives compete for funding, also compare expected business benefit, migration and ongoing costs, and opportunity cost. The foundational [SEI ATAM–CBAM report (2003)](https://www.sei.cmu.edu/library/integrating-the-architecture-tradeoff-analysis-method-atam-with-the-cost-benefit-analysis-method-cbam/) distinguishes technical trade-offs from economic ones. Use ranges, not invented precision.
+
+## One assertion or an uncertain future dominates
+
+- **Falsifiable spike:** identify what observation would change the decision; test under representative data, traffic, and operations with a stop condition. To validate recovery, run a guarded restore or failure exercise, not just a happy-path prototype. [AWS's 2025 Well-Architected framework guidance](https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/rel_testing_resiliency_failure_injection_resiliency.html) calls for measurable steady state, fault injection, and controls on experiment blast radius.
+- **Counterfactual stressors:** alter a minimal design against plausible changes, identify what breaks or remains usable, then challenge the revision with stressors not used in its design. This residuality-inspired technique is described in [Barry O'Reilly's 2025 InfoQ interview](https://www.infoq.com/news/2025/10/architectures-residuality-theory/). Treat claims that random stressors outperform other methods as *practitioner claims*, not established comparative evidence. Do not replace known requirements or observed behavior with imagined futures.
+- **Pre-mortem:** independently imagine a future failure, then turn its most consequential causes into a test, mitigation, contingency, or accepted risk. Distinguish this discussion aid from a security threat model or production test.
+
+## Authority and adoption are the uncertainty
+
+- **Advice process:** let a suitably accountable person decide after soliciting affected people and relevant experts; advice is not unanimous consent. [Thoughtworks Technology Radar (April 2025)](https://www.thoughtworks.com/radar/techniques/architecture-advice-process) classified it **Trial**, not a rule for every organization. Clarify separate mandatory-control authority: [GitLab's architecture workflow (last modified February 2026)](https://handbook.gitlab.com/handbook/engineering/architecture/workflow/) distinguishes consultation from defined blocking review. Its review timeline is organization-specific.
+- **Developer platform as internal product:** watch real developer journeys, pilot a minimum viable self-service path, then measure task success, continued use, satisfaction, and delivery outcomes. Mandated adoption is not evidence of value. [DORA platform-engineering guidance (last updated January 2026)](https://dora.dev/capabilities/platform-engineering/) also warns that a poorly managed platform may hurt throughput or change stability.
+- Prefer an **asynchronous, blame-free review** with actionable findings and a finite decision. [AWS review guidance, 2025 framework edition](https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/the-review-process.html) recommends early reviews for hard-to-reverse choices, then repeat checks when the design changes.
+
+## After a decision
+
+- Build observable checks for important boundaries and quality goals. Ask whether the necessary data even exists [Ford and Richards, Thoughtworks podcast (February 2025)](https://www.thoughtworks.com/en-us/insights/podcasts/technology-podcasts/architecture-as-code). For AI-assisted review, keep objective gates deterministic and use calibrated, evidence-bounded AI judgment only as an advisory signal with human escalation [InfoQ practitioner proposal (August 2026)](https://www.infoq.com/articles/agentic-fitness-functions-evolutionary-architecture/).
+- Use an AI assistant to generate counterarguments and possible tests, **not** to certify architecture quality. A [2025 multivocal research review](https://arxiv.org/html/2503.13310v2) reports limited rigorous evaluation of generated architectural outputs; verify sensitive, vendor-specific, and consequential assertions independently.
