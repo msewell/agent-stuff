@@ -11,10 +11,10 @@
   - [Projection Strategies](#projection-strategies)
   - [UX Strategies for Masking Lag](#ux-strategies-for-masking-lag)
 - [Testing Strategy](#testing-strategy)
-  - [Favor Integration Tests Over Unit Tests](#favor-integration-tests-over-unit-tests)
+  - [Test Slice Wiring at Its Boundary](#test-slice-wiring-at-its-boundary)
   - [Use Given / When / Then as the Slice Contract](#use-given--when--then-as-the-slice-contract)
-  - [When Unit Tests Still Matter](#when-unit-tests-still-matter)
-  - [Minimize Mocking](#minimize-mocking)
+  - [Use Focused Tests for Pure Rules](#use-focused-tests-for-pure-rules)
+  - [Use the Real Engine for Database Semantics](#use-the-real-engine-for-database-semantics)
 - [Synergy with CQRS and Event Modeling](#synergy-with-cqrs-and-event-modeling)
 - [Evolution and Migration](#evolution-and-migration)
   - [The Evolution Path](#the-evolution-path)
@@ -96,11 +96,9 @@ The right strategy depends on context. Most systems only need to solve "read you
 
 ## Testing Strategy
 
-VSA fundamentally shifts the testing pyramid.
+### Test Slice Wiring at Its Boundary
 
-### Favor Integration Tests Over Unit Tests
-
-Each slice is a cohesive, self-contained behavior. The highest-confidence, lowest-effort test is an integration test that exercises the slice end-to-end: send a request, assert the response and side effects (database state, events published). Use in-memory or containerized infrastructure (e.g., Testcontainers) rather than mocks.
+For wiring and side effects, exercise the slice through its entry point: send a request and assert the response and effects, such as a committed row or published event. This can run in process; a browser or full deployment is unnecessary unless the risk depends on it.
 
 ### Use Given / When / Then as the Slice Contract
 
@@ -112,19 +110,19 @@ Treat each slice as a black box:
 
 This aligns testing with the slice boundary and makes tests resilient to internal refactoring.
 
-### When Unit Tests Still Matter
+### Use Focused Tests for Pure Rules
 
-Isolate unit tests for genuinely complex domain logic — calculations, state machines, invariant enforcement. These belong on the domain model, not on the handler. If a handler contains logic complex enough to warrant unit testing, that logic probably belongs in a domain entity or value object.
+Test a pure rule directly whenever that check can expose the defect, even if the rule is simple. Put complex domain behavior in the domain model rather than the handler.
 
-### Minimize Mocking
+### Use the Real Engine for Database Semantics
 
-Because slices have fewer internal dependencies than layered services, the need for mocks drops dramatically. Mock only external system boundaries (third-party APIs, email services). Never mock your own database or repository — test against real infrastructure.
+Use private, real infrastructure for risks that depend on it. An in-memory repository can support a behavioral test that does not depend on database behavior, but it cannot verify engine-specific constraints, transaction semantics, or schema migrations. Use the deployment-compatible database engine for those checks. Stub live third-party services at the boundary rather than coupling tests to the public network.
 
 | Aspect | Layered Architecture | Vertical Slice |
 |---|---|---|
 | Test boundary | Layer interface | Slice entry/exit |
-| Primary test type | Unit tests with mocks | Integration tests |
-| Mocking | Heavy (cross-layer contracts) | Minimal (external boundaries only) |
+| Typical boundary check | Layer interface tests | Slice integration tests for wiring and side effects |
+| Test doubles | Often used across layer interfaces | Use at boundaries that are not the behavior under test |
 | Regression risk per change | High (shared layer changes) | Low (isolated slice changes) |
 
 ---

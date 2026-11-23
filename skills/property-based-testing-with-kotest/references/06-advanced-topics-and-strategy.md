@@ -1,5 +1,7 @@
 # Advanced Topics and Testing Strategy
 
+## Table of Contents
+
 - [Stateful / Model-Based Testing](#stateful--model-based-testing)
 - [Metamorphic Testing](#metamorphic-testing)
 - [Testing Concurrent Code](#testing-concurrent-code)
@@ -113,26 +115,24 @@ The first parameter is a list of edge case values tested before random sampling 
 
 ## CI/CD Strategies for PBT
 
-**Balancing thoroughness with speed:**
+**Separate required verification from exploration:**
 
-| Environment | Iterations | Rationale |
-|-------------|-----------|-----------|
-| Local dev | 100-1,000 | Fast feedback |
-| PR CI | 1,000 | Reasonable coverage |
-| Nightly build | 10,000-100,000 | Deep exploration |
+| Lane | Inputs and work budget |
+|------|------------------------|
+| Focused local | Match the required seed for the case you are changing; keep the run small. |
+| Required CI | Declare a stable seed set and bounds on iterations, input size and shrinking. Measure runtime; 1,000 iterations is a library default, not a target. |
+| Exploration | Rotate seeds, give the wider search its own budget, and report findings separately from required verdicts. |
 
 ```kotlin
-val iterations = System.getenv("PBT_ITERATIONS")?.toIntOrNull() ?: 1_000
-
-checkAll(PropTestConfig(iterations = iterations)) { s: String ->
-    // ...
+// Example required-lane configuration; size this budget from measurements.
+for (seed in listOf(42L, 123L)) {
+    checkAll(PropTestConfig(seed = seed, iterations = 100), Arb.string()) { s ->
+        s.reversed().reversed() shouldBe s
+    }
 }
 ```
 
-**Seed management in CI:**
-- Enable `writeFailedSeed` locally for automatic regression.
-- Set `failOnSeed = true` in CI to prevent accidentally committing seed files.
-- When a CI run discovers a failure, capture the seed from the output and create a permanent regression test.
+Archive the failing seed and shrunk input with the pinned generator and Kotest version. Keep the required lane’s seed store clean and job-private. Replay for diagnosis, then add the minimized example as a regression; a later pass on another seed does not erase a required failure.
 
 ## Statistics and Coverage
 
@@ -170,8 +170,8 @@ PBT occupies a specific niche in the testing pyramid:
 1. **Write example-based tests** for documented behavior and known edge cases.
 2. **Write property-based tests** for invariants, round-trips, and broad coverage.
 3. **When PBT finds a failure**, add the minimal counterexample as a concrete regression test.
-4. **Run PBT in CI** with 1,000 iterations. Run longer suites (10k+) in nightly builds.
-5. **Use seeds** for reproducibility. Store failing seeds for regression.
+4. **Run a bounded, stable-seed core in required CI.** Rotate seeds in a separate exploration lane.
+5. **Record failures.** Preserve the failing seed and minimized input for replay and regression coverage.
 6. **During code review**, ask: "Can this test be a property-based test?" Generalize repetitive example-based tests.
 
 ### Adoption strategy

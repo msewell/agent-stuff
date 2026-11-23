@@ -69,7 +69,7 @@ Summarize the PR's intent in one sentence before proceeding. If you
 cannot, note the unclear intent as the first finding.
 
 Review the diff against these priorities (highest first). See
-[references/review-checklist.md](references/review-checklist.md) for
+[references/01-review-checklist.md](references/01-review-checklist.md) for
 detailed checks and false-positive guidance per category.
 
 1. **Goal alignment** — Does the PR achieve what linked issue(s) describe?
@@ -97,12 +97,21 @@ and CI workflow files. Run in order, skip any that are unavailable:
 
 1. **Lint** — e.g. `npm run lint`, `ruff check .`, `golangci-lint run`
 2. **Type-check** — e.g. `npx tsc --noEmit`, `mypy .`, `pyright`
-3. **Tests** — prefer running tests relevant to changed files only
+3. **Tests** — run relevant tests for local review evidence. Account for runtime
+   dependencies, not just changed filenames. Widen the selection if impact is
+   uncertain. A focused local pass does not certify a required CI check.
+4. **Schema-affecting changes** — verify required fresh-install and upgrade
+   results against the real target engine on the exact merge candidate (the
+   merge-group commit when a queue is used). Check mixed-version compatibility
+   when deployment versions overlap. A green PR-head check or nightly run is
+   not a substitute. If the required evidence is missing, report it as blocking.
 
 **Guardrails:**
 
-- Do NOT run commands that modify state (deploy, migrate, publish, seed,
-  `--write`, `--fix`).
+- Do not deploy, publish, use `--write` or `--fix`, or modify shared, persistent,
+  or production state. Run migration or seed commands locally only against an
+  explicitly disposable, isolated test database whose target you have verified.
+  Otherwise inspect the recorded CI evidence and report what could not be verified.
 - If unsure what a command does, skip it and note it in the report.
 - If no checks are available, note this and proceed.
 
@@ -129,7 +138,7 @@ security > bugs > logic errors > breaking changes. Include at least one
 praise if anything positive stands out.
 
 Generate the report using
-[references/report-template.md](references/report-template.md).
+[references/02-report-template.md](references/02-report-template.md).
 
 ## Phase 6 — Post review to GitHub (only if user requests)
 
@@ -162,7 +171,7 @@ gh pr review <PR> --comment --body "<report>"
 
 ## References
 
-- [references/review-checklist.md](references/review-checklist.md) —
+- [references/01-review-checklist.md](references/01-review-checklist.md) —
   Detailed checks by category with false-positive guidance
-- [references/report-template.md](references/report-template.md) —
+- [references/02-report-template.md](references/02-report-template.md) —
   Report template with example findings

@@ -114,7 +114,10 @@ are deferred to the linter."
   with branching logic and has zero test changes, flag it.
 
 Do not demand 100% coverage. Focus on whether the riskiest new code paths
-have at least one test.
+have at least one test. Treat a focused local run as review evidence, not a
+merge verdict. For schema-affecting changes, require fresh-install and upgrade
+evidence on the exact candidate, plus mixed-version evidence where versions
+can overlap. Never run a migration against an unverified or shared database.
 
 ## Performance
 

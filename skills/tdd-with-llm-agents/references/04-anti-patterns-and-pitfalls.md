@@ -46,7 +46,7 @@
 
 **The problem:** TDD requires running tests many times per feature — at minimum once per red phase, once per green phase, and once per refactor. If the test suite takes 30 seconds, each TDD cycle costs two minutes just in test execution. This compounds quickly.
 
-**The fix:** Run only the relevant subset of tests during active TDD cycles (`--testPathPattern`, `-k`, or similar filters). Run the full suite periodically (at the end of a feature, before commits, or via hooks on less frequent events).
+**The fix:** Run the new test in RED and the relevant regression tests in GREEN and REFACTOR (`-k` or the runner’s equivalent). Widen the selection if impact is uncertain. Keep the broader required checks on the exact merge candidate; a focused pass, commit hook, or periodic run is not a substitute.
 
 ### Refactoring tests and implementation simultaneously
 
@@ -58,4 +58,4 @@
 
 **The problem:** Long TDD sessions accumulate test output, implementation code, and conversation history that can exceed the context window. Earlier decisions, constraints, or even which tests exist get lost.
 
-**The fix:** Keep TDD sessions focused on a single feature or module. Summarize completed work periodically. For long sessions, re-anchor by re-running the test suite and reviewing the current state.
+**The fix:** Keep TDD sessions focused on a single feature or module. Summarize completed work periodically. For long sessions, re-anchor by rerunning the relevant regression tests and reviewing the current state.

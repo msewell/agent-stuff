@@ -26,7 +26,8 @@ category: Software Engineering
    — don't rely on `filter()` or `assume()` (keep discard rate under 10%).
    For domain types, compose with `arbitrary { ... }` using `.bind()`.
 4. **Write the test.** Use `checkAll` with Kotest matchers (preferred over
-   `forAll` with booleans). Default: 1,000 iterations.
+   `forAll` with booleans). Choose the iteration budget for the test lane;
+   1,000 is Kotest’s default, not a CI target.
 5. **Handle failures.** Analyze the shrunk counterexample. Convert it into a
    permanent example-based regression test. Keep the property test running to
    find future failures.
@@ -44,18 +45,18 @@ dependencies {
 
 - **`checkAll` vs `forAll`:** Use `checkAll` — richer error messages via matchers.
 - **`Arb` vs `Exhaustive`:** Use `Arb` unless the domain is small and finite (enums, boolean).
-- **Iteration count:** 1,000 (default) for local/CI. Use env var for nightly builds (10k+).
-- **Shrinking:** Leave at default `Bounded(1000)`. Use `Unbounded` only when debugging.
+- **Required lane:** Use a declared, stable seed set and bound iterations and shrinking against the measured runtime budget.
+- **Exploration lane:** Rotate seeds and, where useful, budget more iterations. Use unbounded shrinking only during deliberate debugging.
 - **Custom generators:** Always use `.bind()` inside `arbitrary {}`, never `kotlin.random.Random`.
 - **Custom shrinkers:** Must preserve domain invariants. Invalid shrunk values cause false failures.
-- **Seeds:** Let Kotest auto-persist failed seeds. Convert discovered failures to regression tests.
+- **Failure evidence:** Capture the failing seed and minimized input, then add a regression test. Do not let mutable failed-seed history or a new seed decide a required verdict.
 
 ## Edge cases
 
 - **Lossy conversions:** Roundtrip pattern fails if conversion loses precision (e.g., `Float`→`Double`). Verify losslessness or test a weaker property.
 - **Cross-variable constraints:** Use `assume()` only when the constraint can't be expressed in the generator. Prefer restructuring (e.g., `val (larger, smaller) = if (a > b) a to b else b to a`).
-- **Slow generators:** Don't reduce iteration count. Optimize the generator, split suites, or run long suites in nightly builds.
-- **Non-determinism in SUT:** Pin seeds for debugging, but keep the main property test with random seeds.
+- **Slow generators:** Optimize or constrain them first. If the broader search does not fit the required budget, move it to exploration and keep a deterministic core covering the required risk.
+- **Nondeterminism in the system under test:** Control the actual source, such as a clock or scheduler. Pinning Kotest’s generator seed alone is not enough.
 
 ## Reference material
 

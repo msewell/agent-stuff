@@ -1,5 +1,7 @@
 # Shrinking, Seeds, and Assumptions
 
+## Table of Contents
+
 - [Shrinking](#shrinking)
 - [Seeds and Reproducibility](#seeds-and-reproducibility)
 - [Assumptions and Constraints](#assumptions-and-constraints)
@@ -62,11 +64,11 @@ Kotest uses *integrated* (internal) shrinking — shrinking operates on the rand
 
 ## Seeds and Reproducibility
 
-Every property test run uses a random seed. Kotest provides several mechanisms to control and leverage this.
+Kotest chooses a random seed if you do not supply one. Use explicit seeds for required tests and rotate seeds in exploration.
 
 ### Failed seed persistence
 
-When a test fails, Kotest:
+When failed-seed persistence is enabled, Kotest:
 1. Prints the seed that caused the failure.
 2. Writes it to `~/.kotest/seeds/<spec>/<testname>`.
 3. On subsequent runs, replays that seed *first* — creating an automatic regression test.
@@ -74,7 +76,7 @@ When a test fails, Kotest:
 
 ### Manual seeds
 
-Pin a seed for debugging or permanent regression:
+Pin a seed for required CI or to replay a failure:
 
 ```kotlin
 checkAll(PropTestConfig(seed = 127305235)) { s: String ->
@@ -90,7 +92,7 @@ test("empty string edge case (regression)") {
     myFunction("") shouldBe ""
 }
 
-// Original property test continues finding new failures
+// The separate exploration lane continues sampling different seeds
 test("myFunction preserves length") {
     checkAll<String> { s -> myFunction(s).length shouldBe s.length }
 }
@@ -98,18 +100,7 @@ test("myFunction preserves length") {
 
 ### CI/CD seed management
 
-Prevent accidentally committing seed files to version control:
-
-```kotlin
-// In kotest config or system property:
-// kotest.proptest.seed.fail-if-set=true  // fail CI if seed files exist
-```
-
-Or disable seed persistence entirely:
-
-```kotlin
-PropertyTesting.writeFailedSeed = false
-```
+Keep required-run inputs independent of previous runs: start with a clean, job-private seed store, use declared seeds, and disable failed-seed persistence there. When using a Kotest version exposing `PropertyTesting.writeFailedSeed`, set it to `false` for the required lane. Verify these settings on the pinned version; archive the failing seed and shrunk input in CI artifacts instead. A diagnostic replay is evidence, not a replacement verdict.
 
 ---
 

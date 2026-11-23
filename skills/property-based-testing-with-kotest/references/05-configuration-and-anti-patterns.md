@@ -1,5 +1,7 @@
 # Configuration and Anti-Patterns
 
+## Table of Contents
+
 - [Configuration Reference](#configuration-reference)
 - [Anti-Patterns](#anti-patterns)
 

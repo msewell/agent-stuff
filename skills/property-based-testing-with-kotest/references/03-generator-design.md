@@ -1,5 +1,7 @@
 # Generator Design
 
+## Table of Contents
+
 - [Built-in generators](#built-in-generators)
 - [Edge cases](#edge-cases)
 - [Generator operations](#generator-operations)

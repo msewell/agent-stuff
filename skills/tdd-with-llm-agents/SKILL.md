@@ -8,8 +8,9 @@ category: Test Strategy & Reliability
 
 ## Session start
 
-Run the full test suite before any new work. Report the baseline (total tests,
-pass/fail counts). If any tests fail, fix those first.
+Run the relevant existing regression tests before changing behavior. Report the
+scope and results. Investigate unexpected baseline failures before starting new
+work; do not hide them by changing the selection or retrying until green.
 
 ## Workflow: red/green/refactor
 
@@ -21,8 +22,9 @@ Execute one cycle at a time. Never batch.
 2. Use a descriptive, behavior-focused name
    (`should reject emails without @ symbol`, not `test case 3`).
 3. Follow AAA: Arrange, Act, Assert.
-4. Run the test. **Confirm it fails.** If it passes, the test is wrong — it
-   is not exercising new behavior.
+4. Run the new test. **Confirm it fails for the intended behavioral reason.**
+   A setup error is not RED. If it passes, check whether the behavior already
+   exists or the test fails to exercise it.
 5. Do NOT write any implementation code in this phase.
 
 ### GREEN — minimal implementation
@@ -30,14 +32,15 @@ Execute one cycle at a time. Never batch.
 1. Write the **minimum** code to make the failing test pass.
 2. Do NOT modify, delete, or skip any test. Test files are read-only.
 3. Do NOT add functionality beyond what the current test requires.
-4. Run **all** tests. All must pass.
+4. Run the new test and relevant regression tests. All selected tests must
+   pass. Widen the selection if impact is uncertain.
 5. If a previously passing test breaks, fix the implementation — never the test.
 
 ### REFACTOR — clean up under green
 
 1. Improve structure: remove duplication, improve naming, simplify logic.
 2. Do NOT add new behavior.
-3. Run tests after every change. All must stay green.
+3. Run the relevant regression tests after each refactor. They must stay green.
 4. Refactor implementation first (tests are the fixed reference), then
    optionally refactor tests (implementation is the fixed reference). Never
    both simultaneously.
@@ -45,6 +48,13 @@ Execute one cycle at a time. Never batch.
 ### Repeat
 
 Return to RED with the next behavior. Continue until the feature is complete.
+
+## Before integration
+
+Run or verify the broader required checks on the exact merge candidate. A
+focused local pass does not replace them. Intentional RED demonstrates that a
+new test detects missing behavior; an unexpected required-check failure blocks
+integration. A passing retry does not clear it.
 
 ## Hard constraints
 
@@ -79,10 +89,10 @@ For larger features, generate a plan before starting cycles:
   Write the failing test first.
 - **Agent modified a test to pass:** Revert the test change. Fix the
   implementation instead.
-- **Test passes unexpectedly (no red):** The test does not exercise new
-  behavior. Rewrite or discard it.
-- **Context window getting large:** Summarize completed work. Re-run the full
-  test suite to re-anchor.
+- **Test passes unexpectedly (no red):** Check whether the behavior already
+  exists or the test misses it. Do not write implementation for an unobserved failure.
+- **Context window getting large:** Summarize completed work and rerun the
+  relevant regression tests to re-anchor.
 
 ## Reference material
 

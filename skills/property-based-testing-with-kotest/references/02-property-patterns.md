@@ -1,5 +1,7 @@
 # The Seven Property Patterns
 
+## Table of Contents
+
 - [Roundtrip](#roundtrip--there-and-back-again)
 - [Invariants](#invariants--some-things-never-change)
 - [Commutativity](#commutativity--different-paths-same-destination)

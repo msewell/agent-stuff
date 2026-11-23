@@ -50,7 +50,7 @@ Apply the Strangler Fig pattern per feature:
 1. **One slice = one use case.** Name it verb-noun. If you can't, the boundary is wrong.
 2. **Start simple, refactor when it hurts.** Begin with transaction-script handlers. Extract domain objects when complexity warrants it.
 3. **Keep slices rewritable.** Target roughly a day of work per slice.
-4. **Test at the edges.** Integration tests against the slice boundary. Unit tests only for complex domain logic. Minimal mocking. See [references/02-sharing-testing-and-evolution.md](references/02-sharing-testing-and-evolution.md) § Testing Strategy.
+4. **Choose the smallest faithful test boundary.** Use focused tests for pure rules and slice-boundary integration tests for wiring and side effects. Use the real database engine when its behavior matters. See [references/02-sharing-testing-and-evolution.md](references/02-sharing-testing-and-evolution.md) § Testing Strategy.
 5. **Share through the domain model, not services.** Entities and value objects are the sharing mechanism. Service classes multiple slices depend on are a coupling vector.
 6. **Prefer small aggregates.** Fewer slices contending over shared aggregates means less coupling and fewer concurrency conflicts.
 7. **Enforce module boundaries explicitly.** Use build-time tooling (ArchUnit, Spring Modulith) to prevent accidental cross-module coupling.

@@ -24,10 +24,12 @@ When a user asks to set up TDD rules for their project, generate a project-level
 ### Mandatory Process
 - ALWAYS write a failing test BEFORE writing implementation code.
 - Write ONE test at a time. Never batch multiple new tests.
-- Run the test after writing it. Confirm it FAILS before proceeding.
+- Run the new test. Confirm it FAILS for the intended behavioral reason.
 - Write the MINIMUM implementation to make the failing test pass.
-- Run ALL tests after implementation. ALL must pass.
-- Only then consider refactoring — all tests must stay green.
+- Run the new test and relevant regressions. All selected tests must pass.
+- Keep relevant regressions green through refactoring.
+- Before integration, run or verify broader required checks on the exact
+  candidate. A passing retry does not clear an unexpected required failure.
 
 ### Hard Constraints
 - NEVER modify, delete, or skip a test to make it pass.
@@ -46,14 +48,13 @@ When a user asks to set up TDD rules for their project, generate a project-level
 - Start with core happy-path behavior, then add edge cases.
 
 ### Session Protocol
-- At the start of every session, run the full test suite first.
-- Report the baseline: how many tests, how many pass/fail.
-- If any tests are already failing, address those before new work.
+- Run the relevant existing regression tests before new work.
+- Report the scope and pass/fail counts. Investigate unexpected failures.
 
 ### Refactoring Protocol
-- Refactoring happens ONLY when all tests are green.
-- During refactoring, do not change behavior — only improve structure.
-- Run tests after every refactoring change.
+- Start only after the new test and relevant regressions pass.
+- Improve structure without changing behavior.
+- Run the relevant regression tests after each refactor.
 ```
 
 ---
@@ -68,11 +69,12 @@ We are using strict red/green TDD. For each piece of behavior:
 1. Write ONE failing test (red)
 2. Confirm it fails
 3. Write minimum code to pass it (green)
-4. Confirm ALL tests pass
-5. Refactor if needed (keep green)
+4. Confirm the new test and relevant regressions pass
+5. Refactor if needed (keep the relevant checks green)
 6. Move to the next behavior
 
-Start by running the existing test suite to establish a baseline.
+Establish a baseline with the relevant existing regression tests.
+Before integration, verify the broader required checks on the exact candidate.
 ```
 
 **Requesting a new behavior (red phase):**
@@ -86,16 +88,16 @@ Then run the test and show me the failure output.
 ```
 Write the minimum implementation to make the failing test pass.
 Do not modify any test files. Do not add extra functionality.
-Then run all tests and show results.
+Run the new test and relevant regression tests. Show the scope and results.
 ```
 
 **Requesting refactor:**
 ```
-All tests pass. Refactor the implementation:
+The new test and relevant regressions pass. Refactor the implementation:
 - Remove duplication
 - Improve naming
 - Simplify logic
-Keep all tests green. Do not add new behavior.
+Rerun the relevant regression tests after each change. Do not add new behavior.
 ```
 
 **Recovering from a test-subversion attempt:**
@@ -113,7 +115,7 @@ Prompting and AGENTS.md rules set expectations, but violations still happen. Str
 
 ### Automated Test Execution via Hooks
 
-Most agent tools support hooks — shell commands that execute automatically in response to actions. Configure a hook to run the test suite after every file edit:
+Most agent tools support hooks — shell commands that execute automatically in response to actions. Configure a hook to run a focused test command after an edit, not the full integration gate:
 
 **Concept (tool-agnostic):**
 ```
@@ -127,12 +129,14 @@ If tests fail: show failure output immediately
 {
   "event": "PostToolUse",
   "matcher": "Write|Edit|MultiEdit",
-  "command": "npm test 2>&1 | tail -20"
+  "command": "npm run test:focused"
 }
 ```
 
+Substitute the repository’s focused test command; `test:focused` is an example script name. Preserve the runner’s exit status and first failure.
+
 **Example for VS Code / Copilot:**
-Configure "Run on Save" to execute the test suite on every file change for immediate test feedback.
+Configure “Run on Save” to run focused checks for immediate feedback.
 
 This provides **instant feedback** without needing to remember to run tests. It also surfaces regressions the moment they happen, not after several more changes have piled on.
 
@@ -180,7 +184,7 @@ Enforcement tools, hooks, and the TDD process itself can then read this file to 
 Some agent frameworks support spawning sub-agents. A powerful pattern is to use a separate verification agent that independently reviews the implementation against the test specification:
 
 ```
-After the implementation passes all tests, spawn a verification agent.
+After the new test and relevant regressions pass, spawn a verification agent.
 The verification agent should:
 1. Read only the tests (not the implementation)
 2. Independently assess whether the tests are comprehensive
@@ -196,13 +200,12 @@ Use version control as a checkpoint mechanism:
 
 - **Commit after every green phase.** Each passing cycle gets its own commit. If a later cycle goes off the rails, revert to the last known-good state without losing work.
 - **Branch-per-feature.** Keep TDD work on a feature branch so the main branch is always stable.
-- **Pre-commit hooks.** Run the full test suite before every commit. If tests fail, the commit is rejected.
+- **Pre-commit hooks.** Run a fast, relevant check before each commit. Reject failures; run or verify all broader required checks on the exact candidate before integration.
 
 ```bash
 # .git/hooks/pre-commit (simplified)
 #!/bin/sh
-npm test
-if [ $? -ne 0 ]; then
+if ! npm run test:focused; then
   echo "Tests failed. Commit rejected."
   exit 1
 fi

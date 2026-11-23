@@ -20,7 +20,7 @@
 
 ### Phase 0: Session Start — "First, Run the Tests"
 
-Begin every session against an existing project by running the full test suite first.
+Run the relevant existing regression tests before making changes. Report the scope and results; investigate unexpected baseline failures.
 
 This serves multiple purposes simultaneously:
 - Discover the test suite and learn how to run it
@@ -38,7 +38,7 @@ the submit button should remain disabled and display a validation message.
 Do NOT write any implementation code yet.
 ```
 
-**Run the test and confirm it fails.** If the test passes without implementation, it is wrong — it is not testing new behavior.
+**Run the new test and confirm it fails for the intended behavior.** A setup error is not RED. If it passes, check whether the behavior already exists or whether the test misses it.
 
 Critical constraints during this phase:
 - One test only — not a batch
@@ -56,7 +56,7 @@ Do not add any functionality beyond what the test requires.
 Do not modify the test.
 ```
 
-Run all tests again. All tests (including previous ones) must pass.
+Run the new test and relevant regression tests. All selected tests must pass; widen the selection when impact is uncertain.
 
 Critical constraints during this phase:
 - Only implementation files may be modified — test files are off-limits
@@ -66,23 +66,23 @@ Critical constraints during this phase:
 
 ### Phase 3: REFACTOR — Clean Up Under Green
 
-Once all tests are green, refactor:
+Once the new test and relevant regression tests are green, refactor:
 
 ```
-All tests pass. Refactor the implementation for clarity and
-reduce duplication. Keep all tests green. Do not change behavior.
+Refactor the implementation for clarity and reduce duplication.
+Run the relevant regression tests after each change. Do not change behavior.
 ```
 
-This is the only phase where structural changes to implementation code are appropriate. The passing test suite is the safety net that ensures refactoring doesn't change behavior.
+This is the only phase where structural changes to implementation code are appropriate.
 
 Critical constraints during this phase:
-- All tests must remain green throughout
+- The relevant regression tests must remain green throughout
 - No new behavior — only structural improvements
 - Test improvements (better names, reduced duplication in test setup) are acceptable but do not change test assertions
 
 ### Phase 4: REPEAT
 
-Return to Phase 1 with the next piece of behavior. The cycle continues until the feature is complete.
+Return to Phase 1 with the next piece of behavior. Before integration, run or verify the broader required checks on the exact candidate. Deliberate RED is not a CI failure to waive; an unexpected required-check failure stays red even if it later passes on retry.
 
 ### Workflow Diagram
 
@@ -103,7 +103,7 @@ Return to Phase 1 with the next piece of behavior. The cycle continues until the
          ┌─────────────────────────┐                   │
          │  GREEN: Write minimum   │                   │
          │  implementation. Run    │                   │
-         │  all tests. All green.  │                   │
+         │  relevant tests. Green. │                   │
          └────────────┬────────────┘                   │
                       │                                │
                       ▼                                │

@@ -1,5 +1,7 @@
 # Fundamentals and Core API
 
+## Table of Contents
+
 - [Why Property-Based Testing](#why-property-based-testing)
 - [Getting Started](#getting-started)
 - [Core API](#core-api)

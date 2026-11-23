@@ -76,7 +76,7 @@ Begin with the core happy-path behavior. Edge cases, error handling, and boundar
 
 ### Refactoring is a separate, explicit phase
 
-After a test passes, refactor — but only with the constraint "keep all tests green." Separating refactoring from implementation prevents restructuring code mid-cycle and breaking the feedback loop.
+After the new test and relevant regressions pass, refactor while keeping those checks green. Separating refactoring from implementation prevents restructuring code mid-cycle and breaking the feedback loop.
 
 ### Never modify tests to make them pass
 
