@@ -2,7 +2,9 @@
 description: Use full ExecPlan guidance and template to draft or refine a living execution plan.
 argument-hint: "[task-or-scope]"
 ---
-Draft or refine an ExecPlan for the user arguments below, following this document to the letter. Write the plan to a new Markdown file. Check your installed skills first and use any that apply to what you will be building.
+Draft or refine an ExecPlan for the user arguments below, following this document to the letter.
+Write the plan to a new Markdown file named `YYYY-MM-DD-<slug>.md` after its creation date.
+Check your installed skills first and use any that apply to what you will be building.
 
 # Using PLANS.md for multi-hour problem solving
 
@@ -55,9 +57,16 @@ This document describes the requirements for an execution plan ("ExecPlan"), a d
 
 When authoring an executable specification (ExecPlan), follow PLANS.md _to the letter_. If it is not in your context, refresh your memory by reading the entire PLANS.md file. Be thorough in reading (and re-reading) source material to produce an accurate specification. When creating a spec, start from the skeleton and flesh it out as you do your research.
 
-Before finalizing an ExecPlan, align with the user on decisions that materially affect product intent, system architecture, program design, or execution order. Investigate first. Ask only questions that research cannot answer. Give context, a recommendation, and tradeoffs with each question. When explaining a consequential design choice, prefer the smallest visual or code-shape sketch that exposes the decision, supported by brief prose, rather than a wall of description. Do not leave consequential decisions unresolved.
+Before finalizing an ExecPlan, align with the user on decisions that materially affect product intent, system architecture, program design, or execution order.
+Investigate first: read any existing code or documents, gather context from whatever other related sources are available, report work in flight elsewhere that is likely to conflict with the plan if any, and research current best practice online where you are unsure of the state of the art.
+Ask only questions that research cannot answer, in as many rounds as it takes to reach full clarity.
+Give each question an index that stays unique across rounds (Q1, Q2, …), context, a recommendation, and tradeoffs.
+Keep open questions in the `Open Questions` section; when one is answered, remove it and record the answer in the `Decision Log` in the same edit.
+When explaining a consequential design choice, prefer the smallest visual or code-shape sketch that exposes the decision, supported by brief prose, rather than a wall of description. Do not leave consequential decisions unresolved.
 
-When implementing an executable specification (ExecPlan), do not prompt the user for "next steps"; simply proceed to the next milestone. Keep all sections up to date, add or split entries in the list at every stopping point to affirmatively state the progress made and next steps. Resolve incidental ambiguities autonomously, and commit frequently.
+When implementing an executable specification (ExecPlan), do not prompt the user for "next steps"; simply proceed to the next milestone until you reach a review point.
+A review point is a stop the plan names in advance, in `Progress`, where a human reviews the work before it continues.
+Keep all sections up to date, add or split entries in the list at every stopping point to affirmatively state the progress made and next steps. Resolve incidental ambiguities autonomously, and commit frequently.
 
 When discussing an executable specification (ExecPlan), record decisions in a log in the spec for posterity; it should be unambiguously clear why any change to the specification was made. ExecPlans are living documents, and it should always be possible to restart from _only_ the ExecPlan and no other work.
 
@@ -81,7 +90,11 @@ The agent executing your plan can list files, read files, search, run the projec
 
 An ExecPlan is a Markdown file, not a fenced block embedded in another response. Use ordinary fenced code blocks with accurate language labels for diagrams, diffs, source code, commands, and transcripts. Use indented text blocks for lightweight component trees, call trees, file trees, and pseudocode when a language label would add no value. Use two newlines after every heading, use # and ## and so on, and use correct Markdown syntax for ordered and unordered lists.
 
-Write in plain prose. Prefer sentences over lists. Avoid checklists, tables, and long enumerations unless brevity would obscure meaning. Checklists are permitted only in the `Progress` section, where they are mandatory. Narrative sections must remain prose-first. Architecture and program-design artifacts are exempt when their form communicates structure more directly than prose.
+Write reasoning and narrative in plain prose.
+Write three or more parallel items (files, terms, rules, test surfaces) as a list, not as a run-on sentence or paragraph.
+Avoid tables unless they communicate structure more directly than a list.
+Checklists belong in `Progress`, where they are mandatory, so the implementer can tick steps off.
+Architecture and program-design artifacts are exempt when their form communicates structure more directly than prose.
 
 ## Guidelines
 
@@ -94,6 +107,18 @@ Anchor the plan with observable outcomes. State what the user can do after imple
 Specify repository context explicitly. Name files with full repository-relative paths, name functions and modules precisely, and describe where new files should be created. If touching multiple areas, include a short orientation paragraph that explains how those parts fit together so a novice can navigate confidently. When running commands, show the working directory and exact command line. When outcomes depend on environment, state the assumptions and provide alternatives when reasonable.
 
 Separate system architecture from program design. System architecture explains how affected services, endpoints, schemas, queues, stores, and external actors interact. Program design pins down the shape of the code: ownership, module boundaries, runtime control flow, state, key types, and method signatures. Make consequential decisions reviewable before implementation instead of deferring them to code review.
+
+Check the program design against these principles, and record any deliberate deviation in the `Decision Log`:
+
+- Make invalid states unrepresentable: prefer types to tests, and compile-time boundaries to runtime checks.
+- Treat every added line, whether code, prose, or configuration, as a maintenance burden; prefer deletion, reuse, and simplification.
+- Organize code by vertical slice, and avoid coupling between distant parts of the system.
+- Prefer a functional style to object orientation.
+- Favor simplicity over hedging for completeness.
+- For each change, first make the change easy (even if this may be hard), then make the easy change.
+- Make state machines explicit instead of leaving them implicit.
+- Prefer deterministic enforcement over documentation that can be skipped.
+- Prefer a stack of small, independently reviewable changes to one large change.
 
 Choose the smallest set of artifacts that makes those decisions obvious. Do not include every available artifact, and do not create a diagram merely to decorate the plan. Each artifact must be warranted by answering a specific design or review question. Use:
 
@@ -149,7 +174,9 @@ A companion HTML mockup is a review aid, never the sole source of required conte
 
 Be idempotent and safe. Write the steps so they can be run multiple times without causing damage or drift. If a step can fail halfway, include how to retry or adapt. If a migration or destructive operation is necessary, spell out backups or safe fallbacks. Prefer additive, testable changes that can be validated as you go.
 
-Validation is not optional. Include instructions to run tests, to start the system if applicable, and to observe it doing something useful. Describe comprehensive testing for any new features or capabilities. Include expected outputs and error messages so a novice can tell success from failure. Where possible, show how to prove that the change is effective beyond compilation (for example, through a small end-to-end scenario, a CLI invocation, or an HTTP request/response transcript). State the exact test commands appropriate to the project’s toolchain and how to interpret their results.
+Validation is not optional. Include instructions to run tests, to start the system if applicable, and to observe it doing something useful. Describe comprehensive testing for any new features or capabilities. Include expected outputs and error messages so a novice can tell success from failure. Where possible, show how to prove that the change is effective beyond compilation (for example, through a small end-to-end scenario, a CLI invocation, or an HTTP request/response transcript). State the exact test commands appropriate to the project’s toolchain and how to interpret their results. Plan property-based tests where the behavior has an invariant (a round trip, idempotence, monotonicity, no valid input causing a crash), and mutation testing where you doubt the tests would catch a regression; plan neither by default.
+
+When the change is visible to a person, end the work with a manual verification at a review point before the change is handed over for integration. Run the system and give the reviewer one block per acceptance criterion: the URL or command to use, the expected result, and what you already observed yourself. Name unchanged behavior worth a glance as well. Open each URL for the reviewer where you can, and keep the system running until they confirm. Name the test or sample data that shows each case, and add what is missing. While the system runs, capture evidence for whoever reviews or accepts the change: screenshots for static changes, and a short video for anything that only shows over time, made with a script kept next to the plan so the same captures can be repeated later.
 
 Capture evidence. When your steps produce terminal output, short diffs, or logs, include them as accurately labeled fenced blocks or concise indented examples. Keep them focused on what proves success. If you need to include a patch, prefer file-scoped diffs or small excerpts that a reader can recreate by following your instructions rather than pasting large blobs.
 
@@ -164,7 +191,7 @@ Organize milestones as vertical slices: thin increments that produce observable 
 ## Living plans and design decisions
 
 - ExecPlans are living documents. As you make key design decisions, update the plan to record both the decision and the thinking behind it. Record all decisions in the `Decision Log` section.
-- ExecPlans must contain and maintain a `Progress` section, a `Surprises & Discoveries` section, a `Decision Log`, and an `Outcomes & Retrospective` section. These are not optional.
+- ExecPlans must contain and maintain a `Progress` section, an `Open Questions` section, a `Surprises & Discoveries` section, a `Decision Log`, and an `Outcomes & Retrospective` section. These are not optional.
 - When you discover optimizer behavior, performance tradeoffs, unexpected bugs, or inverse/unapply semantics that shaped your approach, capture those observations in the `Surprises & Discoveries` section with short evidence snippets (test output is ideal).
 - If you change course mid-implementation, document why in the `Decision Log` and reflect the implications in `Progress`. Plans are guides for the next contributor as much as checklists for you.
 - At completion of a major task or the full plan, write an `Outcomes & Retrospective` entry summarizing what was achieved, what remains, and lessons learned.
@@ -180,7 +207,7 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
 
     # <Short, action-oriented description>
 
-    This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
+    This ExecPlan is a living document. The sections `Progress`, `Open Questions`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
 
     If PLANS.md file is checked into the repo, reference the path to that file here from the repository root and note that this document must be maintained in accordance with PLANS.md.
 
@@ -195,8 +222,13 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
     - [x] (2025-10-01 13:00Z) Example completed step.
     - [ ] Example incomplete step.
     - [ ] Example partially completed step (completed: X; remaining: Y).
+    - [ ] Review point: examples approved.
 
     Use timestamps to measure rates of progress.
+
+    ## Open Questions
+
+    Only questions still waiting for an answer, each with its index, context, a recommendation, and tradeoffs. When one is answered, remove it in the same edit that records the answer in the `Decision Log`. Leave the section empty rather than deleting it.
 
     ## Surprises & Discoveries
 
@@ -235,7 +267,7 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
 
     ## Concrete Steps
 
-    State the exact commands to run and where to run them (working directory). When a command generates output, show a short expected transcript so the reader can compare. This section must be updated as work proceeds.
+    List the steps as checkboxes, each with the exact command to run and where to run it (working directory). When a command generates output, show a short expected transcript so the reader can compare. This section must be updated as work proceeds.
 
     ## Validation and Acceptance
 

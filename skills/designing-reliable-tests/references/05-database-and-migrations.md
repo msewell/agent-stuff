@@ -1,0 +1,21 @@
+# Database tests and migrations
+
+## Isolate real database behavior
+
+Use the deployment-compatible engine, version, extensions, settings and roles. The lock and DDL details below are for PostgreSQL; verify equivalents if the project uses another engine. Start a private server per job/shard; check readiness with the intended role, database and schema. Allocate private databases per worker. A per-test rollback is valid only if every relevant operation uses that transaction and the test needs neither a real commit nor another session. Use a fresh database or proven reset for commit, queue or multi-session checks. A schema namespace alone is not a sandbox; verify permissions, connection-pool settings and shared cluster state.
+
+For a deterministic lock test, have session A take a row lock and confirm acquisition; then have B use `FOR UPDATE NOWAIT` on that row. Assert PostgreSQL SQLSTATE `55P03`, release A, and verify B succeeds in a clean transaction. If the waiting behavior itself is the subject, observe the blocker before release instead of sleeping. Join all work and close pools before cleanup.
+
+## Require fresh install and upgrade on the exact merge candidate
+
+1. **Keep a required check present.** Run the small fresh and upgrade paths against the real deployment engine on every candidate (PR and merge group, if used), even when no migration file changed. Treat schema or ORM definitions, extensions, permissions, bootstrap and runner config as DDL inputs. Use change detection only to add risk-specific cases; if impact is uncertain, run the broader risk matrix. Do not use a conditional path skip, downgrade to nightly, or use lint or quarantine as a substitute.
+2. **Fresh:** Start empty, run the production migration runner to head, verify its ledger and intended end state, and exercise a small app smoke using the application role.
+3. **Upgrade:** Initialize from a pinned supported deployed baseline independent of the candidate’s dump. Seed the **old** data shape. Run the real runner with deployment permissions and assert data preservation, transforms, constraints and intended privileges. Test runner no-op or resume per its contract.
+4. **Compare both outcomes.** Diff structural attributes by qualified identity, not OIDs or raw dump bytes. Compare defaults, grants, RLS, constraints and validation status, index definitions and validity, and relevant extensions. Repeat a small real-role behavior contract on both databases; convergence alone cannot prove that either is correct.
+5. **Exercise rollout and operations before merge.** Test actual deploy order: in the compatibility change that introduces mixed deployment, exercise old and new binaries against the expanded schema with their application roles, verifying reads and writes. Do not wait for the later contract PR to do this check. Test recovery for nontransactional or resumable changes. If data scale, lock duration or backfill throughput determine safety, require a production-shaped rehearsal before merge. Split the change or provision capacity rather than deferring that evidence.
+
+## Separate rollout checks from retirement evidence
+
+Use expand → migrate → contract for incompatible changes. For a simple column removal, first deploy code that stops using the column while it still exists. Add a replacement, backfill, or dual-write only when necessary. Before accepting the drop, verify the deployed versions and scheduled jobs no longer contain old writers, and confirm the dependent rollback window is closed. Use write telemetry as corroboration, not proof that idle or infrequent writers are gone. Neither a nightly CI run nor a mixed-version test proves fleet retirement. Do not demand compatibility with a retired, unsupported binary after the contract change.
+
+For a hot PostgreSQL table, verify actual lock behavior: `NOT VALID` can avoid the initial scan for supported constraints but still takes a lock; `VALIDATE CONSTRAINT` checks historical rows. `CREATE INDEX CONCURRENTLY` cannot run in a transaction block and failure can leave an invalid index. Use a dedicated session with a lock deadline below the statement deadline and an outer watchdog. Treat lint as an early filter, not runtime evidence.
