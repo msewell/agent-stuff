@@ -37,12 +37,6 @@ For the love of [Bob](https://en.wikipedia.org/wiki/J._R._%22Bob%22_Dobbs), if y
 
 Just ask your clanker to install whichever of these skills cater to your needs.
 
-Or, if you use [Vercel's npx skills](https://github.com/vercel-labs/skills), you can install individual skills like this:
-
-```bash
-npx skills add msewell/agent-stuff/skills/<skill-name>
-```
-
 <!-- SKILLS:START -->
 ### Software Engineering
 
