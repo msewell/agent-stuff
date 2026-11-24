@@ -90,10 +90,13 @@ detailed checks and false-positive guidance per category.
   their reasoning before suggesting alternatives.
 - If nothing significant is found, say so — do not invent findings.
 
-## Phase 4 — Run available checks locally
+## Phase 4 — Verify checks
 
-Detect commands from `package.json` scripts, `Makefile`, `pyproject.toml`,
-and CI workflow files. Run in order, skip any that are unavailable:
+Identify repo-defined commands from `package.json` scripts, `Makefile`,
+`pyproject.toml`, and CI workflow files. Run the checks below in order only
+within the user's authorization for execution, revision, writes, and network
+access. If the request is limited to inspection or supplied evidence, don't
+execute checks. Report what ran, what didn't, and any resulting gaps.
 
 1. **Lint** — e.g. `npm run lint`, `ruff check .`, `golangci-lint run`
 2. **Type-check** — e.g. `npx tsc --noEmit`, `mypy .`, `pyright`
@@ -104,7 +107,8 @@ and CI workflow files. Run in order, skip any that are unavailable:
    results against the real target engine on the exact merge candidate (the
    merge-group commit when a queue is used). Check mixed-version compatibility
    when deployment versions overlap. A green PR-head check or nightly run is
-   not a substitute. If the required evidence is missing, report it as blocking.
+   not a substitute for a required result on the merge candidate. If the
+   required evidence is missing, report it as blocking.
 
 **Guardrails:**
 
@@ -159,8 +163,11 @@ gh pr review <PR> --comment --body "<report>"
 
 - **Empty PR description**: Flag as first finding — a PR without context
   is a review anti-pattern.
-- **Very large PR (30+ files or 1000+ lines)**: Note it should be split.
-  Review the highest-risk files regardless.
+- **Large PR**: Treat size as a signal to look for reviewable boundaries, not
+  a finding by itself. Recommend a split only if the pieces can be reviewed
+  independently and remain safe without separating behavior from its tests.
+  Otherwise, ask for a short path through the diff and review the highest-risk
+  parts first.
 - **Draft PR**: Review normally, note draft status in summary.
 - **No linked issue**: Review as-is. Note missing link as a suggestion.
 - **Failing CI on changed code**: Include as a blocking finding.
