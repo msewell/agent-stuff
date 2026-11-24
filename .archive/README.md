@@ -1,6 +1,8 @@
 # Archive
 
-Skills I no longer find useful.
+Retired skills and prompts, kept for reference.
+
+## Skills
 
 | Skill | Reason |
 |-------|--------|
@@ -9,3 +11,9 @@ Skills I no longer find useful.
 | [generating-marp-slides](skills/generating-marp-slides) | The outputted slides are too opinionated and low-value. |
 | [applying-tcr-with-agents](skills/applying-tcr-with-agents) | It clashes with the TDD skill, which is better. |
 | [stripping-ai-tells](skills/stripping-ai-tells) | Superseded by [humanizing-prose](../skills/humanizing-prose). That skill covers AI-tell removal as part of a fuller rewrite workflow, with stricter fact-preservation rules and voice-matching support. |
+
+## Prompts
+
+| Prompt | Reason |
+|--------|--------|
+| [reflect](prompts/reflect.md) | Superseded by [retro](../prompts/retro.md), which uses session evidence to recommend the smallest useful change rather than defaulting to instruction-file edits. |

@@ -145,7 +145,7 @@ These are Claude Code plugins, not Pi extensions; `pi install` does not apply.
 |------|-------------|
 | [exec-plan](prompts/exec-plan.md) | Use full ExecPlan guidance and template to draft or refine a living execution plan. |
 | [missing-tools](prompts/missing-tools.md) | Capture missing tools that would improve research speed and quality, then write requirements/context to MISSING_TOOLS.md. |
-| [reflect](prompts/reflect.md) | Reflect on session learnings and propose AGENTS.md updates. |
+| [retro](prompts/retro.md) | Investigate a coding-agent session and propose evidence-backed improvements |
 | [review-maintainability](prompts/review-maintainability.md) | Review code for long-term maintainability, simplicity, and removal opportunities. |
 <!-- PROMPTS:END -->
 
