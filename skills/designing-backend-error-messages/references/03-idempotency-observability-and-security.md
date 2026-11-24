@@ -235,7 +235,7 @@ function toWireError(internal, req):
     public = PUBLIC_ERROR_REGISTRY[internal.code]
     if public is null:
         # Unknown error — treat as 500 and scrub everything
-        log.error("unregistered_error", internal)
+        log.error("unregistered_error", {trace_id: req.trace_id})
         return wireError(500, "internal.unknown",
                          "An unexpected error occurred. Our team has been notified.",
                          trace_id=req.trace_id)
@@ -249,7 +249,7 @@ The registry approach gives you a single source of truth for every error the ser
 
 ### Debug mode — carefully
 
-In dev/staging, you can emit an extra `debug` extension with stack traces and upstream error text. Guard it behind an environment flag or a signed header (`X-Debug-Mode`) from a trusted source. Never enable in production without an explicit deployment knob.
+Keep client debug output off by default. For an authorized diagnostic audience, a debug flag may enable extra structured fields from an explicit allowlist, such as a failure category or dependency alias. Sanitize values before serialization or telemetry export, even in dev and staging. A flag or trusted header is not permission to bypass redaction: never include raw upstream errors, stack traces, SQL, or secrets in client debug output. Test that enabling debug does not expose excluded fields or values.
 
 ```json
 {
@@ -257,8 +257,8 @@ In dev/staging, you can emit an extra `debug` extension with stack traces and up
   "detail": "An unexpected error occurred.",
   "trace_id": "7f3c…",
   "debug": {
-    "stack": "...",
-    "upstream_error": "..."
+    "dependency": "payment-processor",
+    "failure_category": "upstream_timeout"
   }
 }
 ```

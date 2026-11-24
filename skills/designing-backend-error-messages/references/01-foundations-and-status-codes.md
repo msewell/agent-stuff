@@ -38,7 +38,7 @@ Error messages have to serve two very different readers at the same time:
 | ----------------- | ------------------------------------------------- | ---------------------------------------------------------- |
 | Reader            | Integrator, end user, AI agent                    | On-call engineer, SRE, auditor                             |
 | Format            | Stable wire contract (JSON)                       | Structured log + trace + metric                            |
-| Content           | What happened + what to do next                   | Stack trace, variables, request context, user/tenant, SQL  |
+| Content           | What happened + what to do next                   | Approved diagnostic fields, such as operation, failure category, and safe context |
 | Sensitive data    | Never                                             | Still never (PII/secrets redacted — "even internally")     |
 | Freedom to evolve | Governed by versioning; changes break clients     | Can change any time                                        |
 | Language level    | 7th–8th-grade reading level; no jargon            | Whatever the engineer needs                                |
@@ -47,7 +47,7 @@ Error messages have to serve two very different readers at the same time:
 
 - A user pastes it into a support ticket.
 - An engineer pastes it into the observability platform.
-- A structured log entry with that ID contains the rich context: stack trace, query that failed, tenant, feature flags in effect, upstream error from a dependency.
+- A structured log entry with that ID contains allowlisted, sanitized context, such as the query operation, dependency alias, and failure category. Do not retain raw query text, parameters, or upstream error bodies just to make them searchable.
 
 ```text
 User sees:                         Engineer looks up:

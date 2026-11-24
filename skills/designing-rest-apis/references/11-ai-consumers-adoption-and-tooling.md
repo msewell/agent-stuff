@@ -1,3 +1,10 @@
+## Table of Contents
+
+- [Designing for AI-Agent Consumers](#26-designing-for-ai-agent-consumers)
+- [Organizational Adoption](#27-organizational-adoption)
+- [Tooling Reference](#28-tooling-reference)
+- [Sources](#sources)
+
 ## 26. Designing for AI-Agent Consumers
 
 As of 2026, AI agents (LLMs, autonomous workflows, copilots) are an increasingly

@@ -61,9 +61,11 @@ A Backend-for-Frontend layer aggregates data from multiple slices into a single 
 
 **The problem:** A BFF endpoint that combines data from the `Orders` and `Inventory` slices now couples those slices at the API layer. A change to either slice's read model may require a corresponding change in the BFF. Over time, the BFF accumulates its own lifecycle, its own bugs, and its own deployment constraints — becoming a coordination bottleneck.
 
-**Prefer direct slice-to-client communication.** Let each slice expose its own endpoint. Modern frontends can easily make parallel API calls and compose the results client-side. This preserves slice independence end-to-end.
+**Prefer client-side composition for presentation only.** Let slices expose independent, already-authorized views when the client merely arranges them on screen. Do not fetch fields the client is not allowed to see and hide them in the UI.
 
-**If aggregation is unavoidable**, treat the BFF as a thin, stateless mapping layer — not a place for business logic. Keep it in a separate module with explicit, versioned dependencies on the slice APIs it consumes. Monitor it for scope creep.
+**Compose in a server-side use case when the combination changes the business result or what the caller may learn.** The use case decides which source owns each field, whether a partial result is usable, and what may be disclosed. For example, a client can place order and stock panels side by side, but it should not decide whether an unavailable stock read means an order may proceed.
+
+**Keep the BFF thin.** Map and serialize the use case’s approved output; do not make the BFF own cross-slice business rules. Keep explicit, versioned dependencies and monitor for scope creep.
 
 **Consider GraphQL as an alternative.** A GraphQL layer can let clients query across slices without a hand-written BFF, since clients specify exactly what fields they need. The trade-off is that you introduce a schema that spans slice boundaries, which requires governance.
 

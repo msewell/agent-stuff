@@ -1,3 +1,9 @@
+## Table of Contents
+
+- [Versioning](#7-versioning)
+- [Pagination](#8-pagination)
+- [Filtering, Sorting & Field Selection](#9-filtering-sorting--field-selection)
+
 ## 7. Versioning
 
 ### Choose a strategy

@@ -1,3 +1,9 @@
+## Table of Contents
+
+- [Evolution & Deprecation](#23-evolution--deprecation)
+- [API-First Design Process](#24-api-first-design-process)
+- [Governance](#25-governance)
+
 ## 23. Evolution & Deprecation
 
 ### Non-breaking changes (safe to make without a new version)

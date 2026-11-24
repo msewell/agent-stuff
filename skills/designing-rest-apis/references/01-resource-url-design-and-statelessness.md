@@ -1,3 +1,8 @@
+## Table of Contents
+
+- [Resource & URL Design](#1-resource--url-design)
+- [Statelessness](#2-statelessness)
+
 ## 1. Resource & URL Design
 
 ### Use nouns, not verbs

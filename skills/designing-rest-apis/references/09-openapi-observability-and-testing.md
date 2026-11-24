@@ -1,3 +1,10 @@
+## Table of Contents
+
+- [HATEOAS & Hypermedia](#19-hateoas--hypermedia)
+- [OpenAPI Documentation](#20-openapi-documentation)
+- [Observability](#21-observability)
+- [Testing Strategies](#22-testing-strategies)
+
 ## 19. HATEOAS & Hypermedia
 
 ### What it is

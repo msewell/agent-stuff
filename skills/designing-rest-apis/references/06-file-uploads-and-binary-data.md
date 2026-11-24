@@ -1,3 +1,7 @@
+## Table of Contents
+
+- [File Uploads & Binary Data](#12-file-uploads--binary-data)
+
 ## 12. File Uploads & Binary Data
 
 ### Choosing the right upload method

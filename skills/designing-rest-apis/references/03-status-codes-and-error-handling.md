@@ -1,3 +1,13 @@
+## Table of Contents
+
+- [Status codes](#5-status-codes)
+  - [Success codes](#success-codes)
+  - [Client error codes](#client-error-codes)
+  - [Server error codes](#server-error-codes)
+- [Error handling](#6-error-handling)
+  - [Problem Details for HTTP APIs](#use-rfc-9457-problem-details-for-http-apis)
+  - [Rules for error messages](#rules-for-error-messages)
+
 ## 5. Status Codes
 
 Return the most specific status code that accurately describes the outcome.
@@ -19,7 +29,7 @@ Return the most specific status code that accurately describes the outcome.
 | `400 Bad Request` | Malformed request syntax or invalid payload | Validation failures, unparsable JSON |
 | `401 Unauthorized` | Missing or invalid authentication | No token, expired token |
 | `403 Forbidden` | Authenticated but not authorized | Valid token, insufficient permissions |
-| `404 Not Found` | Resource does not exist | Also use when you want to hide existence from unauthorized users |
+| `404 Not Found` | Resource not found or existence intentionally undisclosed | Use for established absence or to conceal a protected resource from an unauthorized caller |
 | `405 Method Not Allowed` | HTTP method not supported on this resource | Include `Allow` header listing valid methods |
 | `409 Conflict` | Request conflicts with current state | Duplicate creation, concurrent modification |
 | `410 Gone` | Resource previously existed but has been removed | Useful for deprecated endpoints |
@@ -37,8 +47,9 @@ Return the most specific status code that accurately describes the outcome.
 | `503 Service Unavailable` | Server temporarily overloaded or in maintenance. Include `Retry-After` |
 | `504 Gateway Timeout` | Upstream service did not respond in time |
 
-**Anti-pattern:** Never return `200 OK` with an error body. This breaks every HTTP
-tool, proxy, and cache that relies on status codes for correct behavior.
+Use a non-2xx status when the requested operation fails. A successful composite read may return `200 OK` with a documented representation that distinguishes unavailable optional data from available data; it must not disguise failure of the operation as success.
+
+When consuming an upstream API, classify its status and body against the specific endpoint contract. Handle any upstream error envelope inside `200 OK` as evidence of failure, not as a reason to emit your own `200 OK` for a failed operation. An upstream `404` alone does not prove absence: it may conceal denial or indicate a wrong or retired endpoint. Require evidence of absence for the requested resource and authorization scope before returning or caching that conclusion.
 
 ---
 

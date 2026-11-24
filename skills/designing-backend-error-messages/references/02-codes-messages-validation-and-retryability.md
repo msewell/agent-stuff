@@ -194,7 +194,7 @@ You have three tools:
 
 Document this contract _once_, publicly, and link it from your docs:
 
-> **Retry contract.** Retry any response where `is_transient: true`, using exponential backoff starting at 100 ms, doubled each attempt, with ±20% jitter, capped at the value in `Retry-After` if present, up to a maximum of 5 attempts. Never retry responses where `is_transient: false` without changing the request. Never retry non-idempotent operations without an idempotency key (see §9).
+> **Example retry contract.** Retry only transient failures on operations that are safe to repeat. Use exponential backoff with jitter and a shared attempt budget (for example, five total attempts including the first). Treat a valid `Retry-After` as a minimum wait, not a cap. Skip the retry if the wait leaves too little time for a useful attempt or the attempt budget is exhausted. Never retry responses where `is_transient: false` without changing the request. Never retry non-idempotent operations without an idempotency key (see §9).
 
 ### Pseudocode: a client's error classifier
 
@@ -204,11 +204,18 @@ function isRetryable(resp):
         return resp.body.is_transient       # explicit signal wins
     return resp.status in [408, 425, 429, 500, 502, 503, 504]
 
-function retryDelay(resp, attempt):
-    if resp.headers["Retry-After"] is not null:
-        return parseRetryAfter(resp.headers["Retry-After"])
-    base = min(100ms * 2 ** attempt, 30s)
-    return base * uniform(0.8, 1.2)          # ±20% jitter
+# Call only for a retryable response to an operation that is safe to repeat.
+function retryDelay(resp, retryIndex, attemptsLeft, timeLeft, minAttemptTime):
+    if attemptsLeft <= 0:
+        return DO_NOT_RETRY
+    base = min(100ms * 2 ** retryIndex, 30s)  # retryIndex starts at zero
+    backoff = base * uniform(0.8, 1.2)
+    # Accept delay-seconds or an HTTP date; ignore an invalid or missing value.
+    serverDelay = parseRetryAfter(resp.headers["Retry-After"]) ?? 0s
+    delay = max(backoff, serverDelay)
+    if delay + minAttemptTime > timeLeft:
+        return DO_NOT_RETRY
+    return delay
 ```
 
 ### Special cases for retry classification

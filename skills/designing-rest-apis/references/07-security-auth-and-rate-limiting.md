@@ -1,3 +1,9 @@
+## Table of Contents
+
+- [Security](#13-security)
+- [Authentication & Authorization](#14-authentication--authorization)
+- [Rate Limiting](#15-rate-limiting)
+
 ## 13. Security
 
 ### OWASP API Security Top 10 (2023 — current)

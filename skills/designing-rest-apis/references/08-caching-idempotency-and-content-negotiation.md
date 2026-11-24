@@ -1,3 +1,9 @@
+## Table of Contents
+
+- [Caching](#16-caching)
+- [Idempotency](#17-idempotency)
+- [Content Negotiation](#18-content-negotiation)
+
 ## 16. Caching
 
 ### Cache-Control

@@ -1,3 +1,8 @@
+## Table of Contents
+
+- [Bulk & Batch Operations](#10-bulk--batch-operations)
+- [Asynchronous & Long-Running Operations](#11-asynchronous--long-running-operations)
+
 ## 10. Bulk & Batch Operations
 
 ### When to use bulk operations

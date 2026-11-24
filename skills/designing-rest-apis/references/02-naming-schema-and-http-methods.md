@@ -1,3 +1,16 @@
+## Table of Contents
+
+- [Naming conventions and schema design](#3-naming-conventions--schema-design)
+  - [JSON field naming](#json-field-naming-use-camelcase)
+  - [Date and time](#date-and-time-use-rfc-3339-iso-8601-profile-in-utc)
+  - [Null vs. omitted fields](#null-vs-omitted-fields)
+  - [Boolean fields](#boolean-fields-avoid-nullable-booleans)
+  - [Enum design](#enum-design)
+  - [Resource representation conventions](#resource-representation-conventions)
+- [HTTP methods](#4-http-methods)
+  - [PUT vs. PATCH](#put-vs-patch)
+  - [POST for non-CRUD operations](#post-for-non-crud-operations)
+
 ## 3. Naming Conventions & Schema Design
 
 ### JSON field naming: use camelCase
@@ -96,7 +109,7 @@ serialization libraries, and semantically unclear. A named enum is self-document
 |----------|-----------|
 | Use strings, not integers | `"SHIPPED"` is self-documenting; `3` means nothing without a lookup table |
 | Use UPPER_SNAKE_CASE | Visually distinct from field names; consistent across languages |
-| Prefer open enums | Clients should handle unknown enum values gracefully (e.g., fall back to a default). Adding new values should not be a breaking change |
+| Prefer open enums | Preserve unknown values as unknown or use a neutral display fallback. Do not map an unfamiliar value to a known business state. If an operation needs that meaning to proceed safely, report the data as unusable instead of guessing. |
 | Document every value | Include descriptions in the OpenAPI spec for each enum member |
 
 ### Resource representation conventions
@@ -106,7 +119,7 @@ serialization libraries, and semantically unclear. A named enum is self-document
 | **Resource IDs** | Use string type even for numeric IDs — avoids JavaScript integer overflow (`Number.MAX_SAFE_INTEGER` is 2^53) and allows future migration to UUIDs |
 | **Money / currency** | Use the smallest currency unit (cents, not dollars) as an integer, plus a currency code: `{ "amount": 5000, "currency": "USD" }`. Avoids floating-point precision errors |
 | **Collections** | Wrap in a named key (`"data": [...]`) rather than returning a bare array — allows adding pagination metadata without a breaking change |
-| **Empty collections** | Return `{ "data": [] }`, never `null` or `404` — an empty list is a valid result |
+| **Empty collections** | Return `{ "data": [] }` for a successful query that establishes there are no matching items in the authorized scope. Do not report an unavailable or incomplete query as a valid empty result. |
 
 ---
 
