@@ -23,7 +23,7 @@ This skill is intentionally Mermaid-specific: keep the output in Mermaid `sequen
 5. Write messages one per line. Keep message labels concise (e.g., `POST /orders`, `201 Created`). Move payload details to `Note` blocks.
 6. Add `autonumber` when the diagram has 5+ messages.
 7. Use `+`/`-` shorthand for activations on arrows (e.g., `->>+Server` to activate, `-->>-Client` to deactivate).
-8. Model error paths with `alt`/`else`. Never produce a happy-path-only diagram — always include at least one failure branch.
+8. Use `alt`/`else` for material failure paths in scope. For an as-built diagram, show only branches supported by evidence. If behavior is unknown, say so; if a branch is a proposal, label it as such. A success-only diagram is valid when it labels that limited scope.
 9. Use control flow blocks as needed — read `references/02-control-flow-and-notes.md` for `alt`, `opt`, `loop`, `par`, `critical`, `break`, and `rect`.
 10. Group related participants with `box` when there are 4+ participants across distinct layers.
 11. Add `Note over` blocks sparingly for protocol details, SLA info, or phase labels.
@@ -40,6 +40,7 @@ This skill is intentionally Mermaid-specific: keep the output in Mermaid `sequen
 5. If the diagram exceeds 20 messages or 7 participants, recommend splitting into focused sub-diagrams.
 6. Ensure arrow style usage is consistent (don't mix sync and async arrows without clear intent).
 7. Confirm participants are declared explicitly with aliases if any name exceeds ~15 characters.
+8. Check whether an in-scope failure branch is missing or unsupported. Don't add an assumed branch to an as-built diagram as if it were verified.
 
 ## Refactoring Large Diagrams
 

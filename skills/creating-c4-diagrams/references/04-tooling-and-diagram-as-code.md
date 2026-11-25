@@ -23,7 +23,7 @@
 
 **Modeling tools** (including model-as-code): You define the model once — elements, relationships, and their metadata. Then you create views (diagrams) on top of the model. Rename a container in the model, and every view updates automatically. The tool can validate consistency and prevent errors.
 
-**Simon Brown's recommendation**: Use a model-first approach. Define the model in Structurizr DSL, then export to any rendering engine (Mermaid, D3.js, etc.).
+Use a model-first approach for a new long-lived portfolio that needs several consistent views. Structurizr DSL is a default when no toolchain is established, not a reason to convert an existing portfolio that meets its needs.
 
 ### Structurizr DSL vs. Mermaid
 
@@ -39,7 +39,7 @@
 | **Interactive diagrams** | Yes (Structurizr UI) | No |
 | **Runtime requirement** | Java CLI or Docker | JavaScript (browser) |
 | **Learning curve** | Medium (custom DSL) | Low (Markdown-like) |
-| **Best for** | Long-lived architecture docs, multi-team orgs | Quick diagrams in docs/READMEs |
+| **Best for** | New long-lived C4 portfolios with shared model elements | Standalone Markdown views supported by the target host |
 
 ---
 
@@ -128,7 +128,7 @@ workspace "System Name" "Optional description" {
   ```
 - **Integrate ADRs**: `!adrs docs/adrs` links Architecture Decision Records directly into the workspace.
 - **Run locally**: `docker run -p 8080:8080 -v ./workspace:/usr/local/structurizr structurizr/lite`
-- **CI/CD integration**: Use the Structurizr GitHub Action to auto-publish on push.
+- **CI/CD integration**: Use pushes to build revision-labeled previews. An authorized workflow may publish a proposed or approved-target view if it is clearly labeled. Advance the deployed view only after independent rollout evidence confirms the corresponding revision and environment. Keep the last verified deployed view until then.
 - **Cloud themes**: Use `!theme amazon-web-services-2020.04.30` for AWS icons in deployment diagrams.
 
 ---

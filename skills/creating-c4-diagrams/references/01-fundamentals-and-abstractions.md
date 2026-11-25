@@ -80,7 +80,7 @@ Examples:
 **Scope**: A single software system.
 **Shows**: The system in scope, its users (people), and external system dependencies.
 **Audience**: Everyone — technical and non-technical.
-**Recommendation**: **Always create one.** This is the starting point for every project.
+**Recommendation**: Start here for a new system-wide C4 portfolio. Reuse an appropriate context view when someone asks for a focused diagram.
 
 **Purpose**: Answer the question *"What is this system, and how does it fit into the world?"*
 
@@ -95,7 +95,7 @@ Examples:
 **Scope**: A single software system, decomposed into its containers.
 **Shows**: Containers within the system, their technologies, and how they communicate. Also shows external people and systems that interact with them.
 **Audience**: Technical team members — developers, architects, DevOps.
-**Recommendation**: **Always create one.** This is the most valuable diagram for technical teams.
+**Recommendation**: Add this after context in a new system-wide portfolio, or use it on its own when the question is about internal responsibilities and dependencies.
 
 **Purpose**: Answer the question *"What are the major technical building blocks, and how do they talk to each other?"*
 
@@ -162,4 +162,4 @@ Examples:
 **Key concepts**:
 - **Deployment nodes**: Physical servers, VMs, cloud instances, Kubernetes pods, Docker hosts, execution environments. Can be nested.
 - **Infrastructure nodes**: DNS services, load balancers, firewalls, CDNs.
-**When to use**: **Recommended** for any system running in production. Create separate diagrams for each significant environment.
+**When to use**: When placement, failure domains, or operations matter to the audience. Name the environment; separate views where environment differences affect the answer.

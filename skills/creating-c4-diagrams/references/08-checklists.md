@@ -56,8 +56,9 @@ Use this checklist before sharing any C4 diagram:
 | Situation | Recommended Tool |
 |-----------|-----------------|
 | Quick diagram in a README or PR | Mermaid |
-| Long-lived architecture documentation | Structurizr DSL |
-| Multi-team, enterprise-scale modeling | Structurizr DSL + Structurizr Cloud/On-Premises |
+| Existing portfolio meets the view requirements | Keep its source format and rendering toolchain |
+| New long-lived C4 portfolio without an established toolchain | Structurizr DSL |
+| New multi-team model needs a shared publishing and collaboration surface | Structurizr DSL + Structurizr Cloud/On-Premises |
 | Non-technical stakeholders need to create diagrams | IcePanel or Miro |
 | Interactive architecture exploration | Structurizr, IcePanel, or Ilograph |
 

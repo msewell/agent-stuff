@@ -31,7 +31,7 @@ clearly enough to evaluate correctness.
 
 ## Bugs and Logic Errors
 
-Focus on added and modified lines. Check for:
+Start with added or modified behavior, then trace its effects into unchanged consumers and artifacts. Flag those effects only when the PR introduces or materially worsens them. Check for:
 
 - **Null/undefined paths** — Is every value checked before use? Look for
   optional chaining, null guards, or assertion patterns the codebase uses.
@@ -146,7 +146,7 @@ unless the code is in a proven hot path.
 - **Breaking changes** — Are they noted in the PR description? Does the
   project have a changelog that needs updating?
 - **Config changes** — Are new environment variables or config options
-  documented?
+  documented? Does a changed route or deployment setting invalidate an unchanged diagram or runbook? Cite both sides of the mismatch.
 
 ## Escalation Signals
 

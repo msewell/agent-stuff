@@ -44,7 +44,7 @@ catalogSystem = softwareSystem "Catalog Service" "Manages product catalog. Owned
 
 - Serverless functions (Lambda, Cloud Functions) are containers — they are separately deployable and runnable.
 - Managed services (RDS, DynamoDB, S3) → containers if you own the configuration, external systems if truly external.
-- Use **deployment diagrams** to show how containers map to cloud infrastructure.
+- Use a **deployment diagram** when the audience needs to understand placement, failure domains, or operations.
 - Use cloud-provider themes/icons for intuitive deployment topology.
 
 ## Integration with Domain-Driven Design (DDD)
@@ -65,7 +65,7 @@ Use DDD to inform your C4 boundaries. Use C4 to visualize the static structure t
 ### Phase 1: Foundation (Week 1–2)
 
 1. **Educate the team.** Run a 1-hour session covering C4 concepts, the maps metaphor, and the four levels.
-2. **Pick your tooling.** Developer-heavy teams: Structurizr DSL. Mixed teams: IcePanel or Miro with C4 templates.
+2. **Pick your tooling.** Keep the existing toolchain if it meets the team's needs. For a new long-lived C4 portfolio with no established tooling, default to Structurizr DSL; consider visual modeling if non-technical contributors need to edit the model directly.
 3. **Create your first System Context diagram.** Do this collaboratively — whiteboard it together, then codify it.
 4. **Create your first Container diagram.** Debate what the containers are, how they communicate, and what technologies they use.
 
@@ -80,7 +80,7 @@ Use DDD to inform your C4 boundaries. Use C4 to visualize the static structure t
 8. **Use diagrams in onboarding.** New members start with System Context, then Container diagram.
 9. **Reference diagrams in design discussions.** Pull up the container diagram during architecture reviews.
 10. **Include diagram updates in your definition of done.** If a PR introduces a new container, update the diagrams in the same PR.
-11. **Review periodically.** Quarterly review to ensure diagrams reflect reality.
+11. **Check freshness before relying on a view.** Recheck affected views when implementation or configuration changes. Periodic review can catch omissions, but a recent review date does not establish which revision is deployed.
 
 ### Common Adoption Pitfalls
 

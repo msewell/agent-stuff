@@ -191,13 +191,11 @@ config:
 ---
 ```
 
-Note platform differences:
-- Local ELK rendering may differ from GitHub's default Mermaid layout.
-- If consistency is required, publish rendered SVGs.
+Local ELK rendering may differ from GitHub's Mermaid layout. Use the renderer and settings that produce the actual page when verifying a maintained publication. If the target cannot be exercised, report that check as blocked; an alternate SVG is a preview only. When the publishing contract permits an embedded SVG, render and verify that artifact through the intended publication pipeline.
 
 ### CI/CD Rendering
 
-Render diagrams in CI to prevent broken docs.
+Render diagrams in CI with the publication toolchain to catch broken docs.
 
 ```yaml
 - name: Render diagrams

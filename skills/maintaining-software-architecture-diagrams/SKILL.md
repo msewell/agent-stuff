@@ -1,6 +1,6 @@
 ---
 name: maintaining-software-architecture-diagrams
-description: Reviews software architecture diagrams against independent evidence and verifies requested local fixes. Use when auditing C4 or other architecture views for accuracy or freshness, reviewing architecture impact in a pull request, defining a view contract or conformance check, or reconciling diagram drift after a rollout or migration. Reports whether the evidence supports handoff, merge, or promotion. Not for diagram syntax, layout, or design decisions alone.
+description: Audits claims in maintained software architecture diagrams against independent evidence for a stated scope, revision, and lifecycle state. Use when checking whether a C4 or other architecture view accurately reflects implementation or deployment, reviewing architecture impact in a PR, defining a view contract or conformance check, or reconciling diagram drift. Reports whether the claim is safe to rely on and verifies requested local fixes. Not for C4 notation, diagram layout, or architecture decisions alone.
 category: Diagramming & Visualization
 ---
 
@@ -23,8 +23,8 @@ Review the architecture claims that someone will rely on, not just the drawing. 
    - Prefer the repository's checker or direct inspection for small sets. If using a new extractor, verify it recognizes a known-good case. Don't treat data it can't extract as a missing edge. Sampled silence cannot establish absence.
 
 3. **Verify the view and gate separately.**
-   - Render with the project's existing publication tooling. Check cross-view identity and inspect the actual page where available. For consequential views, test a representative reader task; state explicitly if nobody performed it. If a rendering prerequisite is missing, report the check as blocked or not run. Don't download or install tools without permission.
-   - Check implementation and configuration changes even if diagram files were untouched. For a required merge check, inspect three cases: a relevant configuration-only change, a queued merge when a merge queue is enabled, and an out-of-scope change that must still report a successful no-op. Verify what the gate tests on the actual merge candidate. A local render or workflow definition doesn't show the gate ran; treat enforcement you can't inspect as unverified, not absent.
+   - Use the project's publication tooling and inspect the actual page where available. Check that the same entities and relationships are identifiable across views. For consequential views, test a representative reader task; state explicitly if nobody performed it. If the publication renderer is unavailable, report the check as blocked or not run. An alternate render is illustrative, not publication verification. Don't download or install tools without permission.
+   - Check implementation and configuration changes even if diagram files were untouched. For a required diagram conformance check, inspect a relevant configuration-only change, a queued merge when a merge queue is enabled, and a change proven out of scope for that check. Only the last case may report a successful diagram no-op; it cannot satisfy or waive another required check. Verify what ran against the actual merge candidate. A local render or workflow definition doesn't show the gate ran; treat enforcement you can't inspect as unverified, not absent.
 
 4. **Record the disposition.** Apply the repository's approved policy; label these as recommended defaults where none is documented:
    - **Block the applicable gate** for a required view or schema failure, or a confirmed mismatch in comparable evidence.

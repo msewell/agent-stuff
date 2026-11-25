@@ -1,6 +1,6 @@
 ---
 name: creating-c4-diagrams
-description: "Creates, reviews, and interprets C4 software architecture diagrams (System Context, Container, Component, Dynamic, Deployment). Produces Structurizr DSL or Mermaid C4 diagram code following C4 model best practices. Use when the requested output is explicitly C4, when reviewing existing C4 diagrams for correctness and anti-patterns, when generating Structurizr DSL workspaces, when producing Mermaid C4 diagrams for READMEs, or when using C4 diagrams as context for design decisions, code generation, risk analysis, or onboarding."
+description: "Creates and reviews C4 software architecture diagrams for modeling, abstraction, and notation quality. Produces Structurizr DSL or Mermaid C4 source. Use when choosing a C4 view, modeling systems and containers, checking C4 boundaries or relationships, or explaining an existing C4 model. Not for proving a documented topology matches a deployed release or investigating architecture drift."
 category: Diagramming & Visualization
 ---
 
@@ -10,17 +10,18 @@ This skill is C4-specific: model architecture using C4 abstractions and notation
 
 ## Workflow: Creating a C4 diagram
 
-1. **Identify the audience and scope.** Determine which diagram level is needed:
-   - **Level 1 — System Context**: How the system fits into the world. Always create this first.
-   - **Level 2 — Container**: Major technical building blocks and communication. Always create this second.
-   - **Level 3 — Component**: Internal structure of a single container. Create only when it adds value.
-   - **Dynamic**: Runtime behavior for a specific use case. Create for complex or non-obvious flows.
-   - **Deployment**: How containers map to infrastructure. Create for production systems.
-   - Skip Level 4 (Code) — auto-generate from IDE instead.
+1. **Identify the audience and scope.** Choose the smallest set of views that answers the question. For a new system-wide portfolio, start with System Context, then Container. For a focused request, reuse existing views and add only the detail needed.
+   - **Level 1 — System Context**: How the system fits into the world.
+   - **Level 2 — Container**: Major technical building blocks and communication.
+   - **Level 3 — Component**: Internal structure of one container, when it adds value.
+   - **Dynamic**: Runtime behavior for a complex or non-obvious flow.
+   - **Deployment**: Where instances run, when placement, failure domains, or operations are the question.
+   - Skip Level 4 (Code) — auto-generate from the IDE when needed.
 
 2. **Choose the tool.**
-   - **Default: Structurizr DSL** — model-first, single model with multiple views, supports all diagram types. Use for any long-lived architecture documentation.
-   - **Alternative: Mermaid** — use only for quick diagrams in Markdown files (READMEs, PRs, wikis). Limited to Context and Container levels; no dynamic or deployment diagrams.
+   - **Existing portfolio:** Keep its source format and rendering toolchain unless they cannot meet a stated requirement. Do not migrate just to match a default.
+   - **New long-lived C4 portfolio without an established toolchain:** Default to Structurizr DSL for a shared model with multiple views.
+   - **Standalone Markdown diagram:** Use Mermaid C4 when the target host supports the view and syntax you need.
 
 3. **Identify the elements.** Map the system to C4 abstractions:
    - **Person**: A human user role.
@@ -45,7 +46,9 @@ This skill is C4-specific: model architecture using C4 abstractions and notation
 
 6. **Validate against the review checklist.** Check all items in [references/08-checklists.md](references/08-checklists.md).
 
-## Workflow: Reviewing an existing C4 diagram
+## Workflow: Reviewing C4 modeling and notation
+
+Judge whether the diagram represents its stated scope using C4 abstractions and notation. A model or rendering can pass this review without proving any depicted dependency is deployed.
 
 1. **Check abstraction correctness:**
    - Are containers actually separately deployable? (shared libraries are components, not containers)
@@ -65,7 +68,7 @@ This skill is C4-specific: model architecture using C4 abstractions and notation
 
 ## Workflow: Using C4 diagrams as context
 
-When C4 diagrams are available in the project (`.dsl` files or Mermaid blocks), use them as architectural context for:
+When C4 diagrams are available in the project (`.dsl` files or Mermaid blocks), check their stated scope, lifecycle state, and revision before using them as context. Treat an undated or unverified view as a model, not as evidence of current production. Use it for:
 
 - **Design decisions**: Reference the container diagram to understand system boundaries and communication patterns before proposing changes.
 - **Code generation**: Use component diagrams to understand module responsibilities and interfaces when generating implementation code.

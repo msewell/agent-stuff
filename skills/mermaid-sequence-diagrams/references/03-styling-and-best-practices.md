@@ -116,7 +116,7 @@ API-->>Client: { order { id } }
 
 ### Design Anti-Patterns
 
-1. **Omitting failure paths.** A diagram showing only the happy path is incomplete and misleading. Always model at least the primary error scenario.
+1. **Misrepresenting failure paths.** Show material branches within the stated scope. Label success-only walkthroughs as such. In an as-built diagram, don't invent missing error handling: describe the gap as unknown or show a proposed branch separately.
 
 2. **Too many arrow styles in one diagram.** Mixing solid, dotted, cross, and async arrows without a clear convention confuses readers. Establish and document a convention.
 

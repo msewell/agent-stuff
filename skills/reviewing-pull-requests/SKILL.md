@@ -73,18 +73,18 @@ Review the diff against these priorities (highest first). See
 detailed checks and false-positive guidance per category.
 
 1. **Goal alignment** — Does the PR achieve what linked issue(s) describe?
-2. **Bugs and logic errors** — Focus on added/modified lines only.
+2. **Bugs and logic errors** — Start with added or modified behavior; trace its effects on unchanged consumers and artifacts.
 3. **Security** — HIGH-confidence findings only. Trace data flow from
    source to sink before reporting.
 4. **Codebase consistency** — Compare against surrounding code, not
    abstract ideals.
 5. **Test coverage** — Are the riskiest new code paths tested?
 6. **Performance** — Flag only concrete, demonstrable findings.
-7. **Documentation** — Are public APIs and breaking changes documented?
+7. **Documentation** — Are public APIs and breaking changes documented? Does the change make maintained documentation or diagrams stale?
 
 **Rules:**
 
-- Focus on CHANGED code. Do not flag pre-existing findings outside the diff.
+- Review the effects of the change, not unrelated pre-existing debt. Cite the changed input and the affected artifact when the artifact itself is unchanged. For example, a routing configuration change can invalidate an untouched architecture diagram.
 - Never block on style when a linter or formatter is configured.
 - If the author left comments explaining a non-obvious choice, acknowledge
   their reasoning before suggesting alternatives.

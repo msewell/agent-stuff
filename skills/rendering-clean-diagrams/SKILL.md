@@ -72,7 +72,8 @@ compatibility: "Requires at least one renderer (Mermaid CLI, D2, Graphviz, or Pl
 - Default to **D2** for most generated diagrams in controlled pipelines.
 - Use **PlantUML** for UML-style sequence notation needs.
 - Use **Graphviz dot** when edge-crossing minimization and ranking control matter more than syntax simplicity.
-- If a tool is unavailable, switch to the nearest equivalent and preserve diagram semantics.
+- For a standalone illustration, switch to a suitable available renderer if the requested output permits it. Preserve diagram semantics.
+- For a maintained publication or specified host, verify with the actual renderer and settings. If unavailable, report publication verification as blocked. Label any alternate render as illustrative; don't present it as verification or replace the maintained source format.
 
 ## Validation commands
 
