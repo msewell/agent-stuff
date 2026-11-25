@@ -21,15 +21,18 @@ benefits outweigh the theoretical purity of header-based approaches.
 
 ### Versioning rules
 
-1. **Only bump major versions for breaking changes.** Adding a new optional field is
-   not a breaking change. Removing a field, changing a type, or altering behavior is.
+1. **Only bump major versions for breaking changes.** An optional response field is
+   additive only if supported clients and intermediaries accept it and existing
+   behavior is unchanged. Removing a field, changing a type, or altering promised
+   behavior is breaking.
 2. **Use integer versions** (`v1`, `v2`), not semver in the URL. Reserve semver for
    your OpenAPI spec and changelogs.
 3. **Support at least one prior version.** Give consumers a migration window —
    typically 6–12 months. Communicate timelines via deprecation headers and
    changelogs.
-4. **Design for extensibility.** Prefer additive changes: new optional fields, new
-   endpoints, new enum values. Clients that ignore unknown fields won't break.
+4. **Design for extensibility.** Prefer additive changes, but verify supported
+   consumers against candidate responses rather than assuming they ignore unknown
+   fields or enum values.
 
 ### Deprecation signaling
 

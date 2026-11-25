@@ -18,7 +18,7 @@ Treat slices as self-contained behaviors, not miniature layered architectures. S
 3. **Choose folder structure.** Start with single-file-per-feature (Option A). Promote to feature folders (Option B) or module nesting (Option C) when complexity warrants it. See [references/01-foundations-and-structure.md](references/01-foundations-and-structure.md) § Folder Structure Strategies for examples and trade-offs.
 4. **Handle shared code using three tiers:**
    - **Tier 1 — Infrastructure** (share freely): logging, auth middleware, Result pattern → `SharedKernel/`
-   - **Tier 2 — Domain concepts** (share through entities): business rules live on entities/value objects, not service classes
+   - **Tier 2 — Domain concepts**: slices in the same bounded context may share the entities and value objects that enforce their common rules.
    - **Tier 3 — Feature-local** (keep near slices): if only one module needs it, keep it in that module's `Shared/`
 5. **Use framework mechanisms for cross-cutting concerns.** Middleware, pipeline behaviors, interceptors — not per-slice boilerplate. Individual slices contain zero cross-cutting code.
 6. **Mirror slice boundaries in the frontend.** What changes together lives together, across the full stack. See [references/01-foundations-and-structure.md](references/01-foundations-and-structure.md) § Full-Stack Slice Co-location.
@@ -41,7 +41,7 @@ Apply the Strangler Fig pattern per feature:
 
 1. **Pick the easiest slice** (clear boundaries, low coupling, high visibility) — not the most important one. Build confidence in the process first.
 2. **Implement the new slice alongside old code** in a `Features/` or `Modules/` folder. Route traffic to the new slice.
-3. **Delete old code** (controller, service, repository) once the slice is stable. Do not keep it as a fallback.
+3. **Retire the old path** once supported consumers and jobs have moved and recovery is proven. After write authority moves, a route switch alone cannot recover new writes. Remove the old code when it is no longer needed.
 4. **Repeat.** New features always go in slices; never add new code to the layered structure.
 5. **Accept a hybrid period.** This is normal — maintain clear direction. See [references/02-sharing-testing-and-evolution.md](references/02-sharing-testing-and-evolution.md) § Evolution and Migration for the full evolution path.
 
@@ -51,7 +51,7 @@ Apply the Strangler Fig pattern per feature:
 2. **Start simple, refactor when it hurts.** Begin with transaction-script handlers. Extract domain objects when complexity warrants it.
 3. **Keep slices rewritable.** Target roughly a day of work per slice.
 4. **Choose the smallest faithful test boundary.** Use focused tests for pure rules and slice-boundary integration tests for wiring and side effects. Use the real database engine when its behavior matters. See [references/02-sharing-testing-and-evolution.md](references/02-sharing-testing-and-evolution.md) § Testing Strategy.
-5. **Share through the domain model, not services.** Entities and value objects are the sharing mechanism. Service classes multiple slices depend on are a coupling vector.
+5. **Share domain rules within their bounded context.** Across contexts, use an owned public contract or published read model, not another context’s private entities or tables. A contract can be in-process.
 6. **Prefer small aggregates.** Fewer slices contending over shared aggregates means less coupling and fewer concurrency conflicts.
 7. **Enforce module boundaries explicitly.** Use build-time tooling (ArchUnit, Spring Modulith) to prevent accidental cross-module coupling.
 8. **Migrate incrementally.** Strangler Fig per feature — never a big-bang rewrite.

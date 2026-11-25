@@ -113,6 +113,6 @@ Use incremental, reversible migration patterns:
 
 - **Strangler Fig:** route selected capabilities through a façade to new implementation while old behavior remains available.
 - **Branch by Abstraction:** introduce a stable interface around a deep component, run old and new implementations behind it, then switch gradually.
-- **Feature flags:** ship the new path inactive, enable by slice, monitor, and roll back quickly.
+- **Feature flags:** ship the new path inactive, enable by slice, and monitor. A flag switches routing; it does not undo writes. After transferring write authority, switch back only if recovery has been rehearsed and preserves or explicitly reverses new writes. Otherwise repair forward.
 
-Finish the migration by deleting old code and removing flags. Otherwise the system keeps two behaviors forever and coupling increases.
+Remove the old path and flags once supported consumers and jobs have moved and recovery is proven. Otherwise the system keeps two behaviors indefinitely and coupling increases.

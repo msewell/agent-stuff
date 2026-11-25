@@ -61,7 +61,7 @@ Two valid schools exist:
 - **If two slices always change together in response to the same requirement**, they may belong in the same slice — or they share a domain concept that should be extracted.
 - **If a handler exceeds ~200 lines**, the use case is likely doing too much. Push logic into domain objects or split into finer-grained slices.
 - **Apply the verb-noun test.** If you cannot name the slice with a clear verb-noun pair (`BookAppointment`, `GetInvoice`, `CancelReservation`), the boundary is probably wrong.
-- **Align modules with bounded contexts.** At the macro level, modules should correspond to business subdomains. Enforce that modules communicate only through public APIs or events.
+- **Align modules with bounded contexts.** At the macro level, modules should correspond to business subdomains. Across bounded contexts, use owned public contracts such as an in-process interface, an event, or a published read model.
 
 ---
 
@@ -174,9 +174,9 @@ Multiple slices often write to the same aggregate (`CreateOrder`, `ShipOrder`, `
 
 - **Prefer small aggregates.** Vaughn Vernon's rule: make aggregates as small as possible while still protecting invariants. Fewer slices contending over a shared aggregate means less coupling.
 - **Each slice should load and modify at most one aggregate.** If a slice needs to coordinate writes across multiple aggregates, that is either a sign the aggregate boundaries are wrong, or the operation requires a saga/process manager.
-- **Use separate read models for queries.** Query slices should never load an aggregate. They read from projections or directly from the database. Only command slices interact with aggregates.
+- **Use separate read models for queries.** Query slices should never load an aggregate. They read from their context’s own data or published read models, not another context’s private tables. Only command slices interact with aggregates.
 - **Split aggregates when slices diverge.** If `CreateOrder` and `FulfillOrder` have no shared invariants, they may not belong on the same aggregate. Consider splitting into `Order` (for placement) and `Fulfillment` (for shipping), linked by an order ID rather than a shared object graph.
-- **Accept that aggregates are shared — manage the coupling explicitly.** The aggregate lives in the domain layer, shared by multiple slices. This is deliberate sharing through the domain model (Tier 2 sharing), not accidental coupling. The aggregate's public API is the contract between slices.
+- **Accept that aggregates are shared — manage the coupling explicitly.** An aggregate can enforce a common invariant for multiple slices in its owning context (Tier 2 sharing). Its public methods are not a cross-context integration contract.
 
 ### Concurrency at the Aggregate Boundary
 

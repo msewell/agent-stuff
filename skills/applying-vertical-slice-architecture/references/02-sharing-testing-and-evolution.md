@@ -31,7 +31,7 @@ The instinct to create a `Common/` or `Shared/` project is strong — resist it 
 
 **Tier 1 — Technical Infrastructure (share freely).** Pure plumbing that applies uniformly: logging, authentication middleware, database connection factories, the `Result` pattern, validation pipeline behaviors. Place in `SharedKernel/` or `Infrastructure/`.
 
-**Tier 2 — Domain Concepts (push into entities/value objects).** Business rules belong on the entities and value objects themselves. Multiple slices can depend on the same `Order` entity without coupling to each other. This is sharing through the domain model, not through service classes.
+**Tier 2 — Domain Concepts (push into entities/value objects).** Business rules belong on the entities and value objects themselves. Slices in the same bounded context can share its `Order` entity to enforce a common invariant. This avoids coupling slices to each other’s handlers, but still couples them to the shared model.
 
 **Tier 3 — Feature-local sharing (keep it near the slices that use it).** If only `Orders/` slices need a pricing calculation, keep `OrderPricingService` in `Orders/Shared/`. When the feature is deleted, the shared code goes with it — no zombie code.
 
@@ -39,7 +39,7 @@ The instinct to create a `Common/` or `Shared/` project is strong — resist it 
 
 1. **Apply the Rule of Three.** Do not extract shared code until three separate locations use identical, stable logic. Premature abstraction creates the wrong abstraction.
 2. **Duplication is cheaper than the wrong abstraction.** Two slices with similar-looking response DTOs should *not* be unified. Tomorrow's requirements will diverge. Accept structural duplication when the concepts are semantically distinct.
-3. **Never let one slice call into another slice's internals.** If Slice A needs data that Slice B produces, Slice A queries the database directly (the domain entity is shared, the slice is not). For triggering side effects across boundaries, use domain events or a messaging abstraction.
+3. **Never let one slice call into another slice's internals.** Within a bounded context, slices may read its owned tables directly. Across contexts, consume an owned public contract or published read model, not a private table or entity. A public interface can be in-process; use a published event when consumers can react asynchronously.
 
 ---
 
@@ -144,7 +144,7 @@ When combined with Event Modeling, the system design maps directly to implementa
 VSA provides a natural migration path toward distributed systems:
 
 1. **Start as a well-structured monolith.** Slices organized under business-capability folders. Single deployable. Fast iteration.
-2. **Introduce module boundaries.** Enforce that modules communicate only through public APIs or events — never by reaching into another module's internals. Tools like Spring Modulith or ArchUnit can enforce these boundaries at build time.
+2. **Introduce module boundaries.** Enforce public contracts between bounded contexts — never reach into another context’s internals. Tools like Spring Modulith or ArchUnit can enforce these boundaries at build time.
 3. **Extract selectively.** When a module needs independent scaling, deployment, or team ownership, extract it into a service. The module boundary is already the service boundary. Defer the distributed systems tax until the evidence demands it.
 
 ### Migrating from an Existing Layered Codebase
@@ -153,13 +153,13 @@ Most teams adopting VSA are not starting greenfield. Apply the **Strangler Fig p
 
 1. **Pick the easiest slice, not the most important one.** Choose a feature with clear boundaries, low coupling to other layers, and high business value — low risk, high visibility.
 2. **Implement the new slice alongside the old code.** The new slice lives in a `Features/` or `Modules/` folder. The old controller, service, and repository remain in place. Route traffic to the new slice.
-3. **Delete the old code once the slice is stable.** Remove the controller method, the service method, and (if unused elsewhere) the repository method. Do not leave the old code as a fallback — that creates two systems to maintain.
+3. **Retire the old path on evidence.** Verify supported consumers and scheduled jobs have moved and rehearse recovery before removing the old path. After the new path accepts authoritative writes, switch back only if those writes can be preserved or explicitly reversed; otherwise repair forward. Remove obsolete handlers and data access once no longer needed.
 4. **Repeat, expanding slice by slice.** Each migrated feature shrinks the layered code and grows the sliced code. Over time, the layered structure becomes the minority and can be retired entirely.
 
 **Key rules during migration:**
 
 - New features always go into the slice structure. Never add new code to the layered codebase.
-- Resist the urge to create a "compatibility layer" between old and new. If a slice needs data that an old service provides, query the database directly rather than calling the old service.
+- Don’t add a compatibility layer unless a supported consumer needs it. Query directly only when the data is owned by the same context. For legacy data owned elsewhere, use an explicit producer-owned interface or read model.
 - Accept that the codebase will be hybrid for a period. This is normal and manageable as long as the direction is clear.
 
 ---
@@ -168,7 +168,7 @@ Most teams adopting VSA are not starting greenfield. Apply the **Strangler Fig p
 
 **The "Common" junk drawer.** A `Shared/` or `Common/` project that grows unbounded, coupling unrelated features. Use the three-tier sharing framework instead.
 
-**Slice-to-slice coupling.** One slice importing another slice's handler or internal types. This destroys independence. Use events, shared domain entities, or direct database queries instead.
+**Slice-to-slice coupling.** One slice importing another slice's handler or internal types. This destroys independence. Share domain entities or query owned data only within the same bounded context; across contexts, use a public contract or published read model.
 
 **Over-abstracting within slices.** Introducing repository interfaces, service abstractions, and mapper layers inside a single slice. If the slice has one consumer, it needs zero abstraction. Use framework APIs (ORM, HTTP client) directly.
 

@@ -8,7 +8,8 @@
 
 ### Non-breaking changes (safe to make without a new version)
 
-- Adding a new optional field to a response
+- Adding an optional response field when supported clients and intermediaries
+  accept it and existing behavior is unchanged
 - Adding a new endpoint
 - Adding a new optional query parameter
 - Adding a new enum value (if clients handle unknown values gracefully)

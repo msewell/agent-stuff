@@ -256,7 +256,7 @@ Automated checks that prevent new versions from breaking existing consumers.
 | No field type changes | Yes — `"id": 42` → `"id": "42"` breaks typed clients |
 | No endpoint removals | Yes — consumers still calling the endpoint get `404` |
 | No semantic behavior changes | Yes — same input producing different output is invisible but breaking |
-| New optional response fields | Safe — consumers following Postel's Law ignore unknown fields |
+| New optional response fields | Additive if supported clients and intermediaries accept them and existing behavior is unchanged |
 | New optional request fields | Safe — existing consumers simply don't send them |
 
 **How to automate:**
