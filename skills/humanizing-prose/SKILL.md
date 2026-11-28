@@ -1,6 +1,6 @@
 ---
 name: humanizing-prose
-category: Writing & Communication
+category: Editing & Publishing
 description: Rewrites and reviews prose so it sounds written by a specific human rather than generic AI output. Preserves meaning, facts, language, and audience while removing common AI tells and improving voice, specificity, restraint, rhythm, and reader trust. Use when humanizing AI-generated text, editing drafts, matching a writing sample, checking for AI-sounding prose, or revising essays, posts, docs, reports, emails, documentation copy, product copy, and multilingual prose in the source language.
 ---
 

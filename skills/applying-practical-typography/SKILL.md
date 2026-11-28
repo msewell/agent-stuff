@@ -1,7 +1,7 @@
 ---
 name: applying-practical-typography
 description: "Applies and reviews professional typography rules based on Butterick's Practical Typography. Covers characters and symbols (curly quotes, dashes, ellipses, nonbreaking spaces), text formatting (bold/italic, caps, kerning, letterspacing, color), body text settings (point size, line spacing, line length, indents, hyphenation), page layout (margins, headings, tables, lists, columns), font selection (professional vs system fonts, mixing, alternate figures), and document-specific guidance (emails, presentations, résumés, research papers, business cards, letterhead, websites). Use when generating or reviewing text for documents, web pages, presentations, or any formatted output, when the user asks about typography rules, when checking for common typography mistakes (straight quotes, double spaces, bad fonts, improper dashes), or when setting up document styles and layouts."
-category: Writing & Communication
+category: Editing & Publishing
 ---
 
 # Applying Practical Typography
