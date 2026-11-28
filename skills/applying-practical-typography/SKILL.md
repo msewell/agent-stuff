@@ -7,14 +7,16 @@ category: Editing & Publishing
 # Applying Practical Typography
 
 Prioritize readability over aesthetics. Choose what reinforces the meaning
-of the text, not what looks prettiest in isolation.
+of the text, not what looks prettiest in isolation. Apply substitutions only
+in editable prose and follow the locale and house style. Preserve code,
+identifiers, exact UI labels, and wording or punctuation required verbatim.
 
 ## Workflow: Applying typography rules
 
 1. **Set up body text first.** Choose font, point size (10–12pt print,
    15–25px web), line spacing (120–145%), and line length (45–90 chars).
-2. **Use correct characters.** Curly quotes (not straight), proper dashes
-   (not hyphens), real ellipses, proper symbols (©, ™, ×).
+2. **Use the right characters for the prose.** Choose quote marks, dashes,
+   ellipses, and symbols (©, ™, ×) appropriate to the locale and house style.
 3. **Format with restraint.** Bold or italic (not both). No underlining in
    print. All caps only for short runs, with 5–12% extra letterspacing.
    One exclamation point per document. One space between sentences.
@@ -28,7 +30,7 @@ of the text, not what looks prettiest in isolation.
 
 Check for these common problems (in priority order):
 
-1. **Straight quotes** instead of curly quotes or apostrophes.
+1. **Straight quotes** where the style calls for typographic quotes or apostrophes.
 2. **Double spaces** between sentences.
 3. **Hyphens** used where en dashes (ranges, pairs) or em dashes (breaks)
    belong.
@@ -44,8 +46,8 @@ Check for these common problems (in priority order):
 
 | Rule | Correct | Wrong |
 |------|---------|-------|
-| Quotes | "curly" 'quotes' | "straight" 'quotes' |
-| Apostrophes | '70s, rock 'n' roll | '70s, rock 'n' roll |
+| Quotes (English example) | “curly” ‘quotes’ | "straight" 'quotes' |
+| Apostrophes | ’70s, rock ’n’ roll | '70s, rock 'n' roll |
 | Em dash | word—word | word--word |
 | En dash | 1980–2020 | 1980-2020 |
 | Ellipsis | word… | word... or word . . . |

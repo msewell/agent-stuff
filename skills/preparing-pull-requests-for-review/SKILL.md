@@ -6,7 +6,7 @@ category: Software Engineering
 
 # Preparing Pull Requests for Review
 
-Return a paste-ready draft in chat. Do not write files, change revisions, push, upload, post, or send a review request unless explicitly asked. Run checks only within the user's authorization; apply this rule to all references. Leave approval and policy decisions to the team.
+Return a paste-ready draft in chat. Do not write files, change revisions, push, upload, post, or send a review request unless explicitly asked. Before making a handoff visible, verify the exact text, links, attachments, and destination against current repository and channel policy. A request to post does not waive required clearance for that payload. If a required check or clearance cannot be verified, keep the draft private and say what is missing. Run checks only within the user's authorization; leave approval and policy decisions to the team.
 
 ## 1. Establish scope
 

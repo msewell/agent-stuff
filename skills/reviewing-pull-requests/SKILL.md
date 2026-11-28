@@ -137,6 +137,8 @@ Classify every finding:
   worth noting
 - **❌ Request changes** — One or more blocking findings
 
+These verdicts concern the code changes. They do not clear the review text for posting or authorize disclosure of linked material.
+
 Every finding must cite a specific `file:line`. Rank blocking findings:
 security > bugs > logic errors > breaking changes. Include at least one
 praise if anything positive stands out.
@@ -146,7 +148,13 @@ Generate the report using
 
 ## Phase 6 — Post review to GitHub (only if user requests)
 
-**Always confirm with the user before posting.**
+**Always confirm with the user before posting.** Show the exact review text,
+links or attachments, review action, and target repository and PR. Verify that
+current repository and channel policy permits this payload and that any
+required disclosure clearance covers it. Neither confirmation nor code
+approval waives these requirements. If any required check or clearance is
+unverified, keep the draft private and report what is missing. If the payload
+or destination changes, recheck it and obtain fresh confirmation.
 
 ```bash
 # Approve

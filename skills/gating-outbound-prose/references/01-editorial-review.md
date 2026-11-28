@@ -17,11 +17,11 @@ Record `pass`, `repair`, or `uncertain` for each axis the reviewer evaluated. Ma
 
 Preserve exact literals and approved wording unless the brief permits changing them. Keep legitimate long sentences, passive voice, qualifications, and warmth where they help the reader. A readability score, suspected “AI tell,” or reviewer preference is not a blocker by itself.
 
-## English and German defaults
+## Locale profiles and customer-notice defaults
 
-Use the specified profile. Use en-US and de-DE as worked defaults if only the language is named and the regional choice is inconsequential; ask if the choice affects wording, policy, or interpretation.
+Follow the brief and house style, then the artifact’s established language, register, and genre conventions. The table gives en-US and de-DE fallbacks for customer notices only, when no applicable convention is established. Do not flag a difference from these fallbacks as a defect by itself. Ask for clarification if the choice could change meaning, obligations, or how readers interpret the notice.
 
-| Field | en-US default | de-DE default |
+| Field | en-US customer notice | de-DE customer notice |
 | --- | --- | --- |
 | Address | Direct “you” when the reader acts | Formal Sie/Ihnen/Ihr for customer notices unless the brief says otherwise |
 | Time and number display | Use a 12-hour clock in customer notices: “2:30 p.m. CEST”; 2.5 | Use a 24-hour clock in customer notices: „14:30 Uhr (MESZ)“; 2,5. Display CET as MEZ and CEST as MESZ. |

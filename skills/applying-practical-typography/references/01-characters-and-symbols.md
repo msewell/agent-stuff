@@ -24,17 +24,20 @@
 
 ## Straight and Curly Quotes
 
-Use curly quotes, not straight quotes. Straight quotes are a typewriter habit.
+In editable prose, use the quote marks called for by the locale and house
+style. The shortcuts below are for English curly quotes.
 
 | Mark | Windows  | Mac OS                  | HTML      |
 |------|----------|-------------------------|-----------|
-| "    | alt 0147 | option + [              | `&ldquo;` |
-| "    | alt 0148 | option + shift + [      | `&rdquo;` |
-| '    | alt 0145 | option + ]              | `&lsquo;` |
-| '    | alt 0146 | option + shift + ]      | `&rsquo;` |
+| “    | alt 0147 | option + [              | `&ldquo;` |
+| ”    | alt 0148 | option + shift + [      | `&rdquo;` |
+| ‘    | alt 0145 | option + ]              | `&lsquo;` |
+| ’    | alt 0146 | option + shift + ]      | `&rsquo;` |
 
-Turn on the smart-quotes feature in your word processor. In HTML, use the
-explicit entities or a smart-quote library (e.g., smartypants).
+Apply smart quotes only to editable prose, not to code, identifiers, exact
+UI labels, or text required verbatim. If the tool cannot exclude protected
+spans, make the changes manually. In HTML, leave markup and attribute values
+out of substitutions.
 
 ## Apostrophes
 

@@ -54,7 +54,7 @@ Apply these in order:
 5. **Agency:** Prefer clear actors and verbs. Keep passive voice when the actor is unknown, irrelevant, or deliberately withheld.
 6. **Voice:** Let a point of view appear when the genre allows it. For neutral genres, use judgment and clarity instead of personality.
 7. **Rhythm:** Vary sentence and paragraph shape. Avoid metronomic balance, repeated transitions, and stacked three-item lists.
-8. **Density:** Remove throat-clearing, filler, hedging, generic conclusions, and duplicated ideas.
+8. **Density:** Remove throat-clearing, filler, redundant hedging, generic conclusions, and duplicated ideas. Preserve factual uncertainty, conditions, and commitments.
 
 ## Quality gate
 
