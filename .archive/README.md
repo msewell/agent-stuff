@@ -11,6 +11,7 @@ Retired skills and prompts, kept for reference.
 | [generating-marp-slides](skills/generating-marp-slides) | The outputted slides are too opinionated and low-value. |
 | [applying-tcr-with-agents](skills/applying-tcr-with-agents) | It clashes with the TDD skill, which is better. |
 | [stripping-ai-tells](skills/stripping-ai-tells) | Superseded by [humanizing-prose](../skills/humanizing-prose). That skill covers AI-tell removal as part of a fuller rewrite workflow, with stricter fact-preservation rules and voice-matching support. |
+| [toon-format](skills/toon-format) | It hasn't proven useful even once. |
 
 ## Prompts
 
